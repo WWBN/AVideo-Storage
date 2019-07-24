@@ -16,7 +16,10 @@ if(file_exists($configFile)){
     }
 }else
 if(!empty($_POST['inputURL'])){
-    $status = url_get_contents($_POST['inputURL'] . 'plugin/YPTStorage/addSite.json.php?url='.urlencode(getURLToApplication()));
+    $url = $_POST['inputURL'] . 'plugin/YPTStorage/addSite.json.php?url='.urlencode(getURLToApplication());
+    $status = url_get_contents($url);
+    error_log("inputURL: ".$url);
+    error_log("inputURL: ".$status);
     $status = json_decode($status);
 }
 ?>
