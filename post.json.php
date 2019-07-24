@@ -19,7 +19,9 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $name = basename($url); // to get file name
     $ext = pathinfo($url, PATHINFO_EXTENSION); // to get extension
     $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
-
+    $extParts = explode("?", $ext);
+    $ext = $extParts[0];
+    
     if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
         $file = url_get_contents($url); // to get file
         if ($file) {
@@ -42,11 +44,11 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         exec($cmd . " 2>&1", $output, $return_val);
 
         if ($return_val === 0) {
-            if(filesize($obj->filename)<1000000){ // less then 1 mb
+            if (filesize($obj->filename) < 1000000) { // less then 1 mb
                 $obj->msg = "The filesize is smaller then 1 Mb ";
-            }else{
+            } else {
                 $directory = "{$global['videos_directory']}{$name2}";
-                if(!is_dir($directory)){
+                if (!is_dir($directory)) {
                     mkdir($directory);
                 }
                 $cmd = "tar --overwrite  -xvf {$obj->filename} -C {$directory}";
@@ -57,11 +59,11 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                     $obj->error = false;
                     unlink($obj->filename);
                 } else {
-                    $obj->msg = "Error on command {$cmd} ".implode("<br>", $output);
+                    $obj->msg = "Error on command {$cmd} " . implode("<br>", $output);
                 }
             }
         } else {
-            $obj->msg = "Error on command {$cmd} ".implode("<br>", $output);
+            $obj->msg = "Error on command {$cmd} " . implode("<br>", $output);
         }
     } else {
         $obj->msg = "Extension Not Allowed {$ext}";
