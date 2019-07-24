@@ -1,5 +1,6 @@
 <?php
 require_once './configuration.php';
+require_once './functions.php';
 session_write_close();
 
 if (empty($_GET['file'])) {

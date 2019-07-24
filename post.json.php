@@ -1,6 +1,7 @@
 <?php
 
 require_once './configuration.php';
+require_once './functions.php';
 
 header('Content-Type: application/json');
 $obj = new stdClass();
