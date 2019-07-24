@@ -31,6 +31,8 @@
     }
 </style>
 <?php
+$global['videos_directory'] = getPathToApplication() . "videos/";
+
 if (!empty($status) && !empty($status->site->secret)) {
     $data = "<?php
 
@@ -39,7 +41,7 @@ global \$global;
 \$global['secret'] = '{$status->site->secret}';
 \$global['youPHPTubeStorageURL'] = '{$status->site->url}';
 \$global['youPHPTubeURL'] = '" . $_POST['inputURL'] . "';
-\$global['videos_directory'] = '" . getPathToApplication() . "videos/';
+\$global['videos_directory'] = '{$global['videos_directory']}';
 
 session_name(md5(\$global['youPHPTubeStorageURL']));
 session_start();";
@@ -86,17 +88,27 @@ global \$global;
 \$global['secret'] = '********************************';
 \$global['youPHPTubeStorageURL'] = '{$status->site->url}';
 \$global['youPHPTubeURL'] = '" . $_POST['inputURL'] . "';
-\$global['videos_directory'] = '" . getPathToApplication() . "videos/';
+\$global['videos_directory'] = '{$global['videos_directory']}';
 
 session_name(md5(\$global['youPHPTubeStorageURL']));
 session_start();";
             ?>
 
-            <div class="alert alert-warning">Please create a file (<?php echo getPathToApplication(); ?>configuration.php) with the content below then refresh this page</div>
+            <div class="alert alert-warning">Please create a file (<?php echo getPathToApplication(); ?>configuration.php) with the content below then refresh this page
+            <br> <b>sudo nano <?php echo getPathToApplication(); ?>configuration.php</b></div>
             <pre style="text-align: left; margin: 10px 0;"><?php
                 echo htmlentities($data);
                 ?></pre>
             <?php
+        }
+        
+        if(!is_dir($global['videos_directory'])){
+            if(!mkdir($global['videos_directory'])){
+                ?>
+            <div class="alert alert-danger">We could not create the directory videos file. you must create it manually<br>
+                Please create the following directory:<br> <b>sudo mkdir <?php echo $global['videos_directory']; ?></b></div>
+            <?php
+            }
         }
         ?>
     </div><?php
