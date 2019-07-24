@@ -57,6 +57,8 @@ You will need the folowing prerequisites.
 
 Make sure you enable it before your installation, this is necessary because the Storage installation will check your plugin during the configuration assistant
 
+If you do not have it yet, get it [here](https://www.youphptube.com/plugins/)
+
 ### Access your storage server
 
 On the first access you will be requested for your streamer address. the installation script will try to create your videos directory and your configuration.php file. If any of those fail you will need to create it manually.
