@@ -20,14 +20,19 @@ You will need the folowing prerequisites.
 1. PHP 7+
 1. Apache XSendFile
 1. YPTStorage Plugin
+1. YouPHPTube 7.3+
 
 ### What will you need
 1. Root Access to the server
 1. Admin user for YouPHPTube
 
-### Enable YPTStorage 
+### Copy and Paste
 
-This is necessary because the Storage installation will check your plugin during the configuration assistant
+#### Ubuntu 16.04
+    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.0 libapache2-mod-php7.0 php7.0-curl php7.0-gd php7.0-intl php-zip git -y && cd /var/www/html && https://github.com/YouPHPTube/YouPHPTube-Storage.git
+    
+#### Ubuntu 18.04
+    sudo apt-get update -y && sudo apt-get upgrade -y sudo apt-get install nano curl apache2 php7.2 libapache2-mod-php7.2 php7.2-curl php7.2-gd php7.2-intl git -y && cd /var/www/html && sudo git clone https://github.com/YouPHPTube/YouPHPTube-Storage.git
 
 ### Install apache xsendfile
 
@@ -47,3 +52,12 @@ This is necessary because the Storage installation will check your plugin during
         Allow from All
     </Directory>
 
+### Enable YPTStorage Plugin
+
+Make sure you enable it before your installation, this is necessary because the Storage installation will check your plugin during the configuration assistant
+
+### Access your storage server
+
+On the first access you will be requested for your streamer address. the installation script will try to create your videos directory and your configuration.php file. If any of those fail you will need to create it manually.
+
+The script will create a Storage site for you on your streamer site, but this site will be inactive, you will need to activate it (On the YPTStorage plugin) before proceed.
