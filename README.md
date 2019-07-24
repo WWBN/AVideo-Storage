@@ -57,7 +57,7 @@ You will need the folowing prerequisites.
 
 Make sure you enable it before your installation, this is necessary because the Storage installation will check your plugin during the configuration assistant
 
-If you do not have it yet, get it [here](https://www.youphptube.com/plugins/)
+If you do not have the plugin yet, get it [here](https://www.youphptube.com/plugins/)
 
 ### Access your storage server
 
