@@ -56,7 +56,3 @@ function url_get_contents($Url, $ctx = "") {
     $_SESSION = $session;
     return $result;
 }
-
-function ss(){
-    
-}
