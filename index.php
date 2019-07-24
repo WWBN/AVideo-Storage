@@ -16,6 +16,9 @@ if(file_exists($configFile)){
     }
 }else
 if(!empty($_POST['inputURL'])){
+    if (substr($_POST['inputURL'], -1) !== '/') {
+        $_POST['inputURL'] .= "/";
+    }
     $url = $_POST['inputURL'] . 'plugin/YPTStorage/addSite.json.php?url='.urlencode(getURLToApplication());
     $status = url_get_contents($url);
     error_log("inputURL: ".$url);
