@@ -32,6 +32,8 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             //echo $cmd;
             exec($cmd . " 2>&1", $output, $return_val);
 
+            error_log("tarHLS Finish waiting to complete the file");
+            sleep(5);
             if ($return_val === 0) {
                 $obj->error = false;
             } else {
