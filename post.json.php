@@ -60,12 +60,12 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                     unlink($obj->filename);
                 } else {
                     $obj->msg = "post.json.php Error on command {$cmd} ";
-                    error_log("post.json.php Error on command {$cmd} ". json_encode("", $output));
+                    error_log("post.json.php Error on command {$cmd} ". json_encode($output));
                 }
             }
         } else {
             $obj->msg = "Error on command {$cmd} ";
-            error_log($obj->msg. json_encode("", $output));
+            error_log($obj->msg. json_encode($output));
         }
     } else {
         $obj->msg = "Extension Not Allowed {$ext}";
