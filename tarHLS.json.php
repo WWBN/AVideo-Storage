@@ -35,7 +35,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             if ($return_val === 0) {
                 $obj->error = false;
             } else {
-                $obj->msg = implode("<br>", $output);
+                $obj->msg = "Return ERROR ". print_r($return_val, $return);
             }
             $obj->msg = array('output' => implode("<br>", $output), 'return_val' => $return_val, 'success' => $return_val === 0);
 
