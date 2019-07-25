@@ -23,7 +23,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $ext = $extParts[0];
     error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
     if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
-        $file = url_get_contents($_REQUEST['video_url']); // to get file
+        $file = url_get_contents($url."?secret={$_REQUEST['source_secret']}"); // to get file
         if ($file) {
             $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
             if (file_put_contents($obj->filename, $file)) {
