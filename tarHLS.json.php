@@ -1,7 +1,7 @@
 <?php
 
 require_once './configuration.php';
-
+set_time_limit(3600);// 1 hour
 header('Content-Type: application/json');
 $obj = new stdClass();
 $obj->error = true;
