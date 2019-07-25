@@ -21,7 +21,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
     $extParts = explode("?", $ext);
     $ext = $extParts[0];
-    
+    error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
     if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
         $file = url_get_contents($_REQUEST['video_url']); // to get file
         if ($file) {
