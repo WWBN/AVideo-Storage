@@ -37,12 +37,16 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         }
     } else if (strtolower($ext) === 'tgz') {
         $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
+        /*
         $cmd = "wget {$url} -O {$obj->filename}";
 
         error_log("Get HLS Start ({$cmd})");
         //echo $cmd;
         exec($cmd . " 2>&1", $output, $return_val);
         sleep(2);
+         * 
+         */
+        $return_val = file_put_contents($obj->filename, url_get_contents("{$url}"));
         if ($return_val === 0) {
             if (filesize($obj->filename) < 1000000) { // less then 1 mb
                 $obj->msg = "The filesize is smaller then 1 Mb ";
@@ -66,7 +70,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             }
         } else {
             $obj->msg = "Error on command {$cmd} ";
-            error_log($obj->msg. json_encode($output));
+            error_log($obj->msg);
         }
     } else {
         $obj->msg = "Extension Not Allowed {$ext}";
