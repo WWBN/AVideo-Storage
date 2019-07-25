@@ -8,6 +8,7 @@ $obj->error = true;
 $obj->msg = "";
 $obj->youPHPTubeStorageURL = $global['youPHPTubeStorageURL'];
 $obj->filename = "";
+$obj->filesize = 0;
 
 if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $obj->msg = "Invalid secret";
@@ -37,7 +38,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             if ($return_val === 0) {
                 $obj->error = false;
             } else {
-                $obj->msg = "Return ERROR ". print_r($return_val, $return);
+                $obj->msg = "Return ERROR ". print_r($return_val, true);
             }
             //$obj->msg = array('output' => implode("<br>", $output), 'return_val' => $return_val, 'success' => $return_val === 0);
 
@@ -49,6 +50,8 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
 
     $obj->error = false;
 }
-
+if(!$obj->error){
+    $obj->filesize = filesize($obj->tarFile);
+}
 die(json_encode($obj));
 ?>
