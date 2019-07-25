@@ -43,6 +43,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         $obj->msg = "Extension Not Allowed {$ext}";
     }
 }
-
-die(json_encode($obj));
+$json = json_encode($obj);
+error_log($json);
+die($json);
 ?>
