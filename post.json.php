@@ -42,7 +42,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         error_log("Get HLS Start ({$cmd})");
         //echo $cmd;
         exec($cmd . " 2>&1", $output, $return_val);
-        sleep(5);
+        sleep(2);
         if ($return_val === 0) {
             if (filesize($obj->filename) < 1000000) { // less then 1 mb
                 $obj->msg = "The filesize is smaller then 1 Mb ";
@@ -55,6 +55,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                 error_log("restoreVideos HLS {$cmd}");
                 //echo $cmd;exit;
                 exec($cmd . " 2>&1", $output, $return_val);
+                sleep(2);
                 if ($return_val === 0) {
                     $obj->error = false;
                     unlink($obj->filename);
