@@ -59,7 +59,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                     $obj->error = false;
                     unlink($obj->filename);
                 } else {
-                    $obj->msg = "Error on command {$cmd} " . implode("<br>", $output);
+                    $obj->msg = "post.json.php Error on command {$cmd} " . implode("<br>", $output);
                 }
             }
         } else {
