@@ -37,7 +37,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             } else {
                 $obj->msg = "Return ERROR ". print_r($return_val, $return);
             }
-            $obj->msg = array('output' => implode("<br>", $output), 'return_val' => $return_val, 'success' => $return_val === 0);
+            //$obj->msg = array('output' => implode("<br>", $output), 'return_val' => $return_val, 'success' => $return_val === 0);
 
             error_log("tarHLS Done (" . json_encode($obj) . ")");
         }
