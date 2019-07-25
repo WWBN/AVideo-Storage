@@ -33,7 +33,6 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             //echo $cmd;
             exec($cmd . " 2>&1", $output, $return_val);
 
-            error_log("tarHLS Finish waiting to complete the file");
             if ($return_val === 0) {
                 $obj->error = false;
             } else {
@@ -50,6 +49,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $obj->error = false;
 }
 if(!$obj->error){
+    error_log("tarHLS Finish waiting to complete the file");
     sleep(5);
     $obj->filesize = filesize($obj->tarFile);
 }
