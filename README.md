@@ -64,3 +64,15 @@ If you do not have the plugin yet, get it [here](https://www.youphptube.com/plug
 On the first access you will be requested for your streamer address. the installation script will try to create your videos directory and your configuration.php file. If any of those fail you will need to create it manually.
 
 The script will create a Storage site for you on your streamer site, but this site will be inactive, you will need to activate it (On the YPTStorage plugin) before proceed.
+
+## Demonstration
+
+We currently have this feature enabled on the [demo](https://demo.youphptube.com) site
+
+We have the following storages:
+
+* https://storage1.youphptube.com/
+* https://storage2.youphptube.com/
+* https://storage3.youphptube.com/
+
+You can switch the storages from the videos on the videos manager. You will find a move storage button, when you click on it. It will popup a window with the options to move your video to the local storage or one of the 3 storages above.
