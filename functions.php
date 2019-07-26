@@ -69,13 +69,13 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     
     $cmd = "wget {$url} -O {$filename}";
 
-    error_log("Get HLS Start ({$cmd})");
+    error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
     //echo $cmd;
     exec($cmd . " 2>&1", $output, $return_val);
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
     if ($return_val === 0) {
         if (filesize($filename) < 1000000) { // less then 1 mb
-            $obj->msg = "The filesize is smaller then 1 Mb ";
+            $obj->msg = "The filesize in the storage is smaller then 1 Mb ";
         } else {
             $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
             $directory = "{$global['videos_directory']}{$name2}";
@@ -83,7 +83,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
                 mkdir($directory);
             }
             $cmd = "tar --overwrite  -xvf {$filename} -C {$directory}";
-            error_log("restoreVideos HLS {$cmd}");
+            error_log("moveFromSiteToLocalHLS: restoreVideos HLS {$cmd}");
             //echo $cmd;exit;
             exec($cmd . " 2>&1", $output, $return_val);
             if ($return_val === 0) {
