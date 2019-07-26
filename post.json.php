@@ -19,13 +19,14 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $name = basename($url); // to get file name
     $ext = pathinfo($url, PATHINFO_EXTENSION); // to get extension
     $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
-    
-    $query = parse_url($url, PHP_URL_QUERY);
-    // Returns a string if the URL has parameters or NULL if not
-    if ($query) {
-        $url .= "&secret={$_REQUEST['source_secret']}";
-    } else {
-        $url .= "?secret={$_REQUEST['source_secret']}";
+    if(!empty($_REQUEST['source_secret'])){
+        $query = parse_url($url, PHP_URL_QUERY);
+        // Returns a string if the URL has parameters or NULL if not
+        if ($query) {
+            $url .= "&secret={$_REQUEST['source_secret']}";
+        } else {
+            $url .= "?secret={$_REQUEST['source_secret']}";
+        }
     }
     $extParts = explode("?", $ext);
     $ext = $extParts[0];
