@@ -1,5 +1,5 @@
 <?php
-
+ini_set('memory_limit', '-1');
 function getPathToApplication() {
     return str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]);
 }
