@@ -32,7 +32,7 @@ function url_get_contents($Url, $ctx = "") {
     }
     if (ini_get('allow_url_fopen')) {
         try {
-            $tmp = @file_get_contents($Url, false, $context);
+            $tmp = file_get_contents($Url, false, $context);
             @session_start();
             $_SESSION = $session;
             if ($tmp != false) {
@@ -53,7 +53,7 @@ function url_get_contents($Url, $ctx = "") {
         $_SESSION = $session;
         return $output;
     }
-    $result = @file_get_contents($Url, false, $context);
+    $result = file_get_contents($Url, false, $context);
     @session_start();
     $_SESSION = $session;
     return $result;
