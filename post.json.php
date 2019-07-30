@@ -32,8 +32,11 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $ext = $extParts[0];
     error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
     if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
+        error_log("post.json.php: get URL {$url}");
         $file = url_get_contents($url); // to get file
+        error_log("post.json.php: Download done");
         if ($file) {
+            error_log("post.json.php: is file");
             $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
             if (file_put_contents($obj->filename, $file)) {
                 $obj->error = false;
@@ -42,11 +45,13 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                 $obj->msg = "Error on save file {$obj->filename}";
             }
         } else {
+            error_log("post.json.php: empty file");
             $obj->msg = "Error on download URL {$url}";
         }
     } else if (strtolower($ext) === 'tgz') {
         $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
         
+        error_log("post.json.php: Download HLS {$obj->filename}");
         $obj = moveFromSiteToLocalHLS($url, $obj->filename);
     } else {
         $obj->msg = "Extension Not Allowed {$ext}";
