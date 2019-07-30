@@ -13,6 +13,8 @@ You can install as many storagess as you want, without any geographical restrict
 
 One of the advantages is that when a user is watching one of your videos he will use the bandwidth of the storage, so it will facilitate your server load balancing on the amount of the used bandwidth and speed due to the location of each video.
 
+Please check this scenario to try to make the propose of this project clear: https://github.com/YouPHPTube/YouPHPTube-Storage/wiki/Scenario-Description
+
 ## Installation 
 
 You will need the folowing prerequisites.
@@ -33,7 +35,7 @@ You will need the folowing prerequisites.
     sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.0 libapache2-mod-php7.0 php7.0-curl php7.0-gd php7.0-intl php-zip php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && git clone https://github.com/YouPHPTube/YouPHPTube-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/YouPHPTube-Storage/videos && sudo chown www-data:www-data /var/www/html/YouPHPTube-Storage/videos
     
 #### Ubuntu 18.04
-    sudo apt-get update -y && sudo apt-get upgrade -y sudo apt-get install nano curl apache2 php7.2 libapache2-mod-php7.2 php7.2-curl php7.2-gd php7.2-intl php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && sudo git clone https://github.com/YouPHPTube/YouPHPTube-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/YouPHPTube-Storage/videos && sudo chown www-data:www-data /var/www/html/YouPHPTube-Storage/videos
+    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.2 libapache2-mod-php7.2 php7.2-curl php7.2-gd php7.2-intl php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && sudo git clone https://github.com/YouPHPTube/YouPHPTube-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/YouPHPTube-Storage/videos && sudo chown www-data:www-data /var/www/html/YouPHPTube-Storage/videos
 
 ### Install apache xsendfile
 
