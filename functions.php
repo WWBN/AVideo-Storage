@@ -83,6 +83,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
             sleep(10); // wait
         }
     } else {
+        error_log("moveFromSiteToLocalHLS: File Exists {$filename}");
         $return_val = 0;
     }
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
