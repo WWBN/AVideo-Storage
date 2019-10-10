@@ -74,7 +74,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
         error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
         //echo $cmd;
         exec($cmd);
-        sleep(60); // wait 1 min
+        sleep(10); // wait 1 min
     } else {
         $return_val = 0;
     }
