@@ -69,8 +69,10 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     $obj->youPHPTubeStorageURL = $global['youPHPTubeStorageURL'];
     $obj->filename = $filename;
     if (!file_exists($filename) || filesize($filename) < 1000000) { // less then 1 mb
+        error_log("moveFromSiteToLocalHLS: Get HLS Start Download ({$cmd})");
         $data = url_get_contents($filename);
         if(!empty($data)){
+            error_log("moveFromSiteToLocalHLS: Got Data");
             file_put_contents($filename, $data);
         }else{
             $cmd = "wget {$url} -O {$filename}";
