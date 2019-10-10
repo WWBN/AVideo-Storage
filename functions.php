@@ -95,7 +95,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
                     error_log("0 - moveFromSiteToLocalHLS: fail to unpack, Trying again ($newTry)");
                     $newTry += 1;
                     sleep($newTry*10);
-                    moveFromSiteToLocalHLS($url, $filename, $newTry);
+                    return moveFromSiteToLocalHLS($url, $filename, $newTry);
                 }
                 $obj->msg = "moveFromSiteToLocalHLS: Error on command {$cmd} ";
                 error_log("moveFromSiteToLocalHLS: Error on command {$cmd} " . json_encode($output));
