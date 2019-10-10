@@ -1,5 +1,7 @@
 <?php
+
 ini_set('memory_limit', '-1');
+
 function getPathToApplication() {
     return str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]);
 }
@@ -66,13 +68,16 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     $obj->msg = "";
     $obj->youPHPTubeStorageURL = $global['youPHPTubeStorageURL'];
     $obj->filename = $filename;
-    
-    $cmd = "wget {$url} -O {$filename}";
+    if (!file_exists($filename) || filesize($filename) < 1000000) { // less then 1 mb
+        $cmd = "wget {$url} -O {$filename}";
 
-    error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
-    //echo $cmd;
-    exec($cmd . " 2>&1", $output, $return_val);
-    sleep(60); // wait 1 min
+        error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
+        //echo $cmd;
+        exec($cmd . " 2>&1", $output, $return_val);
+        sleep(60); // wait 1 min
+    } else {
+        $return_val = 0;
+    }
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
     if ($return_val === 0) {
         if (filesize($filename) < 1000000) { // less then 1 mb
@@ -91,11 +96,11 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
                 $obj->error = false;
                 unlink($filename);
             } else {
-                if(empty($newTry) && $newTry < 3){
+                if (empty($newTry) && $newTry < 3) {
                     // try again to check if you can get the tar done.
                     error_log("0 - moveFromSiteToLocalHLS: fail to unpack, Trying again ($newTry)");
                     $newTry += 1;
-                    sleep($newTry*10);
+                    sleep($newTry * 10);
                     return moveFromSiteToLocalHLS($url, $filename, $newTry);
                 }
                 $obj->msg = "moveFromSiteToLocalHLS: Error on command {$cmd} ";
