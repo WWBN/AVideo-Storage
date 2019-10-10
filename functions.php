@@ -72,6 +72,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
     //echo $cmd;
     exec($cmd . " 2>&1", $output, $return_val);
+    sleep(60); // wait 1 min
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
     if ($return_val === 0) {
         if (filesize($filename) < 1000000) { // less then 1 mb
