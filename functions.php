@@ -73,43 +73,38 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
 
         error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
         //echo $cmd;
-        exec($cmd . " 2>&1", $output, $return_val);
+        exec($cmd);
         sleep(60); // wait 1 min
     } else {
         $return_val = 0;
     }
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
-    if ($return_val === 0) {
-        if (filesize($filename) < 1000000) { // less then 1 mb
-            $obj->msg = "The filesize in the storage is smaller then 1 Mb ";
-        } else {
-            $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
-            $directory = "{$global['videos_directory']}{$name2}";
-            if (!is_dir($directory)) {
-                mkdir($directory);
-            }
-            $cmd = "tar --overwrite  -xvf {$filename} -C {$directory}";
-            error_log("moveFromSiteToLocalHLS: restoreVideos HLS {$cmd}");
-            //echo $cmd;exit;
-            exec($cmd . " 2>&1", $output, $return_val);
-            if ($return_val === 0) {
-                $obj->error = false;
-                unlink($filename);
-            } else {
-                if (empty($newTry) && $newTry < 3) {
-                    // try again to check if you can get the tar done.
-                    error_log("0 - moveFromSiteToLocalHLS: fail to unpack, Trying again ($newTry)");
-                    $newTry += 1;
-                    sleep($newTry * 10);
-                    return moveFromSiteToLocalHLS($url, $filename, $newTry);
-                }
-                $obj->msg = "moveFromSiteToLocalHLS: Error on command {$cmd} ";
-                error_log("moveFromSiteToLocalHLS: Error on command {$cmd} " . json_encode($output));
-            }
-        }
+    if (filesize($filename) < 1000000) { // less then 1 mb
+        $obj->msg = "The filesize in the storage is smaller then 1 Mb ";
     } else {
-        $obj->msg = "moveFromSiteToLocalHLS: Error on command {$cmd} ";
-        error_log($obj->msg);
+        $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
+        $directory = "{$global['videos_directory']}{$name2}";
+        if (!is_dir($directory)) {
+            mkdir($directory);
+        }
+        $cmd = "tar --overwrite  -xvf {$filename} -C {$directory}";
+        error_log("moveFromSiteToLocalHLS: restoreVideos HLS {$cmd}");
+        //echo $cmd;exit;
+        exec($cmd . " 2>&1", $output, $return_val);
+        if ($return_val === 0) {
+            $obj->error = false;
+            unlink($filename);
+        } else {
+            if (empty($newTry) && $newTry < 3) {
+                // try again to check if you can get the tar done.
+                error_log("0 - moveFromSiteToLocalHLS: fail to unpack, Trying again ($newTry)");
+                $newTry += 1;
+                sleep($newTry * 10);
+                return moveFromSiteToLocalHLS($url, $filename, $newTry);
+            }
+            $obj->msg = "moveFromSiteToLocalHLS: Error on command {$cmd} ";
+            error_log("moveFromSiteToLocalHLS: Error on command {$cmd} " . json_encode($output));
+        }
     }
 
     return $obj;
