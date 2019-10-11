@@ -13,13 +13,14 @@ function getURLToApplication() {
     return $url;
 }
 
-function url_get_contents($Url, $ctx = "") {
-    global $global;
-    $session = @$_SESSION;
-    if (session_status() !== PHP_SESSION_NONE) {
-        session_write_close();
+function url_get_contents($Url, $ctx = "", $timeout=300) {
+    global $global, $mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, $mysqlPort;
+    $session = $_SESSION;
+    session_write_close();
+    if(!empty($timeout)){
+        ini_set('default_socket_timeout', $timeout);
     }
-
+    $global['mysqli']->close();
     if (empty($ctx)) {
         $opts = array(
             "ssl" => array(
@@ -28,16 +29,26 @@ function url_get_contents($Url, $ctx = "") {
                 "allow_self_signed" => true,
             ),
         );
+        if(!empty($timeout)){
+            ini_set('default_socket_timeout', $timeout);
+            $opts['http']=array('timeout' => $timeout);
+        }
         $context = stream_context_create($opts);
     } else {
         $context = $ctx;
     }
     if (ini_get('allow_url_fopen')) {
         try {
-            $tmp = file_get_contents($Url, false, $context);
-            @session_start();
-            $_SESSION = $session;
+            $tmp = @file_get_contents($Url, false, $context);
             if ($tmp != false) {
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION = $session;
+                $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
+                if (!empty($global['mysqli_charset'])) {
+                    $global['mysqli']->set_charset($global['mysqli_charset']);
+                }
                 return $tmp;
             }
         } catch (ErrorException $e) {
@@ -49,17 +60,34 @@ function url_get_contents($Url, $ctx = "") {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        if(!empty($timeout)){
+            curl_setopt($ch,CURLOPT_TIMEOUT,$timeout);
+            curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout+10);
+        }
         $output = curl_exec($ch);
         curl_close($ch);
-        @session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $_SESSION = $session;
+        $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
+        if (!empty($global['mysqli_charset'])) {
+            $global['mysqli']->set_charset($global['mysqli_charset']);
+        }
         return $output;
     }
-    $result = file_get_contents($Url, false, $context);
-    @session_start();
+    $result = @file_get_contents($Url, false, $context);
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
     $_SESSION = $session;
+    $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
+    if (!empty($global['mysqli_charset'])) {
+        $global['mysqli']->set_charset($global['mysqli_charset']);
+    }
     return $result;
 }
+
 
 function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     global $global;
