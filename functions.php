@@ -20,7 +20,6 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
     if(!empty($timeout)){
         ini_set('default_socket_timeout', $timeout);
     }
-    $global['mysqli']->close();
     if (empty($ctx)) {
         $opts = array(
             "ssl" => array(
@@ -45,10 +44,6 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
                     session_start();
                 }
                 $_SESSION = $session;
-                $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
-                if (!empty($global['mysqli_charset'])) {
-                    $global['mysqli']->set_charset($global['mysqli_charset']);
-                }
                 return $tmp;
             }
         } catch (ErrorException $e) {
@@ -70,10 +65,6 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
             session_start();
         }
         $_SESSION = $session;
-        $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
-        if (!empty($global['mysqli_charset'])) {
-            $global['mysqli']->set_charset($global['mysqli_charset']);
-        }
         return $output;
     }
     $result = @file_get_contents($Url, false, $context);
@@ -81,10 +72,6 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
         session_start();
     }
     $_SESSION = $session;
-    $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
-    if (!empty($global['mysqli_charset'])) {
-        $global['mysqli']->set_charset($global['mysqli_charset']);
-    }
     return $result;
 }
 
