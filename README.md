@@ -9,7 +9,7 @@ For example when one of your storage is full, just plug in one more storage and 
 This service is designed to replace our current S3, BackBlaze B2 and FTP plugins, but with much more integration with our services, 
 besides you will have no restriction on the amount of storages used
 
-You can install as many storagess as you want, without any geographical restrictions.
+You can install as many storages as you want, without any geographical restrictions.
 
 One of the advantages is that when a user is watching one of your videos he will use the bandwidth of the storage, so it will facilitate your server load balancing on the amount of the used bandwidth and speed due to the location of each video.
 
