@@ -27,7 +27,7 @@ if ($path_parts["extension"] === "m3u8") {
 if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {    
     error_log("Storage xsendfile with secret");
 }else{
-    $url = "{$global['youPHPTubeURL']}plugin/YPTStorage/canWatchVideo.json.php?token={$_GET['token']}&filename={$sfilename}";
+    $url = "{$global['aVideoURL']}plugin/YPTStorage/canWatchVideo.json.php?token={$_GET['token']}&filename={$sfilename}";
     $json = url_get_contents($url); 
 
     error_log("Storage xsendfile {$url} => {$json}");

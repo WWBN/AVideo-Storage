@@ -4,9 +4,9 @@ class Login {
 
     static function run($user, $pass) {
         global $global;
-        $youPHPTubeURL = $global['youPHPTubeURL'];
-        if (substr($youPHPTubeURL, -1) !== '/') {
-            $youPHPTubeURL .= "/";
+        $aVideoURL = $global['aVideoURL'];
+        if (substr($aVideoURL, -1) !== '/') {
+            $aVideoURL .= "/";
         }
 
         $postdata = http_build_query(
@@ -31,7 +31,7 @@ class Login {
 
         $context = stream_context_create($opts);
 
-        $result = @file_get_contents($youPHPTubeURL . 'login', false, $context);
+        $result = @file_get_contents($aVideoURL . 'login', false, $context);
         if (empty($result)) {
             $object = new stdClass();
             $object->isLogged = false;

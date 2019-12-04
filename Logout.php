@@ -5,4 +5,4 @@ require_once './objects/Login.php';
 
 Login::logoff();
 
-header("location: {$global['youPHPTubeStorageURL']}");
+header("location: {$global['aVideoStorageURL']}");

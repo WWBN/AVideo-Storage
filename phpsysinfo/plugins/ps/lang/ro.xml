@@ -10,7 +10,7 @@
     <exp>Stare proces</exp>
   </expression>
   <expression id="plugin_ps_002" name="ps_command">
-    <exp>Comanda</exp>
+    <exp>Produto</exp>
   </expression>
   <expression id="plugin_ps_003" name="ps_pid">
     <exp>ID Proces</exp>

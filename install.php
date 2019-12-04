@@ -39,11 +39,11 @@ if (!empty($status) && !empty($status->site->secret)) {
 global \$global;
 
 \$global['secret'] = '{$status->site->secret}';
-\$global['youPHPTubeStorageURL'] = '{$status->site->url}';
-\$global['youPHPTubeURL'] = '" . $_POST['inputURL'] . "';
+\$global['aVideoStorageURL'] = '{$status->site->url}';
+\$global['aVideoURL'] = '" . $_POST['inputURL'] . "';
 \$global['videos_directory'] = '{$global['videos_directory']}';
 
-session_name(md5(\$global['youPHPTubeStorageURL']));
+session_name(md5(\$global['aVideoStorageURL']));
 session_start();";
 
     $return = @file_put_contents($configFile, $data);
@@ -61,9 +61,9 @@ session_start();";
     ?>
     <div class="container">
         <div class="alert alert-info" role="alert">
-            <h4 class="alert-heading">Welcome to the YouPHPTube Storage!</h4>
+            <h4 class="alert-heading">Welcome to the AVideo Storage!</h4>
             Please, make sure you have the YPTStorage plugin to be able to use this server as a storage for your videos.<br>
-            You can purchase the plugin <a href="https://www.youphptube.com/plugins/">here</a> 
+            You can purchase the plugin <a href="https://www.avideo.com/plugins/">here</a> 
         </div>
         <form class="form-signin" method="post">
             <h1 class="h3 mb-3 font-weight-normal">Please Type Your Streamer URL</h1>
@@ -86,11 +86,11 @@ session_start();";
 global \$global;
 
 \$global['secret'] = '********************************';
-\$global['youPHPTubeStorageURL'] = '{$status->site->url}';
-\$global['youPHPTubeURL'] = '" . $_POST['inputURL'] . "';
+\$global['aVideoStorageURL'] = '{$status->site->url}';
+\$global['aVideoURL'] = '" . $_POST['inputURL'] . "';
 \$global['videos_directory'] = '{$global['videos_directory']}';
 
-session_name(md5(\$global['youPHPTubeStorageURL']));
+session_name(md5(\$global['aVideoStorageURL']));
 session_start();";
             ?>
 

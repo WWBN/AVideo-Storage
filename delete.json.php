@@ -21,7 +21,7 @@ header('Content-Type: application/json');
 $obj = new stdClass();
 $obj->error = true;
 $obj->msg = "";
-$obj->youPHPTubeStorageURL = $global['youPHPTubeStorageURL'];
+$obj->aVideoStorageURL = $global['aVideoStorageURL'];
 $obj->filename = "";
 
 if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {

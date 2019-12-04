@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 $obj = new stdClass();
 $obj->error = true;
 $obj->msg = "";
-$obj->youPHPTubeStorageURL = $global['youPHPTubeStorageURL'];
+$obj->aVideoStorageURL = $global['aVideoStorageURL'];
 $obj->filename = "";
 $obj->filesize = 0;
 
@@ -21,7 +21,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $backupDir = "{$videosDir}{$filename}";
     if (is_dir($backupDir)) {
         $backupFile = "{$videosDir}{$obj->tarFileName}";
-        $obj->tarURL = "{$global['youPHPTubeStorageURL']}videos/{$obj->tarFileName}";
+        $obj->tarURL = "{$global['aVideoStorageURL']}videos/{$obj->tarFileName}";
         $obj->tarFile = $backupFile;
         if (file_exists($obj->tarFile)) {
             $obj->error = false;

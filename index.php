@@ -8,7 +8,7 @@ if(file_exists($configFile)){
     
     $exists = true;
 
-    $status = url_get_contents($global['youPHPTubeURL'] . 'plugin/YPTStorage/status.php?url='.urlencode($global['youPHPTubeStorageURL']));
+    $status = url_get_contents($global['aVideoURL'] . 'plugin/YPTStorage/status.php?url='.urlencode($global['aVideoStorageURL']));
     $status = json_decode($status);
 
     if (!empty($_REQUEST['inputUser']) && !empty($_REQUEST['inputPassword'])) {

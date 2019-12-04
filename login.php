@@ -32,7 +32,7 @@
 </style>
 <div class="container">
     <form class="form-signin" method="post">
-        <img class="mb-4" src="<?php echo $global['youPHPTubeURL']; ?>videos/userPhoto/logo.png" alt="">
+        <img class="mb-4" src="<?php echo $global['aVideoURL']; ?>videos/userPhoto/logo.png" alt="">
         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
         <label for="inputUser" class="sr-only">User address</label>
         <input type="text" id="inputUser" name="inputUser" class="form-control" placeholder="User address" required autofocus>
