@@ -59,7 +59,7 @@ You will need the folowing prerequisites.
 
 Make sure you enable it before your installation, this is necessary because the Storage installation will check your plugin during the configuration assistant
 
-If you do not have the plugin yet, get it [here](https://www.avideo.com/plugins/)
+If you do not have the plugin yet, get it [here](https://plugins.avideo.com/)
 
 ### Access your storage server
 
