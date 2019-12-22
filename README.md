@@ -13,7 +13,7 @@ You can install as many storages as you want, without any geographical restricti
 
 One of the advantages is that when a user is watching one of your videos he will use the bandwidth of the storage, so it will facilitate your server load balancing on the amount of the used bandwidth and speed due to the location of each video.
 
-Please check this scenario to try to make the propose of this project clear: https://github.com/AVideo/AVideo-Storage/wiki/Scenario-Description
+Please check this scenario to try to make the propose of this project clear: https://github.com/WWBN/AVideo-Storage/wiki/Scenario-Description
 
 ## Installation 
 
