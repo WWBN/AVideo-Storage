@@ -24,7 +24,7 @@ You can install as many storage nodes as you want, without any geographical rest
 
 Please check this scenario to try to make the propose of this project clear: 
 
-https://github.com/WWBN/AVideo-Storage/wiki/Scenario-Description
+<a href="https://github.com/WWBN/AVideo-Storage/wiki/Scenario-Description">https://github.com/WWBN/AVideo-Storage/wiki/Scenario-Description</a>
 
 ## Installation 
 
