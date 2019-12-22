@@ -1,6 +1,9 @@
 <img src="https://platform.avideo.com/website/assets/151/images/avideo_storage.png"/>
+
 #
+
 # AVideo-Storage
+
 ## What is it
 
 It is a Simple Storage Service for the AVideo Sites. It is designed to make web-scale storage. 
