@@ -1,7 +1,4 @@
 <img src="https://platform.avideo.com/website/assets/151/images/avideo_storage.png"/>
-
-#
-
 # AVideo-Storage
 
 ## AVideo Simple Storage is a Storage Service for the AVideo Platform Instances. 
