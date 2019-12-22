@@ -4,9 +4,9 @@
 
 # AVideo-Storage
 
-## What is it
+## AVideo Simple Storage is a Storage Service for the AVideo Platform Instances. 
 
-It is a Simple Storage Service for the AVideo Sites. It is designed to make web-scale storage. 
+It is designed to make web-scale storage. 
 ie with this service you will have unlimited storage capacity and low cost. 
 For example when one of your storage is full, just plug in one more storage and your videos will continue to be saved to the new storage.
 
