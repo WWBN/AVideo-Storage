@@ -1,19 +1,30 @@
+<img src="https://platform.avideo.com/website/assets/151/images/avideo_storage.png"/>
+
 # AVideo-Storage
 
-## What is it
+## AVideo Simple Storage is a Storage Service for the AVideo Platform Instances. 
 
-It is a Simple Storage Service for the AVideo Sites. It is designed to make web-scale storage. 
-ie with this service you will have unlimited storage capacity and low cost. 
+### It is designed to make web-scaleble storage. 
+
+ie with this service you will have unlimited storage capacity and low cost.
+
 For example when one of your storage is full, just plug in one more storage and your videos will continue to be saved to the new storage.
 
 This service is designed to replace our current S3, BackBlaze B2 and FTP plugins, but with much more integration with our services, 
-besides you will have no restriction on the amount of storages used
+besides you will have no restriction on the amount of storages used.
 
-You can install as many storages as you want, without any geographical restrictions.
+You can install as many storage nodes as you want, without any geographical restrictions.
 
-One of the advantages is that when a user is watching one of your videos he will use the bandwidth of the storage, so it will facilitate your server load balancing on the amount of the used bandwidth and speed due to the location of each video.
+## Benefits
+* Storage scales as needed
+* Minimal start up investment and cost
+* Uses the bandwidth of the storage
+* Facilitates your server load balancing on the amount of the used bandwidth 
+* Can speed up delivery based on location of each video
 
-Please check this scenario to try to make the propose of this project clear: https://github.com/AVideo/AVideo-Storage/wiki/Scenario-Description
+Please check this scenario to try to make the propose of this project clear: 
+
+<a href="https://github.com/WWBN/AVideo-Storage/wiki/Scenario-Description">https://github.com/WWBN/AVideo-Storage/wiki/Scenario-Description</a>
 
 ## Installation 
 
@@ -32,10 +43,10 @@ You will need the folowing prerequisites.
 ### Copy and Paste
 
 #### Ubuntu 16.04
-    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.0 libapache2-mod-php7.0 php7.0-curl php7.0-gd php7.0-intl php-zip php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && git clone https://github.com/AVideo/AVideo-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/AVideo-Storage/videos && sudo chown www-data:www-data /var/www/html/AVideo-Storage/videos
+    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.0 libapache2-mod-php7.0 php7.0-curl php7.0-gd php7.0-intl php-zip php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && git clone https://github.com/WWBN/AVideo-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/AVideo-Storage/videos && sudo chown www-data:www-data /var/www/html/AVideo-Storage/videos
     
 #### Ubuntu 18.04
-    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.2 libapache2-mod-php7.2 php7.2-curl php7.2-gd php7.2-intl php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && sudo git clone https://github.com/AVideo/AVideo-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/AVideo-Storage/videos && sudo chown www-data:www-data /var/www/html/AVideo-Storage/videos
+    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.2 libapache2-mod-php7.2 php7.2-curl php7.2-gd php7.2-intl php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && sudo git clone https://github.com/WWBN/AVideo-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/AVideo-Storage/videos && sudo chown www-data:www-data /var/www/html/AVideo-Storage/videos
 
 ### Install apache xsendfile
 
@@ -59,7 +70,7 @@ You will need the folowing prerequisites.
 
 Make sure you enable it before your installation, this is necessary because the Storage installation will check your plugin during the configuration assistant
 
-If you do not have the plugin yet, get it [here](https://www.avideo.com/plugins/)
+If you do not have the plugin yet, get it [here](https://plugins.avideo.com/)
 
 ### Access your storage server
 
