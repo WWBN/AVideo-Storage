@@ -1,5 +1,15 @@
 <?php
 
+// to support the old configuration file
+if (empty($global['aVideoStorageURL']) && !empty($global['youPHPTubeStorageURL'])) {
+    $global['aVideoStorageURL'] = $global['youPHPTubeStorageURL'];
+}
+if (empty($global['aVideoURL']) && !empty($global['youPHPTubeURL'])) {
+    $global['aVideoURL'] = $global['youPHPTubeURL'];
+}
+
+
+
 ini_set('memory_limit', '-1');
 
 function getPathToApplication() {
@@ -13,11 +23,11 @@ function getURLToApplication() {
     return $url;
 }
 
-function url_get_contents($Url, $ctx = "", $timeout=300) {
+function url_get_contents($Url, $ctx = "", $timeout = 300) {
     global $global, $mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, $mysqlPort;
     $session = $_SESSION;
     session_write_close();
-    if(!empty($timeout)){
+    if (!empty($timeout)) {
         ini_set('default_socket_timeout', $timeout);
     }
     if (empty($ctx)) {
@@ -28,9 +38,9 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
                 "allow_self_signed" => true,
             ),
         );
-        if(!empty($timeout)){
+        if (!empty($timeout)) {
             ini_set('default_socket_timeout', $timeout);
-            $opts['http']=array('timeout' => $timeout);
+            $opts['http'] = array('timeout' => $timeout);
         }
         $context = stream_context_create($opts);
     } else {
@@ -55,9 +65,9 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        if(!empty($timeout)){
-            curl_setopt($ch,CURLOPT_TIMEOUT,$timeout);
-            curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout+10);
+        if (!empty($timeout)) {
+            curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout + 10);
         }
         $output = curl_exec($ch);
         curl_close($ch);
@@ -74,7 +84,6 @@ function url_get_contents($Url, $ctx = "", $timeout=300) {
     $_SESSION = $session;
     return $result;
 }
-
 
 function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     global $global;
