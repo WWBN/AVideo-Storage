@@ -1,15 +1,4 @@
 <?php
-
-// to support the old configuration file
-if (empty($global['aVideoStorageURL']) && !empty($global['youPHPTubeStorageURL'])) {
-    $global['aVideoStorageURL'] = $global['youPHPTubeStorageURL'];
-}
-if (empty($global['aVideoURL']) && !empty($global['youPHPTubeURL'])) {
-    $global['aVideoURL'] = $global['youPHPTubeURL'];
-}
-
-
-
 ini_set('memory_limit', '-1');
 
 function getPathToApplication() {
