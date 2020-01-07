@@ -14,7 +14,7 @@ function getURLToApplication() {
 
 
 function url_get_contents($Url, $ctx = "", $timeout = 0) {
-    global $global, $mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, $mysqlPort;
+    global $global;
     if (filter_var($Url, FILTER_VALIDATE_URL)) {
 
         $session = $_SESSION;
@@ -22,7 +22,6 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
         if (!empty($timeout)) {
             ini_set('default_socket_timeout', $timeout);
         }
-        $global['mysqli']->close();
     }
     if (empty($ctx)) {
         $opts = array(
@@ -47,7 +46,6 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
                 if (filter_var($Url, FILTER_VALIDATE_URL)) {
                     _session_start();
                     $_SESSION = $session;
-                    _mysql_connect();
                 }
                 return remove_utf8_bom($tmp);
             }
@@ -69,7 +67,6 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
         if (filter_var($Url, FILTER_VALIDATE_URL)) {
             _session_start();
             $_SESSION = $session;
-            _mysql_connect();
         }
         return remove_utf8_bom($output);
     }
@@ -77,7 +74,6 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
     if (filter_var($Url, FILTER_VALIDATE_URL)) {
         _session_start();
         $_SESSION = $session;
-        _mysql_connect();
     }
     return remove_utf8_bom($result);
 }
@@ -140,21 +136,6 @@ function _session_start(Array $options = array()) {
     } catch (Exception $exc) {
         _error_log($exc->getTraceAsString());
         return false;
-    }
-}
-
-function _mysql_connect() {
-    global $global, $mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, $mysqlPort;
-    if (is_object($global['mysqli']) && empty(@$global['mysqli']->ping())) {
-        try {
-            $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
-            if (!empty($global['mysqli_charset'])) {
-                $global['mysqli']->set_charset($global['mysqli_charset']);
-            }
-        } catch (Exception $exc) {
-            _error_log($exc->getTraceAsString());
-            return false;
-        }
     }
 }
 
