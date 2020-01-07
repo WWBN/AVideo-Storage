@@ -12,12 +12,17 @@ function getURLToApplication() {
     return $url;
 }
 
-function url_get_contents($Url, $ctx = "", $timeout = 300) {
+
+function url_get_contents($Url, $ctx = "", $timeout = 0) {
     global $global, $mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, $mysqlPort;
-    $session = $_SESSION;
-    session_write_close();
-    if (!empty($timeout)) {
-        ini_set('default_socket_timeout', $timeout);
+    if (filter_var($Url, FILTER_VALIDATE_URL)) {
+
+        $session = $_SESSION;
+        session_write_close();
+        if (!empty($timeout)) {
+            ini_set('default_socket_timeout', $timeout);
+        }
+        $global['mysqli']->close();
     }
     if (empty($ctx)) {
         $opts = array(
@@ -39,14 +44,15 @@ function url_get_contents($Url, $ctx = "", $timeout = 300) {
         try {
             $tmp = @file_get_contents($Url, false, $context);
             if ($tmp != false) {
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
+                if (filter_var($Url, FILTER_VALIDATE_URL)) {
+                    _session_start();
+                    $_SESSION = $session;
+                    _mysql_connect();
                 }
-                $_SESSION = $session;
-                return $tmp;
+                return remove_utf8_bom($tmp);
             }
         } catch (ErrorException $e) {
-            
+            return "url_get_contents: " . $e->getMessage();
         }
     } else if (function_exists('curl_init')) {
         $ch = curl_init();
@@ -60,18 +66,20 @@ function url_get_contents($Url, $ctx = "", $timeout = 300) {
         }
         $output = curl_exec($ch);
         curl_close($ch);
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+        if (filter_var($Url, FILTER_VALIDATE_URL)) {
+            _session_start();
+            $_SESSION = $session;
+            _mysql_connect();
         }
-        $_SESSION = $session;
-        return $output;
+        return remove_utf8_bom($output);
     }
     $result = @file_get_contents($Url, false, $context);
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
+    if (filter_var($Url, FILTER_VALIDATE_URL)) {
+        _session_start();
+        $_SESSION = $session;
+        _mysql_connect();
     }
-    $_SESSION = $session;
-    return $result;
+    return remove_utf8_bom($result);
 }
 
 function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
@@ -122,4 +130,36 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     }
 
     return $obj;
+}
+
+function _session_start(Array $options = array()) {
+    try {
+        if (session_status() == PHP_SESSION_NONE) {
+            return session_start($options);
+        }
+    } catch (Exception $exc) {
+        _error_log($exc->getTraceAsString());
+        return false;
+    }
+}
+
+function _mysql_connect() {
+    global $global, $mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, $mysqlPort;
+    if (is_object($global['mysqli']) && empty(@$global['mysqli']->ping())) {
+        try {
+            $global['mysqli'] = new mysqli($mysqlHost, $mysqlUser, $mysqlPass, $mysqlDatabase, @$mysqlPort);
+            if (!empty($global['mysqli_charset'])) {
+                $global['mysqli']->set_charset($global['mysqli_charset']);
+            }
+        } catch (Exception $exc) {
+            _error_log($exc->getTraceAsString());
+            return false;
+        }
+    }
+}
+
+function remove_utf8_bom($text){
+    $bom = pack('H*','EFBBBF');
+    $text = preg_replace("/^$bom/", '', $text);
+    return $text;
 }
