@@ -32,6 +32,7 @@ class Login {
         $context = stream_context_create($opts);
 
         $result = @file_get_contents($aVideoURL . 'login', false, $context);
+        $result = remove_utf8_bom($result);
         if (empty($result)) {
             $object = new stdClass();
             $object->isLogged = false;
