@@ -36,8 +36,9 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         $file = url_get_contents($url); // to get file
         error_log("post.json.php: Download done");
         if ($file) {
-            error_log("post.json.php: is file");
-            if (strlen($file) > 1000) {
+            $size = strlen($file);
+            error_log("post.json.php: is file ".humanFileSize($size));
+            if (strlen($size) > 1000) {
                 $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
                 if (file_put_contents($obj->filename, $file)) {
                     $obj->error = false;
