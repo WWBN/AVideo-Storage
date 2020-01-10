@@ -38,7 +38,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         if ($file) {
             $size = strlen($file);
             error_log("post.json.php: is file {$size} = ".humanFileSize($size));
-            if (strlen($size) > 1000) {
+            if ($size > 1000) {
                 $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
                 if (file_put_contents($obj->filename, $file)) {
                     $obj->error = false;
