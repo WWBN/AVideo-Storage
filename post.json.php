@@ -19,7 +19,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $name = basename($url); // to get file name
     $ext = pathinfo($url, PATHINFO_EXTENSION); // to get extension
     $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
-    if(!empty($_REQUEST['source_secret'])){
+    if (!empty($_REQUEST['source_secret'])) {
         $query = parse_url($url, PHP_URL_QUERY);
         // Returns a string if the URL has parameters or NULL if not
         if ($query) {
@@ -37,12 +37,17 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         error_log("post.json.php: Download done");
         if ($file) {
             error_log("post.json.php: is file");
-            $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
-            if (file_put_contents($obj->filename, $file)) {
-                $obj->error = false;
-                $obj->msg = "";
-            } else {
-                $obj->msg = "Error on save file {$obj->filename}";
+            if (strlen($file) > 1000) {
+                $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
+                if (file_put_contents($obj->filename, $file)) {
+                    $obj->error = false;
+                    $obj->msg = "";
+                } else {
+                    $obj->msg = "Error on save file {$obj->filename}";
+                }
+            }else{
+                error_log("post.json.php: file too small: {$file}");
+                $obj->msg = "Error on download URL {$url}";
             }
         } else {
             error_log("post.json.php: empty file");
@@ -50,7 +55,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         }
     } else if (strtolower($ext) === 'tgz') {
         $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
-        
+
         error_log("post.json.php: Download HLS {$obj->filename}");
         $obj = moveFromSiteToLocalHLS($url, $obj->filename);
     } else {
