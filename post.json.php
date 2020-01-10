@@ -40,14 +40,16 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             error_log("post.json.php: is file {$size} = ".humanFileSize($size));
             if ($size > 1000) {
                 $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
-                $destinationSize = filesize($obj->filename);
+                $destinationSize = @filesize($obj->filename);
                 if($destinationSize>1000){
                     $obj->msg = "Error on save file {$obj->filename} is there already {$destinationSize} = ".  humanFileSize($destinationSize);
+                    error_log("post.json.php: {$obj->msg}");
                 }else if (file_put_contents($obj->filename, $file)) {
                     $obj->error = false;
                     $obj->msg = "";
                 } else {
                     $obj->msg = "Error on save file {$obj->filename}";
+                    error_log("post.json.php: {$obj->msg}");
                 }
             }else{
                 error_log("post.json.php: file too small: {$file}");
