@@ -140,6 +140,9 @@ function _session_start(Array $options = array()) {
 }
 
 function remove_utf8_bom($text){
+    if(strlen($text)>1000000){
+        return $text;
+    }
     $bom = pack('H*','EFBBBF');
     $text = preg_replace("/^$bom/", '', $text);
     return $text;
