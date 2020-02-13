@@ -17,7 +17,7 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
     global $global;
     if (filter_var($Url, FILTER_VALIDATE_URL)) {
 
-        $session = $_SESSION;
+        $session = @$_SESSION;
         session_write_close();
         if (!empty($timeout)) {
             ini_set('default_socket_timeout', $timeout);
