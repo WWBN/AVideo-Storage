@@ -52,7 +52,8 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
         } catch (ErrorException $e) {
             return "url_get_contents: " . $e->getMessage();
         }
-    } else if (function_exists('curl_init')) {
+    } 
+    if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $Url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
