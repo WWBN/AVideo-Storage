@@ -47,6 +47,9 @@ You will need the folowing prerequisites.
     
 #### Ubuntu 18.04
     sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.2 libapache2-mod-php7.2 php7.2-curl php7.2-gd php7.2-intl php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && sudo git clone https://github.com/WWBN/AVideo-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/AVideo-Storage/videos && sudo chown www-data:www-data /var/www/html/AVideo-Storage/videos
+       
+#### Ubuntu 20.04
+    sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install nano curl apache2 php7.4 libapache2-mod-php7.4 php7.4-curl php7.4-gd php7.4-intl php-xml php-mbstring git -y && a2enmod headers && service apache2 restart && cd /var/www/html && sudo git clone https://github.com/WWBN/AVideo-Storage.git && sudo a2enmod rewrite && sudo mkdir /var/www/html/AVideo-Storage/videos && sudo chown www-data:www-data /var/www/html/AVideo-Storage/videos
 
 ### Install apache xsendfile
 
