@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 $object = new stdClass();
 $object->error = true;
-$object->path_parts = array();
+$object->filename = "";
 $object->size = 0;
 $object->msg = "";
 
@@ -22,6 +22,7 @@ if (empty($_GET['filename'])) {
     die(json_encode($object));
 }
 
+$object->filename = $_GET['filename'];
 
 $object->size = getUsageFromFilename($_GET['filename']);
 
