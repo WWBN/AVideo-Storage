@@ -135,7 +135,7 @@ function _session_start(Array $options = array()) {
             return session_start($options);
         }
     } catch (Exception $exc) {
-        _error_log($exc->getTraceAsString());
+        error_log($exc->getTraceAsString());
         return false;
     }
 }
@@ -169,22 +169,22 @@ function getDirSize($dir) {
     if(!is_dir($dir)){
         $dir = dirname($dir);
     }
-    _error_log("getDirSize: start {$dir}");
+    error_log("getDirSize: start {$dir}");
     $command = "du -sb {$dir}";
     exec($command . " < /dev/null 2>&1", $output, $return_val);
     if ($return_val !== 0) {
-        _error_log("getDirSize: ERROR ON Command {$command}");
+        error_log("getDirSize: ERROR ON Command {$command}");
         return 0;
     } else {
         if (!empty($output[0])) {
             preg_match("/^([0-9]+).*/", $output[0], $matches);
         }
         if (!empty($matches[1])) {
-            _error_log("getDirSize: found {$matches[1]} from - {$output[0]}");
+            error_log("getDirSize: found {$matches[1]} from - {$output[0]}");
             return intval($matches[1]);
         }
 
-        _error_log("getDirSize: ERROR on pregmatch {$output[0]}");
+        error_log("getDirSize: ERROR on pregmatch {$output[0]}");
         return 0;
     }
 }
