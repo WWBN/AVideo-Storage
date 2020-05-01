@@ -164,3 +164,52 @@ function humanFileSize($size, $unit = "") {
 
     return number_format($size) . " bytes";
 }
+
+function getDirSize($dir) {
+    if(!is_dir($dir)){
+        $dir = dirname($dir);
+    }
+    _error_log("getDirSize: start {$dir}");
+    $command = "du -sb {$dir}";
+    exec($command . " < /dev/null 2>&1", $output, $return_val);
+    if ($return_val !== 0) {
+        _error_log("getDirSize: ERROR ON Command {$command}");
+        return 0;
+    } else {
+        if (!empty($output[0])) {
+            preg_match("/^([0-9]+).*/", $output[0], $matches);
+        }
+        if (!empty($matches[1])) {
+            _error_log("getDirSize: found {$matches[1]} from - {$output[0]}");
+            return intval($matches[1]);
+        }
+
+        _error_log("getDirSize: ERROR on pregmatch {$output[0]}");
+        return 0;
+    }
+}
+
+function getUsageFromFilename($filename, $dir = "") {
+    global $global;
+    $filename = preg_replace("/[^a-z0-9._-]/i", "", $_GET['filename']);
+    if (empty($dir)) {
+        $dir = $global['videos_directory'];
+    }
+    $pos = strrpos($dir, '/');
+    $dir .= (($pos === false) ? "/" : "");
+    $totalSize = 0;
+    error_log("getUsageFromFilename: start {$dir}{$filename}");
+    $files = glob("{$dir}{$filename}*");
+    foreach ($files as $f) {
+        if (is_dir($f)) {
+            error_log("getUsageFromFilename: {$f} is Dir");
+            $dirSize = getDirSize($f);
+            $totalSize += $dirSize;
+        } else if (is_file($f)) {
+            $filesize = filesize($f);
+            error_log("getUsageFromFilename: {$f} is File ({$filesize})");
+            $totalSize += $filesize;
+        }
+    }
+    return $totalSize;
+}
