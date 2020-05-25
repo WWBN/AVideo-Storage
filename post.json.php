@@ -69,6 +69,6 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     }
 }
 $json = json_encode($obj);
-error_log($json);
+error_log("post.json.php: response {$json}");
 die($json);
 ?>
