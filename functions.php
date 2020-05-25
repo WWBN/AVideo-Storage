@@ -125,7 +125,8 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
             error_log("moveFromSiteToLocalHLS: Error on command {$cmd} " . json_encode($output));
         }
     }
-
+    
+    error_log("moveFromSiteToLocalHLS: Done ".json_encode($obj));
     return $obj;
 }
 
