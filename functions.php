@@ -214,3 +214,69 @@ function getUsageFromFilename($filename, $dir = "") {
     }
     return $totalSize;
 }
+
+
+/**
+ * Returns the size of a file without downloading it, or -1 if the file
+ * size could not be determined.
+ *
+ * @param $url - The location of the remote file to download. Cannot
+ * be null or empty.
+ *
+ * @return The size of the file referenced by $url, or false if the size
+ * could not be determined.
+ */
+function getUsageFromURL($url) {
+    global $global;
+
+    if (!empty($global['doNotGetUsageFromURL'])) { // manually add this variable in your configuration.php file to not scan your video usage
+        return 0;
+    }
+
+    error_log("getUsageFromURL: start ({$url})");
+    // Assume failure.
+    $result = false;
+
+    $curl = curl_init($url);
+
+    error_log("getUsageFromURL: curl_init ");
+
+    try {
+        // Issue a HEAD request and follow any redirects.
+        curl_setopt($curl, CURLOPT_NOBODY, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
+        //curl_setopt($curl, CURLOPT_USERAGENT, get_user_agent_string());
+        $data = curl_exec($curl);
+    } catch (Exception $exc) {
+        echo $exc->getTraceAsString();
+        error_log("getUsageFromURL: ERROR " . $exc->getMessage());
+        error_log("getUsageFromURL: ERROR " . curl_errno($curl));
+        error_log("getUsageFromURL: ERROR " . curl_error($curl));
+    }
+
+    if ($data) {
+        error_log("getUsageFromURL: response header " . $data);
+        $content_length = "unknown";
+        $status = "unknown";
+
+        if (preg_match("/^HTTP\/1\.[01] (\d\d\d)/", $data, $matches)) {
+            $status = (int) $matches[1];
+        }
+
+        if (preg_match("/Content-Length: (\d+)/", $data, $matches)) {
+            $content_length = (int) $matches[1];
+        }
+
+        // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+        if ($status == 200 || ($status > 300 && $status <= 308)) {
+            $result = $content_length;
+        }
+    } else {
+        error_log("getUsageFromURL: ERROR no response data " . curl_error($curl));
+    }
+
+    curl_close($curl);
+    return $result;
+}

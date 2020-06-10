@@ -42,6 +42,12 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                 $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
                 $destinationSize = @filesize($obj->filename);
                 if($destinationSize>1000){
+                    if($size == $destinationSize){
+                        $obj->error = false;
+                        $obj->msg = "The file {$obj->filename} is there already {$destinationSize} = ".  humanFileSize($destinationSize);
+                    }else{
+                        $obj->msg = "Error on save file {$obj->filename} is there already {$destinationSize} = ".  humanFileSize($destinationSize);
+                    }
                     $obj->msg = "Error on save file {$obj->filename} is there already {$destinationSize} = ".  humanFileSize($destinationSize);
                     error_log("post.json.php: {$obj->msg}");
                 }else if (file_put_contents($obj->filename, $file)) {
