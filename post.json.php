@@ -49,7 +49,6 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                         $obj->error = true;
                         $obj->msg = "Error the file {$obj->filename} is there already: we download ({$size}) = ". humanFileSize($size)." and the we found on the storage {$destinationSize} = ".  humanFileSize($destinationSize);
                     }
-                    $obj->msg = "Error on save file {$obj->filename} is there already {$destinationSize} = ".  humanFileSize($destinationSize);
                     error_log("post.json.php: {$obj->msg}");
                 }else if (file_put_contents($obj->filename, $file)) {
                     $obj->error = false;
