@@ -10,6 +10,8 @@ $obj->msg = "";
 $obj->aVideoStorageURL = $global['aVideoStorageURL'];
 $obj->filename = "";
 
+ini_set('max_execution_time', '0');
+ini_set('memory_limit', '-1');
 if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $obj->msg = "Invalid secret";
 } else if (empty($_REQUEST['video_url'])) {
