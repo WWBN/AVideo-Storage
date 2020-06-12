@@ -1,4 +1,5 @@
 <?php
+
 ini_set('memory_limit', '-1');
 
 function getPathToApplication() {
@@ -11,7 +12,6 @@ function getURLToApplication() {
     $url = $url[0];
     return $url;
 }
-
 
 function url_get_contents($Url, $ctx = "", $timeout = 0) {
     global $global;
@@ -52,7 +52,7 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
         } catch (ErrorException $e) {
             return "url_get_contents: " . $e->getMessage();
         }
-    } 
+    }
     if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $Url);
@@ -87,11 +87,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     $obj->aVideoStorageURL = $global['aVideoStorageURL'];
     $obj->filename = $filename;
     if (!empty($newTry) || !file_exists($filename) || filesize($filename) < 1000000) { // less then 1 mb
-        $cmd = "wget {$url} -O {$filename}";
-
-        error_log("moveFromSiteToLocalHLS: Get HLS Start ({$cmd})");
-        //echo $cmd;
-        exec($cmd);
+        $wgetResp = wget($url, $filename);
         sleep(10); // wait
     } else {
         error_log("moveFromSiteToLocalHLS: File Exists {$filename}");
@@ -125,8 +121,8 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
             error_log("moveFromSiteToLocalHLS: Error on command {$cmd} " . json_encode($output));
         }
     }
-    
-    error_log("moveFromSiteToLocalHLS: Done ".json_encode($obj));
+
+    error_log("moveFromSiteToLocalHLS: Done " . json_encode($obj));
     return $obj;
 }
 
@@ -141,11 +137,11 @@ function _session_start(Array $options = array()) {
     }
 }
 
-function remove_utf8_bom($text){
-    if(strlen($text)>1000000){
+function remove_utf8_bom($text) {
+    if (strlen($text) > 1000000) {
         return $text;
     }
-    $bom = pack('H*','EFBBBF');
+    $bom = pack('H*', 'EFBBBF');
     $text = preg_replace("/^$bom/", '', $text);
     return $text;
 }
@@ -167,7 +163,7 @@ function humanFileSize($size, $unit = "") {
 }
 
 function getDirSize($dir) {
-    if(!is_dir($dir)){
+    if (!is_dir($dir)) {
         $dir = dirname($dir);
     }
     error_log("getDirSize: start {$dir}");
@@ -214,7 +210,6 @@ function getUsageFromFilename($filename, $dir = "") {
     }
     return $totalSize;
 }
-
 
 /**
  * Returns the size of a file without downloading it, or -1 if the file
@@ -279,4 +274,15 @@ function getUsageFromURL($url) {
 
     curl_close($curl);
     return $result;
+}
+
+function wget($url, $filename) {
+    $cmd = "wget {$url} -O {$filename}";
+    error_log("wget Start ({$cmd}) ");
+    //echo $cmd;
+    exec($cmd);
+    if(filesize($filename)>1000000){
+        return true;
+    }
+    return false;
 }
