@@ -30,56 +30,62 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             $url .= "?secret={$_REQUEST['source_secret']}";
         }
     }
-    $extParts = explode("?", $ext);
-    $ext = $extParts[0];
-    error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
-    if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
-        $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
-        $wgetResp = wget($url, $obj->filename);
-        if ($wgetResp) {
-            $obj->error = false;
-            $obj->msg = "";
-        } else {
-            error_log("post.json.php: get URL {$url}");
-            $file = url_get_contents($url); // to get file
-            error_log("post.json.php: Download done");
-            if ($file) {
-                $size = strlen($file);
-                error_log("post.json.php: is file {$size} = " . humanFileSize($size));
-                if ($size > 1000) {
-                    $destinationSize = @filesize($obj->filename);
-                    if ($destinationSize > 1000) {
-                        if ($size == $destinationSize) {
+    if(isLocked($url)){
+        $obj->msg = "We still processing the URL {$url}";
+    }else{
+        lockFile($url);
+        $extParts = explode("?", $ext);
+        $ext = $extParts[0];
+        error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
+        if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
+            $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
+            $wgetResp = wget($url, $obj->filename);
+            if ($wgetResp) {
+                $obj->error = false;
+                $obj->msg = "";
+            } else {
+                error_log("post.json.php: get URL {$url}");
+                $file = url_get_contents($url); // to get file
+                error_log("post.json.php: Download done");
+                if ($file) {
+                    $size = strlen($file);
+                    error_log("post.json.php: is file {$size} = " . humanFileSize($size));
+                    if ($size > 1000) {
+                        $destinationSize = @filesize($obj->filename);
+                        if ($destinationSize > 1000) {
+                            if ($size == $destinationSize) {
+                                $obj->error = false;
+                                $obj->msg = "The file {$obj->filename} is there already but they look the same, we download ({$size}) = " . humanFileSize($size) . " and the we found on the storage {$destinationSize} = " . humanFileSize($destinationSize);
+                            } else {
+                                $obj->error = true;
+                                $obj->msg = "Error the file {$obj->filename} is there already: we download ({$size}) = " . humanFileSize($size) . " and the we found on the storage {$destinationSize} = " . humanFileSize($destinationSize);
+                            }
+                            error_log("post.json.php: {$obj->msg}");
+                        } else if (file_put_contents($obj->filename, $file)) {
                             $obj->error = false;
-                            $obj->msg = "The file {$obj->filename} is there already but they look the same, we download ({$size}) = " . humanFileSize($size) . " and the we found on the storage {$destinationSize} = " . humanFileSize($destinationSize);
+                            $obj->msg = "";
                         } else {
-                            $obj->error = true;
-                            $obj->msg = "Error the file {$obj->filename} is there already: we download ({$size}) = " . humanFileSize($size) . " and the we found on the storage {$destinationSize} = " . humanFileSize($destinationSize);
+                            $obj->msg = "Error on save file {$obj->filename}";
+                            error_log("post.json.php: {$obj->msg}");
                         }
-                        error_log("post.json.php: {$obj->msg}");
-                    } else if (file_put_contents($obj->filename, $file)) {
-                        $obj->error = false;
-                        $obj->msg = "";
                     } else {
-                        $obj->msg = "Error on save file {$obj->filename}";
-                        error_log("post.json.php: {$obj->msg}");
+                        error_log("post.json.php: file too small: {$file}");
+                        $obj->msg = "Error on download URL {$url}";
                     }
                 } else {
-                    error_log("post.json.php: file too small: {$file}");
+                    error_log("post.json.php: empty file");
                     $obj->msg = "Error on download URL {$url}";
                 }
-            } else {
-                error_log("post.json.php: empty file");
-                $obj->msg = "Error on download URL {$url}";
             }
-        }
-    } else if (strtolower($ext) === 'tgz') {
-        $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
+        } else if (strtolower($ext) === 'tgz') {
+            $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
 
-        error_log("post.json.php: Download HLS {$obj->filename}");
-        $obj = moveFromSiteToLocalHLS($url, $obj->filename);
-    } else {
-        $obj->msg = "Extension Not Allowed {$ext}";
+            error_log("post.json.php: Download HLS {$obj->filename}");
+            $obj = moveFromSiteToLocalHLS($url, $obj->filename);
+        } else {
+            $obj->msg = "Extension Not Allowed {$ext}";
+        }
+        removeLock($url);
     }
 }
 $json = json_encode($obj);

@@ -281,8 +281,35 @@ function wget($url, $filename) {
     error_log("wget Start ({$cmd}) ");
     //echo $cmd;
     exec($cmd);
-    if(filesize($filename)>1000000){
+    if (filesize($filename) > 1000000) {
         return true;
     }
     return false;
+}
+
+function lockFile($url) {
+    global $global;
+    $name = md5($url);
+    return "{$global['videos_directory']}lock_{$url}.lock";
+}
+
+function lock($url) {
+    $file = self::getLogFile($url);
+    return file_put_contents($file, time() . PHP_EOL, FILE_APPEND | LOCK_EX);
+}
+
+function removeLock($url) {
+    $filename = self::getLogFile($url);
+    if (!file_exists($filename)) {
+        return false;
+    }
+    return unlink($filename);
+}
+
+function isLocked($url) {
+    $filename = self::getLogFile($url);
+    if (!file_exists($filename)) {
+        return false;
+    }
+    return true;
 }
