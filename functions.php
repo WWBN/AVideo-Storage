@@ -277,10 +277,15 @@ function getUsageFromURL($url) {
 }
 
 function wget($url, $filename) {
+    if(isLocked($url)){
+        return false;
+    }
+    lock($url);
     $cmd = "wget {$url} -O {$filename}";
     error_log("wget Start ({$cmd}) ");
     //echo $cmd;
     exec($cmd);
+    removeLock($url);
     if (filesize($filename) > 1000000) {
         return true;
     }
