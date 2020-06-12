@@ -278,6 +278,7 @@ function getUsageFromURL($url) {
 
 function wget($url, $filename) {
     if(isLocked($url)){
+        error_log("wget: ERROR the url is already downloading $url, $filename");
         return false;
     }
     lock($url);
