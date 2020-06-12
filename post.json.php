@@ -33,7 +33,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     if(isLocked($url)){
         $obj->msg = "We still processing the URL {$url}";
     }else{
-        lockFile($url);
+        lock($url);
         $extParts = explode("?", $ext);
         $ext = $extParts[0];
         error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
