@@ -294,12 +294,12 @@ function lockFile($url) {
 }
 
 function lock($url) {
-    $file = self::getLogFile($url);
+    $file = getLogFile($url);
     return file_put_contents($file, time() . PHP_EOL, FILE_APPEND | LOCK_EX);
 }
 
 function removeLock($url) {
-    $filename = self::getLogFile($url);
+    $filename = getLogFile($url);
     if (!file_exists($filename)) {
         return false;
     }
@@ -307,7 +307,7 @@ function removeLock($url) {
 }
 
 function isLocked($url) {
-    $filename = self::getLogFile($url);
+    $filename = getLogFile($url);
     if (!file_exists($filename)) {
         return false;
     }
