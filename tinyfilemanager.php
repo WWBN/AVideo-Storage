@@ -439,7 +439,7 @@ if (isset($_POST['ajax']) && !FM_READONLY) {
         if (!$url) {
             $success = false;
         } else if ($use_curl) {
-            @$fp = fopen($temp_file, "w");
+            //@$fp = fopen($temp_file, "w");
             @$ch = curl_init($url);
             curl_setopt($ch, CURLOPT_NOPROGRESS, false);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -514,7 +514,7 @@ if (isset($_GET['new']) && isset($_GET['type']) && !FM_READONLY) {
             }
             if ($_GET['type'] == "file") {
                 if (!file_exists($path . '/' . $new)) {
-                    @fopen($path . '/' . $new, 'w') or die('Cannot open file:  ' . $new);
+                    //@fopen($path . '/' . $new, 'w') or die('Cannot open file:  ' . $new);
                     fm_set_msg(sprintf('File <b>%s</b> created', fm_enc($new)));
                 } else {
                     fm_set_msg(sprintf('File <b>%s</b> already exists', fm_enc($new)), 'alert');
@@ -1497,9 +1497,9 @@ if (isset($_GET['view'])) {
                                                                                                                             // Save File
                                                                                                                             if (isset($_POST['savedata'])) {
                                                                                                                                 $writedata = $_POST['savedata'];
-                                                                                                                                $fd = fopen($file_path, "w");
-                                                                                                                                @fwrite($fd, $writedata);
-                                                                                                                                fclose($fd);
+                                                                                                                                //$fd = fopen($file_path, "w");
+                                                                                                                                //@fwrite($fd, $writedata);
+                                                                                                                                //fclose($fd);
                                                                                                                                 fm_set_msg('File Saved Successfully');
                                                                                                                             }
 
@@ -2755,6 +2755,7 @@ if (empty($folders) && empty($files)) {
                                                                                                                                                                         $config_string = "<?php" . chr(13) . chr(10) . "//Default Configuration" . chr(13) . chr(10) . "$var_name = $var_value;" . chr(13) . chr(10);
                                                                                                                                                                         if (file_exists($fm_file)) {
                                                                                                                                                                             $lines = file($fm_file);
+                                                                                                                                                                            /*
                                                                                                                                                                             if ($fh = @fopen($fm_file, "w")) {
                                                                                                                                                                                 @fputs($fh, $config_string, strlen($config_string));
                                                                                                                                                                                 for ($x = 3; $x < count($lines); $x++) {
@@ -2762,6 +2763,8 @@ if (empty($folders) && empty($files)) {
                                                                                                                                                                                 }
                                                                                                                                                                                 @fclose($fh);
                                                                                                                                                                             }
+                                                                                                                                                                             * 
+                                                                                                                                                                             */
                                                                                                                                                                         }
                                                                                                                                                                     }
 
