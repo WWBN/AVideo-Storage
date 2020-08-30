@@ -30,6 +30,8 @@ Please check this scenario to try to make the propose of this project clear:
 
 You will need the folowing prerequisites.
 
+We made a video [Installing YPTStorage and configuring the YPTStorage plugin](https://tutorials.avideo.com/video/86/installing-yptstorage-and-configuring-the-yptstorage-plugin)
+
 ### What we use for that:
 1. PHP 7+
 1. Apache XSendFile
