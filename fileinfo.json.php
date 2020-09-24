@@ -27,6 +27,7 @@ $object->filename = $_GET['filename'];
 $object->size = getUsageFromFilename($_GET['filename']);
 $object->modified = getModifiedTimeFromFilename($_GET['filename']);
 $object->modifiedDate = date('Y/m/d H:i:s', $object->modified);
+$object->date = date('Y/m/d H:i:s');
 
 $object->error = false;
 die(json_encode($object));
