@@ -94,7 +94,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
         $return_val = 0;
     }
     if (filesize($filename) < 1000000) { // less then 1 mb
-        error_log("The filesize in the storage is smaller then 1 Mb trying again ");
+        error_log("moveFromSiteToLocalHLS: The filesize in the storage is smaller then 1 Mb trying again ");
         file_put_contents($filename, url_get_contents($url));
     }
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
@@ -106,6 +106,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
         if (!is_dir($directory)) {
             mkdir($directory);
         }
+        error_log("moveFromSiteToLocalHLS: file size is (".filesize($filename).") ". humanFileSize(filesize($filename)));
         $cmd = "tar --overwrite  -xvf {$filename} -C {$directory}";
         error_log("moveFromSiteToLocalHLS: restoreVideos HLS {$cmd}");
         //echo $cmd;exit;
