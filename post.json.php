@@ -12,11 +12,13 @@ $obj->filename = "";
 
 ini_set('max_execution_time', '0');
 ini_set('memory_limit', '-1');
+error_log("post.json.php: start ". json_encode($_REQUEST));
 if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     $obj->msg = "Invalid secret";
 } else if (empty($_REQUEST['video_url'])) {
     $obj->msg = "Empty Video URL";
 } else {
+    error_log("post.json.php: secret and video confirmed ");
     $url = $_REQUEST['video_url'];
     $name = basename($url); // to get file name
     $ext = pathinfo($url, PATHINFO_EXTENSION); // to get extension
@@ -33,6 +35,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     if(isLocked($url)){
         $obj->msg = "We still processing the URL {$url}";
     }else{
+        error_log("post.json.php: not locked ");
         lock($url);
         $extParts = explode("?", $ext);
         $ext = $extParts[0];
