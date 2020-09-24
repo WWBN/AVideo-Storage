@@ -316,6 +316,7 @@ function wget($url, $filename, $try=0) {
     
     $remotesize = getFilesizeFromURL($url);
     if($remotesize> filesize($filename) && $try<5){
+        error_log("wget remote size is bigger then local remote=($remotesize) local=".filesize($filename));
         return wget($url, $filename, ++$try);
     }
     if (filesize($filename) > 1000000) {
