@@ -108,7 +108,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
         if (!is_dir($directory)) {
             mkdir($directory);
         }
-        error_log("moveFromSiteToLocalHLS: file size is (".filesize($filename).") ". humanFileSize(filesize($filename)));
+        error_log("moveFromSiteToLocalHLS: file size is (" . filesize($filename) . ") " . humanFileSize(filesize($filename)));
         $cmd = "tar --overwrite  -xvf {$filename} -C {$directory}";
         error_log("moveFromSiteToLocalHLS: restoreVideos HLS {$cmd}");
         //echo $cmd;exit;
@@ -131,6 +131,20 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
 
     error_log("moveFromSiteToLocalHLS: Done " . json_encode($obj));
     return $obj;
+}
+
+function getFilesizeFromURL($url) {
+    $ch = curl_init($url);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_HEADER, TRUE);
+    curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+
+    $data = curl_exec($ch);
+    $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+
+    curl_close($ch);
+    return $size;
 }
 
 function _session_start(Array $options = array()) {
@@ -185,7 +199,7 @@ function getDirSize($dir) {
         }
         if (!empty($matches[1])) {
             $size = intval($matches[1]);
-            error_log(" getDirSize: found {$size} from - {$output[0]} ". humanFileSize($size));
+            error_log(" getDirSize: found {$size} from - {$output[0]} " . humanFileSize($size));
             return $size;
         }
 
@@ -212,7 +226,7 @@ function getUsageFromFilename($filename, $dir = "") {
             $totalSize += $dirSize;
         } else if (is_file($f)) {
             $filesize = filesize($f);
-            error_log("getUsageFromFilename: {$f} is File ({$filesize}) ". humanFileSize($filesize));
+            error_log("getUsageFromFilename: {$f} is File ({$filesize}) " . humanFileSize($filesize));
             $totalSize += $filesize;
         }
     }
@@ -284,17 +298,26 @@ function getUsageFromURL($url) {
     return $result;
 }
 
-function wget($url, $filename) {
-    if(isLocked($url)){
+function wget($url, $filename, $try=0) {
+    if (isLocked($url)) {
         error_log("wget: ERROR the url is already downloading $url, $filename");
         return false;
     }
     lock($url);
-    $cmd = "wget {$url} -O {$filename}";
+    if($try){
+        $cmd = "wget {$url} -c {$filename}";
+    }else{
+        $cmd = "wget {$url} -O {$filename}";
+    }
     error_log("wget Start ({$cmd}) ");
     //echo $cmd;
     exec($cmd);
     removeLock($url);
+    
+    $remotesize = getFilesizeFromURL($url);
+    if($remotesize> filesize($filename) && $try<5){
+        return wget($url, $filename, ++$try);
+    }
     if (filesize($filename) > 1000000) {
         return true;
     }
