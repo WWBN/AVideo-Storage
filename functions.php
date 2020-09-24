@@ -177,18 +177,19 @@ function getDirSize($dir) {
     $command = "du -sb {$dir}";
     exec($command . " < /dev/null 2>&1", $output, $return_val);
     if ($return_val !== 0) {
-        error_log("getDirSize: ERROR ON Command {$command}");
+        error_log(" getDirSize: ERROR ON Command {$command}");
         return 0;
     } else {
         if (!empty($output[0])) {
             preg_match("/^([0-9]+).*/", $output[0], $matches);
         }
         if (!empty($matches[1])) {
-            error_log("getDirSize: found {$matches[1]} from - {$output[0]}");
-            return intval($matches[1]);
+            $size = intval($matches[1]);
+            error_log(" getDirSize: found {$size} from - {$output[0]} ". humanFileSize($size));
+            return $size;
         }
 
-        error_log("getDirSize: ERROR on pregmatch {$output[0]}");
+        error_log(" getDirSize: ERROR on pregmatch {$output[0]}");
         return 0;
     }
 }
