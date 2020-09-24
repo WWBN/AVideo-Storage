@@ -86,6 +86,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     $obj->msg = "";
     $obj->aVideoStorageURL = $global['aVideoStorageURL'];
     $obj->filename = $filename;
+    error_log("moveFromSiteToLocalHLS: $url, $filename");
     if (!empty($newTry) || !file_exists($filename) || filesize($filename) < 1000000) { // less then 1 mb
         $wgetResp = wget($url, $filename);
         sleep(10); // wait
