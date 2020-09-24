@@ -101,6 +101,8 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
     if (filesize($filename) < 1000000) { // less then 1 mb
         $obj->msg = "The filesize in the storage is smaller then 1 Mb ";
     } else {
+        ini_set('max_execution_time', '0');
+        ini_set('memory_limit', '-1');
         $name2 = pathinfo($url, PATHINFO_FILENAME); //file name without extension
         $directory = "{$global['videos_directory']}{$name2}";
         if (!is_dir($directory)) {
