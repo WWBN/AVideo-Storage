@@ -211,7 +211,7 @@ function getUsageFromFilename($filename, $dir = "") {
             $totalSize += $dirSize;
         } else if (is_file($f)) {
             $filesize = filesize($f);
-            error_log("getUsageFromFilename: {$f} is File ({$filesize})");
+            error_log("getUsageFromFilename: {$f} is File ({$filesize}) ". humanFileSize($filesize));
             $totalSize += $filesize;
         }
     }
