@@ -233,6 +233,19 @@ function getUsageFromFilename($filename, $dir = "") {
     return $totalSize;
 }
 
+
+function getModifiedTimeFromFilename($filename, $dir = "") {
+    global $global;
+    $filename = preg_replace("/[^a-z0-9._-]/i", "", $_GET['filename']);
+    if (empty($dir)) {
+        $dir = $global['videos_directory'];
+    }
+    $pos = strrpos($dir, '/');
+    $dir .= (($pos === false) ? "/" : "");
+     
+    return filemtime($dir.$filename);
+}
+
 /**
  * Returns the size of a file without downloading it, or -1 if the file
  * size could not be determined.

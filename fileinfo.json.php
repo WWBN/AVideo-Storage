@@ -25,6 +25,7 @@ if (empty($_GET['filename'])) {
 $object->filename = $_GET['filename'];
 
 $object->size = getUsageFromFilename($_GET['filename']);
+$object->modified = getModifiedTimeFromFilename($_GET['filename']);
 
 $object->error = false;
 die(json_encode($object));
