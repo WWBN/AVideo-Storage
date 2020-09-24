@@ -314,7 +314,8 @@ function getUsageFromURL($url) {
 
 function wget($url, $filename, $try=0) {
     if (isLocked($url)) {
-        error_log("wget: ERROR the url is already downloading $url, $filename");
+        $remotesize = getFilesizeFromURL($url);
+        error_log("wget: ERROR the url is already downloading $url, $filename remote=($remotesize) local=".filesize($filename));
         return false;
     }
     lock($url);
