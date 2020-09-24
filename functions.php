@@ -349,5 +349,6 @@ function isLocked($url) {
     if (!file_exists($filename)) {
         return false;
     }
+    error_log("$url is locked $filename");
     return true;
 }
