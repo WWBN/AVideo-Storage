@@ -296,7 +296,7 @@ function wget($url, $filename) {
 function getLogFile($url) {
     global $global;
     $name = md5($url);
-    return "{$global['videos_directory']}lock_{$url}.lock";
+    return "{$global['videos_directory']}lock_{$name}.lock";
 }
 
 function lock($url) {
