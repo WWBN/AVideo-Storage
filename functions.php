@@ -243,7 +243,9 @@ function getModifiedTimeFromFilename($filename, $dir = "") {
     }
     $pos = strrpos($dir, '/');
     $dir .= (($pos === false) ? "/" : "");
-     
+    if(!file_exists($dir.$filename) && !is_dir($filename)){
+        return 0;
+    }
     return filemtime($dir.$filename);
 }
 
