@@ -366,7 +366,7 @@ function isLocked($url) {
     }
     if((time()-filectime($filename)) < 21600){// older then 6 hours
         error_log("Locker is too old $filename");
-        return true;
+        return false;
     }
     error_log("$url is locked $filename");
     return true;
