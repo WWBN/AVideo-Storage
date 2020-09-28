@@ -188,7 +188,7 @@ function getDirSize($dir) {
     if (!is_dir($dir)) {
         $dir = dirname($dir);
     }
-    error_log("getDirSize: start {$dir}");
+    //error_log("getDirSize: start {$dir}");
     $command = "du -sb {$dir}";
     exec($command . " < /dev/null 2>&1", $output, $return_val);
     if ($return_val !== 0) {
@@ -200,11 +200,11 @@ function getDirSize($dir) {
         }
         if (!empty($matches[1])) {
             $size = intval($matches[1]);
-            error_log(" getDirSize: found {$size} from - {$output[0]} " . humanFileSize($size));
+            //error_log(" getDirSize: found {$size} from - {$output[0]} " . humanFileSize($size));
             return $size;
         }
 
-        error_log(" getDirSize: ERROR on pregmatch {$output[0]}");
+        //error_log(" getDirSize: ERROR on pregmatch {$output[0]}");
         return 0;
     }
 }
