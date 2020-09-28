@@ -222,12 +222,12 @@ function getUsageFromFilename($filename, $dir = "") {
     $files = glob("{$dir}{$filename}*");
     foreach ($files as $f) {
         if (is_dir($f)) {
-            error_log("getUsageFromFilename: {$f} is Dir");
+            //error_log("getUsageFromFilename: {$f} is Dir");
             $dirSize = getDirSize($f);
             $totalSize += $dirSize;
         } else if (is_file($f)) {
             $filesize = filesize($f);
-            error_log("getUsageFromFilename: {$f} is File ({$filesize}) " . humanFileSize($filesize));
+            //error_log("getUsageFromFilename: {$f} is File ({$filesize}) " . humanFileSize($filesize));
             $totalSize += $filesize;
         }
     }
