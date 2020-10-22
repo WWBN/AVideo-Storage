@@ -1,4 +1,4 @@
-<img src="https://platform.avideo.com/website/assets/151/images/avideo_storage.png"/>
+<img src="https://avideo.tube/website/assets/151/images/avideo_storage.png"/>
 
 # AVideo-Storage
 
