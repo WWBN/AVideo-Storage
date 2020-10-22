@@ -1,5 +1,5 @@
 <?php
-
+header('Set-Cookie: cross-site-cookie=name; SameSite=None; Secure');
 class Login {
 
     static function run($user, $pass) {
@@ -8,6 +8,7 @@ class Login {
         if (substr($aVideoURL, -1) !== '/') {
             $aVideoURL .= "/";
         }
+        $agent = getSelfUserAgent();
 
         $postdata = http_build_query(
                 array(
@@ -24,7 +25,7 @@ class Login {
             ),
             'http' => array(
                 'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded',
+                'header' => "User-Agent: {$agent}\r\nContent-type: application/x-www-form-urlencoded\r\n",
                 'content' => $postdata
             )
         );

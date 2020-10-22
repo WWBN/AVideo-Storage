@@ -13,8 +13,16 @@ function getURLToApplication() {
     return $url;
 }
 
+function getSelfUserAgent(){
+    global $global;
+    $agent = 'AVideoStorage ';
+    $agent .= parse_url($global['webSiteRootURL'], PHP_URL_HOST);
+    return $agent;
+}
+
 function url_get_contents($Url, $ctx = "", $timeout = 0) {
     global $global;
+    $agent = getSelfUserAgent();
     if (filter_var($Url, FILTER_VALIDATE_URL)) {
 
         $session = @$_SESSION;
@@ -25,6 +33,7 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
     }
     if (empty($ctx)) {
         $opts = array(
+            'http' => array('header' => "User-Agent: {$agent}\r\n"),
             "ssl" => array(
                 "verify_peer" => false,
                 "verify_peer_name" => false,
@@ -55,6 +64,7 @@ function url_get_contents($Url, $ctx = "", $timeout = 0) {
     }
     if (function_exists('curl_init')) {
         $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_URL, $Url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);

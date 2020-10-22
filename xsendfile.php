@@ -16,7 +16,7 @@ $path_parts = pathinfo($_GET['file']);
 $file = $path_parts['basename'];
 $path = "{$global['videos_directory']}{$file}";
 
-if ($path_parts["extension"] === "m3u8") {
+if ($path_parts["extension"] === "m3u8" || $path_parts["extension"] === "key") {
     $arr = explode("/", $path_parts["dirname"]);
     $sfilename = end($arr);
     $path = "{$global['videos_directory']}{$sfilename}/{$file}";
