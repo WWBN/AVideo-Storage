@@ -25,14 +25,17 @@ class Login {
             ),
             'http' => array(
                 'method' => 'POST',
-                'header' => "User-Agent: {$agent}\r\nContent-type: application/x-www-form-urlencoded\r\n",
+                'header' => array(
+                    "Content-type: application/x-www-form-urlencoded\r\n",
+                    "User-Agent: {$agent}\r\n"),
                 'content' => $postdata
             )
         );
 
         $context = stream_context_create($opts);
-
-        $result = @file_get_contents($aVideoURL . 'login', false, $context);
+        
+        $url = $aVideoURL . 'login?user='. urlencode($user).'&pass='. urlencode($pass).'&encodedPass='. urlencode($encodedPass);
+        $result = @file_get_contents($url, false, $context);
         $result = remove_utf8_bom($result);
         if (empty($result)) {
             $object = new stdClass();
