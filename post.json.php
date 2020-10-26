@@ -34,6 +34,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
     }
     if(isLocked($url)){
         $obj->msg = "We still processing the URL {$url}";
+        error_log("post.json.php: We still processing the URL {$url}");
     }else{
         error_log("post.json.php: not locked ");
         lock($url);
@@ -42,8 +43,10 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
         if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
             $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
+            error_log("post.json.php: requesting wget $url, $obj->filename");
             $wgetResp = wget($url, $obj->filename);
             if ($wgetResp) {
+                error_log("post.json.php: wget respond fine $url, $obj->filename");
                 $obj->error = false;
                 $obj->msg = "";
             } else {
