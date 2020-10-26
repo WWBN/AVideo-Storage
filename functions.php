@@ -16,7 +16,7 @@ function getURLToApplication() {
 function getSelfUserAgent(){
     global $global;
     $agent = 'AVideoStorage ';
-    $agent .= parse_url($global['webSiteRootURL'], PHP_URL_HOST);
+    $agent .= parse_url($global['aVideoStorageURL'], PHP_URL_HOST);
     return $agent;
 }
 
