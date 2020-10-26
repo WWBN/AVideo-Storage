@@ -2,6 +2,12 @@
 
 ini_set('memory_limit', '-1');
 
+if (empty($_SERVER['HTTP_ORIGIN'])) {
+    header('Access-Control-Allow-Origin: *');
+} else {
+    header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+}
+
 function getPathToApplication() {
     return str_replace("index.php", "", $_SERVER["SCRIPT_FILENAME"]);
 }
