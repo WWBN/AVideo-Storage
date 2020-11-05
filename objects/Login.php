@@ -34,6 +34,10 @@ class Login {
 
         $context = stream_context_create($opts);
         
+        if(empty($encodedPass)){
+            $encodedPass = 0;
+        }
+        
         $url = $aVideoURL . 'login?user='. urlencode($user).'&pass='. urlencode($pass).'&encodedPass='. urlencode($encodedPass);
         $result = @file_get_contents($url, false, $context);
         $result = remove_utf8_bom($result);
