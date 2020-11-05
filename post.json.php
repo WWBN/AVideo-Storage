@@ -40,7 +40,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         lock($url);
         $extParts = explode("?", $ext);
         $ext = $extParts[0];
-        error_log("post.json.php: request extension {$ext} on URL {$_REQUEST['video_url']}");
+        error_log("post.json.php: request extension {{$ext}} on URL {$_REQUEST['video_url']}");
         if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
             $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
             error_log("post.json.php: requesting wget $url, $obj->filename");
