@@ -110,8 +110,8 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
         error_log("moveFromSiteToLocalHLS: File Exists {$filename}");
         $return_val = 0;
     }
-    if (filesize($filename) < 1000000) { // less then 1 mb
-        error_log("moveFromSiteToLocalHLS: The filesize in the storage is smaller then 1 Mb trying again ");
+    if (filesize($filename) < 3000) { // less then 1 mb
+        error_log("moveFromSiteToLocalHLS: The filesize in the storage is smaller then 300k trying again ");
         file_put_contents($filename, url_get_contents($url));
     }
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
