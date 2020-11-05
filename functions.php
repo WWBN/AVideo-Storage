@@ -115,8 +115,8 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
         file_put_contents($filename, url_get_contents($url));
     }
     //$return_val = file_put_contents($filename, url_get_contents("{$url}"));
-    if (filesize($filename) < 1000000) { // less then 1 mb
-        $obj->msg = "The filesize in the storage is smaller then 1 Mb ";
+    if (filesize($filename) < 3000) { // less then 1 mb
+        $obj->msg = "The filesize in the storage is smaller then 300k ";
     } else {
         ini_set('max_execution_time', '0');
         ini_set('memory_limit', '-1');
