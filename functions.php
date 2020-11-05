@@ -126,7 +126,7 @@ function moveFromSiteToLocalHLS($url, $filename, $newTry = 0) {
             mkdir($directory);
         }
         error_log("moveFromSiteToLocalHLS: file size is (" . filesize($filename) . ") " . humanFileSize(filesize($filename)));
-        $cmd = "tar --overwrite  -xvf {$filename} -C {$directory}";
+        $cmd = "tar --overwrite -xf {$filename} -C {$directory}";
         error_log("moveFromSiteToLocalHLS: restoreVideos HLS {$cmd}");
         //echo $cmd;exit;
         exec($cmd . " 2>&1", $output, $return_val);
