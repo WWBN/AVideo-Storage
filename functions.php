@@ -396,7 +396,7 @@ function downloadHLS($filepath) {
         return false;
     }
     
-    $videosDir = "{$global['systemRootPath']}videos/";
+    $videosDir = "{$global['videos_directory']}";
     
     $outputfilename = str_replace($videosDir, "", $filepath);
     $parts = explode("/", $outputfilename);
