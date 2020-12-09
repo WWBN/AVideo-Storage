@@ -390,6 +390,15 @@ function isLocked($url) {
     return true;
 }
 
+function make_path($path) {
+    if (substr($path, -1) !== '/') {
+        $path = pathinfo($path, PATHINFO_DIRNAME);
+    }
+    if (!is_dir($path)) {
+        @mkdir($path, 0755, true);
+    }
+}
+
 function downloadHLS($filepath) {
     global $global;
     if(!file_exists($filepath)){
