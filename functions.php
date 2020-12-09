@@ -400,8 +400,7 @@ function downloadHLS($filepath) {
     
     $outputfilename = str_replace($videosDir, "", $filepath);
     $parts = explode("/", $outputfilename);
-    $resolution = Video::getResolutionFromFilename($filepath);
-    $outputfilename = $parts[0]."_{$resolution}_.mp4";
+    $outputfilename = $parts[0].".mp4";
     $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
     make_path($outputpath);
     if(empty($outputfilename)){
