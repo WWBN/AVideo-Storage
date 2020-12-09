@@ -44,11 +44,17 @@ if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {
 
 if (file_exists($path)) {
     if (!empty($_GET['download'])) {
+        
+        if($path_parts["extension"] === "m3u8"){
+            downloadHLS($path);
+        }
+        
         if(!empty($_GET['title'])){
             $quoted = sprintf('"%s"', addcslashes(basename($_GET['title']), '"\\'));
         }else{
             $quoted = sprintf('"%s"', addcslashes(basename($_GET['file']), '"\\'));
         }
+        
         header('Content-Description: File Transfer');
         header('Content-Disposition: attachment; filename=' . $quoted);
         header('Content-Transfer-Encoding: binary');

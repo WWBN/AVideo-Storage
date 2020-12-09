@@ -389,3 +389,53 @@ function isLocked($url) {
     error_log("$url is locked $filename");
     return true;
 }
+
+function downloadHLS($filepath) {
+    global $global;
+    if(!file_exists($filepath)){
+        return false;
+    }
+    
+    $videosDir = "{$global['systemRootPath']}videos/";
+    
+    $outputfilename = str_replace($videosDir, "", $filepath);
+    $parts = explode("/", $outputfilename);
+    $resolution = Video::getResolutionFromFilename($filepath);
+    $outputfilename = $parts[0]."_{$resolution}_.mp4";
+    $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
+    make_path($outputpath);
+    if(empty($outputfilename)){
+        return false;
+    }
+    
+    if (!empty($_REQUEST['title'])) {
+        $quoted = sprintf('"%s"', addcslashes(basename($_REQUEST['title']), '"\\'));
+    } else if (!empty($_REQUEST['file'])) {
+        $quoted = sprintf('"%s"', addcslashes(basename($_REQUEST['file']), '"\\')).".mp4";
+    } else {
+        $quoted = $outputfilename;
+    }
+    
+    $filepath = escapeshellcmd($filepath);
+    $outputpath = escapeshellcmd($outputpath);
+    if(true || !file_exists($outputpath)){
+        $command = "ffmpeg -allowed_extensions ALL -y -i {$filepath} -c copy {$outputpath}";
+        //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
+        exec($command . " 2>&1", $output, $return);
+        if(!empty($return)){
+            _error_log("downloadHLS: ". implode(PHP_EOL, $output));
+            return false;
+        }
+    }
+    //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
+    //var_dump($command, $outputpath);exit;
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=' . $quoted);
+    header('Content-Transfer-Encoding: binary');
+    header('Connection: Keep-Alive');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
+    header("X-Sendfile: {$outputpath}");
+    exit;
+}
