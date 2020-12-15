@@ -431,7 +431,7 @@ function downloadHLS($filepath) {
         //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
         exec($command . " 2>&1", $output, $return);
         if(!empty($return)){
-            _error_log("downloadHLS: ". implode(PHP_EOL, $output));
+            error_log("downloadHLS: {$command} ". implode(PHP_EOL, $output));
             return false;
         }
     }
