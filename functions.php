@@ -427,7 +427,7 @@ function downloadHLS($filepath) {
     $filepath = escapeshellcmd($filepath);
     $outputpath = escapeshellcmd($outputpath);
     if(true || !file_exists($outputpath)){
-        $command = "ffmpeg -allowed_extensions ALL -y -i {$filepath} -c copy {$outputpath}";
+        $command = "ffmpeg -allowed_extensions ALL -y -i {$filepath} -c:v copy -bsf:a aac_adtstoasc -strict -2 {$outputpath}";
         //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
         exec($command . " 2>&1", $output, $return);
         if(!empty($return)){
