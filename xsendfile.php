@@ -28,6 +28,9 @@ if ($path_parts["extension"] === "m3u8" || $path_parts["extension"] === "key") {
 } else {
     $sfilename = $path_parts['filename'];
 }
+if($path_parts["extension"]=='ts'){
+   $skipAuthorization = 1;
+}
 
 if(!empty($skipAuthorization)){
     
