@@ -20,6 +20,9 @@ if ($path_parts["extension"] === "m3u8" || $path_parts["extension"] === "key") {
     $arr = explode("/", $path_parts["dirname"]);
     $sfilename = end($arr);
     $path = "{$global['videos_directory']}{$sfilename}/{$file}";
+    if (!file_exists($path)) {
+        $path = "{$global['videos_directory']}{$path_parts["dirname"]}/{$file}";
+    }
 } else {
     $sfilename = $path_parts['filename'];
 }
