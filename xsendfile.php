@@ -21,12 +21,17 @@ if ($path_parts["extension"] === "m3u8" || $path_parts["extension"] === "key") {
     $sfilename = end($arr);
     $path = "{$global['videos_directory']}{$sfilename}/{$file}";
     if (!file_exists($path)) {
+        // probably resolution m3u8
+        $skipAuthorization = 1;
         $path = "{$global['videos_directory']}{$path_parts["dirname"]}/{$file}";
     }
 } else {
     $sfilename = $path_parts['filename'];
 }
 
+if(!empty($skipAuthorization)){
+    
+}else
 if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {    
     error_log("Storage xsendfile with secret");
 }else{
