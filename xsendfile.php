@@ -82,7 +82,7 @@ if (file_exists($path)) {
     header('Content-Length: ' . filesize($path));
     die();
 } else if (!empty($_GET['playHLSasMP4'])) {
-    playHLSasMP4($_GET['file']);
+    playHLSasMP4($path);
 } else {
     error_log("XSENDFILE ERROR: Not exists {$path} = " . json_encode($path_parts));
 }
