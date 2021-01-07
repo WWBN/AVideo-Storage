@@ -1,4 +1,5 @@
 <?php
+
 require_once './configuration.php';
 require_once './functions.php';
 session_write_close();
@@ -8,7 +9,7 @@ if (empty($_GET['file'])) {
     die('GET file not found');
 }
 
-if(empty($_GET['token'])){
+if (empty($_GET['token'])) {
     $_GET['token'] = 0;
 }
 
@@ -28,44 +29,44 @@ if ($path_parts["extension"] === "m3u8" || $path_parts["extension"] === "key") {
 } else {
     $sfilename = $path_parts['filename'];
 }
-if($path_parts["extension"]=='ts'){
-   $skipAuthorization = 1;
+if ($path_parts["extension"] == 'ts') {
+    $skipAuthorization = 1;
 }
 
-if(!empty($skipAuthorization)){
+if (!empty($skipAuthorization)) {
     
-}else
-if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {    
+} else
+if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {
     error_log("Storage xsendfile with secret");
-}else{
+} else {
     $url = "{$global['aVideoURL']}plugin/YPTStorage/canWatchVideo.json.php?token={$_GET['token']}&filename={$sfilename}";
-    $json = url_get_contents($url); 
+    $json = url_get_contents($url);
 
     error_log("Storage xsendfile {$url} => {$json}");
 
-    if(empty($json)){
-       die("Streamer error: {$url}"); 
+    if (empty($json)) {
+        die("Streamer error: {$url}");
     }
 
     $jsonObject = json_decode($json);
-    if(empty($jsonObject->authorization)){
-        die("Not authorized: ".$json);
+    if (empty($jsonObject->authorization)) {
+        die("Not authorized: " . $json);
     }
 }
 
 if (file_exists($path)) {
     if (!empty($_GET['download'])) {
-        
-        if($path_parts["extension"] === "m3u8"){
+
+        if ($path_parts["extension"] === "m3u8") {
             downloadHLS($path);
         }
-        
-        if(!empty($_GET['title'])){
+
+        if (!empty($_GET['title'])) {
             $quoted = sprintf('"%s"', addcslashes(basename($_GET['title']), '"\\'));
-        }else{
+        } else {
             $quoted = sprintf('"%s"', addcslashes(basename($_GET['file']), '"\\'));
         }
-        
+
         header('Content-Description: File Transfer');
         header('Content-Disposition: attachment; filename=' . $quoted);
         header('Content-Transfer-Encoding: binary');
@@ -80,6 +81,8 @@ if (file_exists($path)) {
     }
     header('Content-Length: ' . filesize($path));
     die();
-}else{
-    error_log("XSENDFILE ERROR: Not exists {$path} = ". json_encode($path_parts));
+} else if (!empty($_GET['playHLSasMP4'])) {
+    playHLSasMP4($_GET['file']);
+} else {
+    error_log("XSENDFILE ERROR: Not exists {$path} = " . json_encode($path_parts));
 }

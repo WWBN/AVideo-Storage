@@ -401,42 +401,33 @@ function make_path($path) {
 
 function downloadHLS($filepath) {
     global $global;
-    if(!file_exists($filepath)){
+
+    if (!CustomizeUser::canDownloadVideos()) {
+        _error_log("downloadHLS: CustomizeUser::canDownloadVideos said NO");
         return false;
     }
-    
-    $videosDir = "{$global['videos_directory']}";
-    
-    $outputfilename = str_replace($videosDir, "", $filepath);
-    $parts = explode("/", $outputfilename);
-    $outputfilename = $parts[0].".mp4";
-    $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
-    make_path($outputpath);
-    if(empty($outputfilename)){
+
+    if (!file_exists($filepath)) {
+        _error_log("downloadHLS: file NOT found: {$filepath}");
         return false;
     }
+    $output = m3u8ToMP4($filepath);
     
+    if(empty($output)){
+        die("downloadHLS was not possible");
+    }
+    
+    $outputpath = $output['path'];
+    $outputfilename = $output['filename'];
+
     if (!empty($_REQUEST['title'])) {
         $quoted = sprintf('"%s"', addcslashes(basename($_REQUEST['title']), '"\\'));
-    } else if (!empty($_REQUEST['file'])) {
-        $quoted = sprintf('"%s"', addcslashes(basename($_REQUEST['file']), '"\\')).".mp4";
+    } elseif (!empty($_REQUEST['file'])) {
+        $quoted = sprintf('"%s"', addcslashes(basename($_REQUEST['file']), '"\\')) . ".mp4";
     } else {
         $quoted = $outputfilename;
     }
     
-    $filepath = escapeshellcmd($filepath);
-    $outputpath = escapeshellcmd($outputpath);
-    if(true || !file_exists($outputpath)){
-        $command = "ffmpeg -allowed_extensions ALL -y -i {$filepath} -c:v copy -c:a copy -bsf:a aac_adtstoasc -strict -2 {$outputpath}";
-        //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
-        exec($command . " 2>&1", $output, $return);
-        if(!empty($return)){
-            error_log("downloadHLS: {$command} ". implode(PHP_EOL, $output));
-            return false;
-        }
-    }
-    //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
-    //var_dump($command, $outputpath);exit;
     header('Content-Description: File Transfer');
     header('Content-Disposition: attachment; filename=' . $quoted);
     header('Content-Transfer-Encoding: binary');
@@ -446,4 +437,81 @@ function downloadHLS($filepath) {
     header('Pragma: public');
     header("X-Sendfile: {$outputpath}");
     exit;
+}
+
+function playHLSasMP4($filepath) {
+    global $global;
+
+    if (!CustomizeUser::canDownloadVideos()) {
+        _error_log("playHLSasMP4: CustomizeUser::canDownloadVideos said NO");
+        return false;
+    }
+
+    if (!file_exists($filepath)) {
+        _error_log("playHLSasMP4: file NOT found: {$filepath}");
+        return false;
+    }
+    $output = m3u8ToMP4($filepath);
+    
+    if(empty($output)){
+        die("playHLSasMP4 was not possible");
+    }
+    
+    $outputpath = $output['path'];
+    
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: post-check=0, pre-check=0', false);
+    header('Pragma: no-cache');
+    header('Content-type: video/mp4');
+    header('Content-Length: ' . filesize($outputpath));
+    header("X-Sendfile: {$outputpath}");
+    exit;
+}
+
+function m3u8ToMP4($input){
+    $videosDir = Video::getStoragePath();
+    $outputfilename = str_replace($videosDir, "", $input);
+    $parts = explode("/", $outputfilename);
+    $resolution = Video::getResolutionFromFilename($input);
+    $outputfilename = $parts[0] . "_{$resolution}_.mp4";
+    $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
+    make_path($outputpath);
+    if (empty($outputfilename)) {
+        _error_log("downloadHLS: empty outputfilename {$outputfilename}");
+        return false;
+    }
+
+    $filepath = escapeshellcmd($input);
+    $outputpath = escapeshellcmd($outputpath);
+    if (!file_exists($outputpath)) {
+        $command = get_ffmpeg() . " -allowed_extensions ALL -y -i {$filepath} -c:v copy -c:a copy -bsf:a aac_adtstoasc -strict -2 {$outputpath}";
+        //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
+        exec($command . " 2>&1", $output, $return);
+        if (!empty($return)) {
+            _error_log("downloadHLS: ERROR 1 " . implode(PHP_EOL, $output));
+            
+            $command = get_ffmpeg() . " -y -i {$filepath} -c:v copy -c:a copy -bsf:a aac_adtstoasc -strict -2 {$outputpath}";
+            //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
+            exec($command . " 2>&1", $output, $return);
+            if (!empty($return)) {
+                _error_log("downloadHLS: ERROR 2 " . implode(PHP_EOL, $output));
+                return false;
+            }
+        }
+    }
+    return array('path'=>$outputpath, 'filename'=>$outputfilename);
+}
+
+function get_ffmpeg($ignoreGPU = false) {
+    global $global;
+    //return 'ffmpeg -user_agent "'.getSelfUserAgent("FFMPEG").'" ';
+    //return 'ffmpeg -headers "User-Agent: '.getSelfUserAgent("FFMPEG").'" ';
+    $ffmpeg = 'ffmpeg  ';
+    if (empty($ignoreGPU) && !empty($global['ffmpegGPU'])) {
+        $ffmpeg .= ' --enable-nvenc ';
+    }
+    if (!empty($global['ffmpeg'])) {
+        $ffmpeg = "{$global['ffmpeg']}{$ffmpeg}";
+    }
+    return $ffmpeg;
 }

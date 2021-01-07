@@ -36,6 +36,7 @@ Options All -Indexes
 <ifModule mod_rewrite.c>
     <IfModule mod_xsendfile.c>
         RewriteEngine on
+        RewriteRule    ^videos/([A-Za-z0-9-_.]+(/[A-Za-z0-9-_.]+)?([^!#$&'()*+,:;=?@[\]]+(\.(m3u8\.mp4)))) xsendfile.php?playHLSasMP4=1&file=$1    [QSA]
         RewriteRule    ^videos/([A-Za-z0-9-_.]+(/[A-Za-z0-9-_.]+)?([^!#$&'()*+,:;=?@[\]]+(\.(mp4|webm|m3u8|mp3|ogg)))) xsendfile.php?file=$1    [QSA]
         RewriteRule    ^videos/([A-Za-z0-9-_.]+/[A-Za-z0-9-_.].key)$ xsendfile.php?file=$1    [QSA]
     </IfModule>
