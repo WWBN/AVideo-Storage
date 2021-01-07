@@ -13,6 +13,8 @@ if (empty($_GET['token'])) {
     $_GET['token'] = 0;
 }
 
+$_GET['file'] = str_replace(".m3u8.mp4", '.m3u8', $_GET['file']);
+
 $path_parts = pathinfo($_GET['file']);
 $file = $path_parts['basename'];
 $path = "{$global['videos_directory']}{$file}";
