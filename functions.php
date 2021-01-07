@@ -403,12 +403,12 @@ function downloadHLS($filepath) {
     global $global;
 
     if (!CustomizeUser::canDownloadVideos()) {
-        _error_log("downloadHLS: CustomizeUser::canDownloadVideos said NO");
+        error_log("downloadHLS: CustomizeUser::canDownloadVideos said NO");
         return false;
     }
 
     if (!file_exists($filepath)) {
-        _error_log("downloadHLS: file NOT found: {$filepath}");
+        error_log("downloadHLS: file NOT found: {$filepath}");
         return false;
     }
     $output = m3u8ToMP4($filepath);
@@ -442,13 +442,8 @@ function downloadHLS($filepath) {
 function playHLSasMP4($filepath) {
     global $global;
 
-    if (!CustomizeUser::canDownloadVideos()) {
-        _error_log("playHLSasMP4: CustomizeUser::canDownloadVideos said NO");
-        return false;
-    }
-
     if (!file_exists($filepath)) {
-        _error_log("playHLSasMP4: file NOT found: {$filepath}");
+        error_log("playHLSasMP4: file NOT found: {$filepath}");
         return false;
     }
     $output = m3u8ToMP4($filepath);
@@ -469,15 +464,14 @@ function playHLSasMP4($filepath) {
 }
 
 function m3u8ToMP4($input){
-    $videosDir = Video::getStoragePath();
-    $outputfilename = str_replace($videosDir, "", $input);
+    $videosDir = "{$global['videos_directory']}";    
+    $outputfilename = str_replace($videosDir, "", $filepath);
     $parts = explode("/", $outputfilename);
-    $resolution = Video::getResolutionFromFilename($input);
-    $outputfilename = $parts[0] . "_{$resolution}_.mp4";
+    $outputfilename = $parts[0].".mp4";
     $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
     make_path($outputpath);
     if (empty($outputfilename)) {
-        _error_log("downloadHLS: empty outputfilename {$outputfilename}");
+        error_log("downloadHLS: empty outputfilename {$outputfilename}");
         return false;
     }
 
@@ -488,13 +482,13 @@ function m3u8ToMP4($input){
         //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
         exec($command . " 2>&1", $output, $return);
         if (!empty($return)) {
-            _error_log("downloadHLS: ERROR 1 " . implode(PHP_EOL, $output));
+            error_log("downloadHLS: ERROR 1 " . implode(PHP_EOL, $output));
             
             $command = get_ffmpeg() . " -y -i {$filepath} -c:v copy -c:a copy -bsf:a aac_adtstoasc -strict -2 {$outputpath}";
             //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
             exec($command . " 2>&1", $output, $return);
             if (!empty($return)) {
-                _error_log("downloadHLS: ERROR 2 " . implode(PHP_EOL, $output));
+                error_log("downloadHLS: ERROR 2 " . implode(PHP_EOL, $output));
                 return false;
             }
         }
