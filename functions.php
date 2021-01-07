@@ -463,8 +463,9 @@ function playHLSasMP4($filepath) {
 }
 
 function m3u8ToMP4($input){
+    global $global;
     $videosDir = "{$global['videos_directory']}";    
-    $outputfilename = str_replace($videosDir, "", $filepath);
+    $outputfilename = str_replace($videosDir, "", $input);
     $parts = explode("/", $outputfilename);
     $outputfilename = $parts[0].".mp4";
     $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
