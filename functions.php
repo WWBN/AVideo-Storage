@@ -441,7 +441,7 @@ function downloadHLS($filepath) {
 
 function playHLSasMP4($filepath) {
     global $global;
-
+    $filepath = str_replace(".m3u8.mp4", '.m3u8', $filepath);
     if (!file_exists($filepath)) {
         error_log("playHLSasMP4: file NOT found: {$filepath}");
         return false;
