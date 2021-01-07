@@ -76,15 +76,15 @@ if (file_exists($path)) {
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Pragma: public');
-    }
+    } else if (!empty($_GET['playHLSasMP4'])) {
+        playHLSasMP4($path);
+    } 
     header("X-Sendfile: {$path}");
     if (empty($_GET['download'])) {
         header("Content-type: " . mime_content_type($path));
     }
     header('Content-Length: ' . filesize($path));
     die();
-} else if (!empty($_GET['playHLSasMP4'])) {
-    playHLSasMP4($path);
-} else {
+}else {
     error_log("XSENDFILE ERROR: Not exists {$path} = " . json_encode($path_parts));
 }
