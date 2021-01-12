@@ -402,11 +402,6 @@ function make_path($path) {
 function downloadHLS($filepath) {
     global $global;
 
-    if (!CustomizeUser::canDownloadVideos()) {
-        error_log("downloadHLS: CustomizeUser::canDownloadVideos said NO");
-        return false;
-    }
-
     if (!file_exists($filepath)) {
         error_log("downloadHLS: file NOT found: {$filepath}");
         return false;
