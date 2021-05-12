@@ -27,7 +27,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             $obj->error = false;
             error_log("tarHLS file already exists");
         } else {
-            $cmd = "tar -cjf {$backupFile} -C {$backupDir} .";
+            $cmd = "tar -cf {$backupFile} -C {$backupDir} .";
 
             error_log("tarHLS Start ({$cmd})");
             //echo $cmd;
