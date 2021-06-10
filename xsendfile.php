@@ -4,6 +4,20 @@ require_once './configuration.php';
 require_once './functions.php';
 session_write_close();
 
+if ($_GET['test']) {    
+    $path = getcwd().'/xtest.txt';    
+    header('Content-Description: File Transfer');
+    header('Content-Disposition: attachment; filename=successtest.txt');
+    header('Content-Transfer-Encoding: binary');
+    header('Connection: Keep-Alive');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Pragma: public');
+    header("X-Sendfile: {$path}");
+    header('Content-Length: ' . filesize($path));
+    exit;
+}
+
 if (empty($_GET['file'])) {
     error_log("XSENDFILE GET file not found ");
     die('GET file not found');
@@ -78,13 +92,13 @@ if (file_exists($path)) {
         header('Pragma: public');
     } else if (!empty($_GET['playHLSasMP4'])) {
         playHLSasMP4($path);
-    } 
+    }
     header("X-Sendfile: {$path}");
     if (empty($_GET['download'])) {
         header("Content-type: " . mime_content_type($path));
     }
     header('Content-Length: ' . filesize($path));
     die();
-}else {
+} else {
     error_log("XSENDFILE ERROR: Not exists {$path} = " . json_encode($path_parts));
 }
