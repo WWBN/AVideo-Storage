@@ -4,7 +4,7 @@ require_once './configuration.php';
 require_once './functions.php';
 session_write_close();
 
-if ($_GET['test']) {    
+if (!empty($_GET['test'])) {    
     $path = getcwd().'/xtest.txt';    
     header('Content-Description: File Transfer');
     header('Content-Disposition: attachment; filename=successtest.txt');
