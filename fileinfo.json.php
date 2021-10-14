@@ -24,6 +24,7 @@ if (empty($_GET['filename'])) {
 
 $object->filename = $_GET['filename'];
 
+$object->resolution = getResolutionFromFilename($_GET['filename']);
 $object->size = getUsageFromFilename($_GET['filename']);
 $object->modified = getModifiedTimeFromFilename($_GET['filename']);
 $object->modifiedDate = date('Y/m/d H:i:s', $object->modified);

@@ -19,7 +19,7 @@ function getURLToApplication() {
     return $url;
 }
 
-function getSelfUserAgent(){
+function getSelfUserAgent() {
     global $global;
     $agent = 'AVideoStorage ';
     $agent .= parse_url($global['aVideoStorageURL'], PHP_URL_HOST);
@@ -250,7 +250,6 @@ function getUsageFromFilename($filename, $dir = "") {
     return $totalSize;
 }
 
-
 function getModifiedTimeFromFilename($filename, $dir = "") {
     global $global;
     $filename = preg_replace("/[^a-z0-9._-]/i", "", $_GET['filename']);
@@ -259,10 +258,10 @@ function getModifiedTimeFromFilename($filename, $dir = "") {
     }
     $pos = strrpos($dir, '/');
     $dir .= (($pos === false) ? "/" : "");
-    if(!file_exists($dir.$filename) && !is_dir($filename)){
+    if (!file_exists($dir . $filename) && !is_dir($filename)) {
         return 0;
     }
-    return filemtime($dir.$filename);
+    return filemtime($dir . $filename);
 }
 
 /**
@@ -330,26 +329,26 @@ function getUsageFromURL($url) {
     return $result;
 }
 
-function wget($url, $filename, $try=0) {
+function wget($url, $filename, $try = 0) {
     if (isLocked($url)) {
         $remotesize = getFilesizeFromURL($url);
-        error_log("wget: ERROR the url is already downloading $url, $filename remote=($remotesize) local=".filesize($filename));
+        error_log("wget: ERROR the url is already downloading $url, $filename remote=($remotesize) local=" . filesize($filename));
         return false;
     }
     lock($url);
-    if($try){
+    if ($try) {
         $cmd = "wget {$url} -c {$filename}";
-    }else{
+    } else {
         $cmd = "wget {$url} -O {$filename}";
     }
     error_log("wget Start ({$cmd}) ");
     //echo $cmd;
     exec($cmd);
     removeLock($url);
-    
+
     $remotesize = getFilesizeFromURL($url);
-    if($remotesize> filesize($filename) && $try<5){
-        error_log("wget remote size is bigger then local remote=($remotesize) local=".filesize($filename));
+    if ($remotesize > filesize($filename) && $try < 5) {
+        error_log("wget remote size is bigger then local remote=($remotesize) local=" . filesize($filename));
         return wget($url, $filename, ++$try);
     }
     if (filesize($filename) > 1000000) {
@@ -382,7 +381,7 @@ function isLocked($url) {
     if (!file_exists($filename)) {
         return false;
     }
-    if((time()-filectime($filename)) < 21600){// older then 6 hours
+    if ((time() - filectime($filename)) < 21600) {// older then 6 hours
         error_log("Locker is too old $filename");
         return false;
     }
@@ -407,11 +406,11 @@ function downloadHLS($filepath) {
         return false;
     }
     $output = m3u8ToMP4($filepath);
-    
-    if(empty($output)){
+
+    if (empty($output)) {
         die("downloadHLS was not possible");
     }
-    
+
     $outputpath = $output['path'];
     $outputfilename = $output['filename'];
 
@@ -422,7 +421,7 @@ function downloadHLS($filepath) {
     } else {
         $quoted = $outputfilename;
     }
-    
+
     header('Content-Description: File Transfer');
     header('Content-Disposition: attachment; filename=' . $quoted);
     header('Content-Transfer-Encoding: binary');
@@ -441,13 +440,13 @@ function playHLSasMP4($filepath) {
         return false;
     }
     $output = m3u8ToMP4($filepath);
-    
-    if(empty($output)){
+
+    if (empty($output)) {
         die("playHLSasMP4 was not possible");
     }
-    
+
     $outputpath = $output['path'];
-    
+
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
     header('Cache-Control: post-check=0, pre-check=0', false);
     header('Pragma: no-cache');
@@ -457,12 +456,12 @@ function playHLSasMP4($filepath) {
     exit;
 }
 
-function m3u8ToMP4($input){
+function m3u8ToMP4($input) {
     global $global;
-    $videosDir = "{$global['videos_directory']}";    
+    $videosDir = "{$global['videos_directory']}";
     $outputfilename = str_replace($videosDir, "", $input);
     $parts = explode("/", $outputfilename);
-    $outputfilename = $parts[0].".mp4";
+    $outputfilename = $parts[0] . ".mp4";
     $outputpath = "{$videosDir}cache/downloads/{$outputfilename}";
     make_path($outputpath);
     if (empty($outputfilename)) {
@@ -478,7 +477,7 @@ function m3u8ToMP4($input){
         exec($command . " 2>&1", $output, $return);
         if (!empty($return)) {
             error_log("downloadHLS: ERROR 1 " . implode(PHP_EOL, $output));
-            
+
             $command = get_ffmpeg() . " -y -i {$filepath} -c:v copy -c:a copy -bsf:a aac_adtstoasc -strict -2 {$outputpath}";
             //var_dump($outputfilename, $command, $_GET, $filepath, $quoted);exit;
             exec($command . " 2>&1", $output, $return);
@@ -488,7 +487,7 @@ function m3u8ToMP4($input){
             }
         }
     }
-    return array('path'=>$outputpath, 'filename'=>$outputfilename);
+    return array('path' => $outputpath, 'filename' => $outputfilename);
 }
 
 function get_ffmpeg($ignoreGPU = false) {
@@ -503,4 +502,88 @@ function get_ffmpeg($ignoreGPU = false) {
         $ffmpeg = "{$global['ffmpeg']}{$ffmpeg}";
     }
     return $ffmpeg;
+}
+
+function getResolutionFromFilename($filename) {
+    global $global;
+    $resolution = false;
+    if (preg_match("/_([0-9]+).(mp4|webm)/i", $filename, $matches)) {
+        if (!empty($matches[1])) {
+            $resolution = intval($matches[1]);
+        }
+    } elseif (preg_match('/res([0-9]+)\/index.m3u8/i', $filename, $matches)) {
+        if (!empty($matches[1])) {
+            $resolution = intval($matches[1]);
+        }
+    } elseif (preg_match('/_(HD|Low|SD).(mp4|webm)/i', $filename, $matches)) {
+        if (!empty($matches[1])) {
+            if ($matches[1] == 'HD') {
+                $resolution = 1080;
+            } else if ($matches[1] == 'SD') {
+                $resolution = 720;
+            } else if ($matches[1] == 'Low') {
+                $resolution = 480;
+            }
+        }
+    } elseif (preg_match('/\/(hd|low|sd)\/index.m3u8/', $filename, $matches)) {
+        if (!empty($matches[1])) {
+            if ($matches[1] == 'hd') {
+                $resolution = 1080;
+            } else if ($matches[1] == 'sd') {
+                $resolution = 720;
+            } else if ($matches[1] == 'low') {
+                $resolution = 480;
+            }
+        }
+    } elseif (preg_match('/video_[0-9_a-z]+\/index.m3u8/i', $filename)) {
+        if (file_exists($filename)) {
+            $resolution = getHLSHigestResolutionFromFile($filename);
+        }
+    }
+    return $resolution;
+}
+
+function getHLSHigestResolutionFromFile($file) {
+    global $global;
+    $fileOpened = fopen($file, "r");
+    $resolution = 0;
+    while (!feof($fileOpened)) {
+        $line = trim(fgets($fileOpened));
+        if (preg_match("/res([^\/]+)\/index.m3u8/", $line, $match)) {
+            $newRes = intval($match[1]);
+            if (empty($newRes)) {
+                continue;
+            }
+            if ($newRes > $resolution) {
+                $resolution = $newRes;
+            }
+        } else if (preg_match("/^([^\/]+)\/index.m3u8/", $line, $match)) {
+            if (empty($match[1])) {
+                continue;
+            }
+            $newRes = strtolower($match[1]);
+            switch ($newRes) {
+                case "hd":
+                    $newRes = 720;
+                    break;
+                case "sd":
+                    $newRes = 540;
+                    break;
+                case "low":
+                    $newRes = 360;
+                    break;
+                default:
+                    $newRes = 0;
+                    break;
+            }
+            if (empty($newRes)) {
+                continue;
+            }
+            if ($newRes > $resolution) {
+                $resolution = $newRes;
+            }
+        }
+    }
+    fclose($fileOpened);
+    return $resolution;
 }
