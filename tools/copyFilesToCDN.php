@@ -83,7 +83,7 @@ foreach ($glob as $file) {
             echo "Upload $value to $remote_file" . PHP_EOL;
             $filesize = filesize($value);
             $start = microtime(true);
-            $filesizeMb = $file/(1024*1024);
+            $filesizeMb = $filesize/(1024*1024);
             //ftp_mkdir_recusive($remote_file);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
                 echo "successfully uploaded $value\n";
