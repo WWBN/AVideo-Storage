@@ -90,7 +90,7 @@ foreach ($glob as $file) {
             } else {
                 echo "There was a problem while uploading $file\n";
             }
-            $end = microtime(true)-$start;
+            $end = number_format(microtime(true)-$start);
             
             echo number_format($filesizeMb,2)."MB Uploaded in $end seconds ". number_format($filesizeMb/$end,1)."Mbps\n";
         }
