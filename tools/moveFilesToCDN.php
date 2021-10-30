@@ -78,7 +78,7 @@ foreach ($glob as $file) {
         $remote_file = "{$dirName}/{$parts[1]}";
         echo "Upload $value to $remote_file" . PHP_EOL;
 
-        ftp_mkdir_recusive($remote_file);
+        //ftp_mkdir_recusive($remote_file);
         if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
             echo "successfully uploaded $value\n";
         } else {
