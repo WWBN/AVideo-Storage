@@ -598,8 +598,9 @@ function getCleanFilenameFromFile($filename) {
     if (empty($filename)) {
         return "";
     }
-    $filename = fixPath($filename);
-    $filename = str_replace(getVideosDir(), '', $filename);
+    $parts = explode('/videos/', $filename);
+    $filename = rtrim($parts[1], '/');
+    
     if (preg_match('/videos[\/\\\]([^\/\\\]+)[\/\\\].*index.m3u8$/', $filename, $matches)) {
         return $matches[1];
     }
