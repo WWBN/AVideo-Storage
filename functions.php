@@ -587,3 +587,61 @@ function getHLSHigestResolutionFromFile($file) {
     fclose($fileOpened);
     return $resolution;
 }
+
+function isCommandLineInterface() {
+    return (empty($_GET['ignoreCommandLineInterface']) && php_sapi_name() === 'cli');
+    }
+
+
+function getCleanFilenameFromFile($filename) {
+    global $global;
+    if (empty($filename)) {
+        return "";
+    }
+    $filename = fixPath($filename);
+    $filename = str_replace(getVideosDir(), '', $filename);
+    if (preg_match('/videos[\/\\\]([^\/\\\]+)[\/\\\].*index.m3u8$/', $filename, $matches)) {
+        return $matches[1];
+    }
+    $search = array('_Low', '_SD', '_HD', '_thumbsV2', '_thumbsSmallV2', '_thumbsSprit', '_roku', '_portrait', '_portrait_thumbsV2', '_portrait_thumbsSmallV2', '_spectrum', '_tvg', '.notfound');
+
+    if (!empty($global['langs_codes_values_withdot']) && is_array($global['langs_codes_values_withdot'])) {
+        $search = array_merge($search, $global['langs_codes_values_withdot']);
+    }
+
+    if (empty($global['avideo_resolutions']) || !is_array($global['avideo_resolutions'])) {
+        $global['avideo_resolutions'] = array(240, 360, 480, 540, 720, 1080, 1440, 2160);
+    }
+
+    foreach ($global['avideo_resolutions'] as $value) {
+        $search[] = "_{$value}";
+
+        $search[] = "res{$value}";
+    }
+
+    $cleanName = str_replace($search, '', $filename);
+
+    if ($cleanName == $filename) {
+        $cleanName = preg_replace('/([a-z]+_[0-9]{12}_[a-z0-9]{4})_[0-9]+/', '$1', $filename);
+    }
+
+    $path_parts = pathinfo($cleanName);
+    if (empty($path_parts['extension'])) {
+        //_error_log("Video::getCleanFilenameFromFile could not find extension of ".$filename);
+        if (!empty($path_parts['filename'])) {
+            return $path_parts['filename'];
+        } else {
+            return $filename;
+        }
+    } else if (strlen($path_parts['extension']) > 4) {
+        return $cleanName;
+    } else if ($path_parts['filename'] == 'index' && $path_parts['extension'] == 'm3u8') {
+        $parts = explode(DIRECTORY_SEPARATOR, $cleanName);
+        if (!empty($parts[0])) {
+            return $parts[0];
+        }
+        return $parts[1];
+    } else {
+        return $path_parts['filename'];
+    }
+}
