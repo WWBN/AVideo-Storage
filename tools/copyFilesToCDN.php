@@ -89,7 +89,7 @@ foreach ($glob as $file) {
                 $end = number_format(microtime(true)-$start);
                 if(!empty($end)){
                     $ETA = secondsToVideoTime($end*($totalItems-$countItems));
-                    echo number_format($filesizeMb,2)."MB Uploaded in ".secondsToVideoTime($end).' '. number_format($filesizeMb/$end,1)."Mbps\n ETA:{$ETA}".PHP_EOL;
+                    echo number_format($filesizeMb,2)."MB Uploaded in ".secondsToVideoTime($end).' '. number_format($filesizeMb/$end,1)."Mbps ETA:{$ETA}".PHP_EOL;
                 }
             } else {
                 echo "There was a problem while uploading $file\n";
