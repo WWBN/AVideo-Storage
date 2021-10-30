@@ -85,7 +85,6 @@ foreach ($glob as $file) {
             echo "There was a problem while uploading $file\n";
         }
     }
-    EXIT;
 }
 
 // close the connection
