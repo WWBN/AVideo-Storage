@@ -37,7 +37,6 @@ if (!isCommandLineInterface()) {
 //$storage_hostname = 'storage.ypt.me';
 //$storage_username = '';
 //$storage_password = '';
-
 // set up basic connection
 $conn_id = ftp_connect($storage_hostname);
 
@@ -76,13 +75,24 @@ foreach ($glob as $file) {
     foreach ($filesToUpload as $value) {
         $parts = explode('/videos/', $value);
         $remote_file = "{$dirName}/{$parts[1]}";
-        echo "Upload $value to $remote_file" . PHP_EOL;
 
-        //ftp_mkdir_recusive($remote_file);
-        if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
-            echo "successfully uploaded $value\n";
+        $res = ftp_size($conn_id, $remote_file);
+        if ($res < 0) {
+            echo "File $remote_file already exists" . PHP_EOL;
         } else {
-            echo "There was a problem while uploading $file\n";
+            echo "Upload $value to $remote_file" . PHP_EOL;
+            $filesize = filesize($remote_file);
+            $start = microtime(true);
+            $filesizeMb = $file/(1024*1024);
+            //ftp_mkdir_recusive($remote_file);
+            if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
+                echo "successfully uploaded $value\n";
+            } else {
+                echo "There was a problem while uploading $file\n";
+            }
+            $end = microtime(true)-$start;
+            
+            echo "{$filesizeMb}MB Uploaded in $end seconds ".($filesizeMb/$end)."Mbps\n";
         }
     }
 }
