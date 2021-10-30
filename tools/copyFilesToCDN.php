@@ -81,7 +81,7 @@ foreach ($glob as $file) {
             echo "File $remote_file already exists" . PHP_EOL;
         } else {
             echo "Upload $value to $remote_file" . PHP_EOL;
-            $filesize = filesize($remote_file);
+            $filesize = filesize($value);
             $start = microtime(true);
             $filesizeMb = $file/(1024*1024);
             //ftp_mkdir_recusive($remote_file);
