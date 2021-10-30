@@ -77,7 +77,7 @@ foreach ($glob as $file) {
         $remote_file = "{$dirName}/{$parts[1]}";
 
         $res = ftp_size($conn_id, $remote_file);
-        if ($res < 0) {
+        if ($res > 0) {
             echo "File $remote_file already exists" . PHP_EOL;
         } else {
             echo "Upload $value to $remote_file" . PHP_EOL;
