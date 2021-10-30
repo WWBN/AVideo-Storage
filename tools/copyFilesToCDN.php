@@ -92,7 +92,7 @@ foreach ($glob as $file) {
             }
             $end = microtime(true)-$start;
             
-            echo "{$filesizeMb}MB Uploaded in $end seconds ".($filesizeMb/$end)."Mbps\n";
+            echo number_format($filesizeMb,2)."MB Uploaded in $end seconds ". number_format($filesizeMb/$end,1)."Mbps\n";
         }
     }
 }
