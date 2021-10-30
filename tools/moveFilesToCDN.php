@@ -32,7 +32,7 @@ foreach ($glob as $file) {
     if (is_dir($file)) {
         //$parts = explode('/videos/', $file);
         //$dirName = rtrim($parts[1], '/');
-        $glob2 = glob("{$file}*");
+        $glob2 = glob("{$file}/*");
         foreach ($glob2 as $file2) {
             $filesToUpload[] = $file2;
         }
