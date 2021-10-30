@@ -1,5 +1,30 @@
 <?php
 
+function ftp_mkdir_recusive($path) {
+    global $conn_id;
+    $parts = explode("/", $path);
+    array_pop($parts);
+    $return = true;
+    $fullpath = "";
+    foreach ($parts as $part) {
+        if (empty($part)) {
+            $fullpath .= "/";
+            continue;
+        }
+        $fullpath .= $part . "/";
+        if (@ftp_chdir($conn_id, $fullpath)) {
+            ftp_chdir($conn_id, $fullpath);
+        } else {
+            if (@ftp_mkdir($conn_id, $part)) {
+                ftp_chdir($conn_id, $part);
+            } else {
+                $return = false;
+            }
+        }
+    }
+    return $return;
+}
+
 //streamer config
 require_once '../functions.php';
 
@@ -14,11 +39,10 @@ $storage_password = '';
 // set up basic connection
 $conn_id = ftp_connect($storage_hostname);
 
-/*
-  // login with username and password
-  $login_result = ftp_login($conn_id, $storage_username, $storage_password);
-  ftp_pasv($conn_id, true);
- */
+// login with username and password
+$login_result = ftp_login($conn_id, $storage_username, $storage_password);
+ftp_pasv($conn_id, true);
+
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
@@ -48,27 +72,19 @@ foreach ($glob as $file) {
     }
 
     foreach ($filesToUpload as $value) {
-        //$remote_file = 
-        echo "Upload $value to " . PHP_EOL;
-    }
+        $parts = explode('/videos/', $value);
+        $remote_file = $parts[1];
+        echo "Upload $value to $remote_file" . PHP_EOL;
 
-    /*
-      // upload a file
-      if (ftp_mkdir($conn_id, $dir)) {
-      echo "successfully created $dir\n";
-      if (ftp_put($conn_id, $remote_file, $file, FTP_ASCII)) {
-      echo "successfully uploaded $file\n";
-      } else {
-      echo "There was a problem while uploading $file\n";
-      }
-      } else {
-      echo "There was a problem while creating $dir\n";
-      }
-     * 
-     */
+        ftp_mkdir_recusive($remote_file);
+        if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
+            echo "successfully uploaded $value\n";
+        } else {
+            echo "There was a problem while uploading $file\n";
+        }
+    }
+    EXIT;
 }
-/*
+
 // close the connection
 ftp_close($conn_id);
- * 
- */
