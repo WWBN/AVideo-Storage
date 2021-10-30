@@ -15,10 +15,10 @@ $storage_password = '';
 $conn_id = ftp_connect($storage_hostname);
 
 /*
-// login with username and password
-$login_result = ftp_login($conn_id, $storage_username, $storage_password);
-ftp_pasv($conn_id, true);
-*/
+  // login with username and password
+  $login_result = ftp_login($conn_id, $storage_username, $storage_password);
+  ftp_pasv($conn_id, true);
+ */
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
@@ -34,28 +34,36 @@ foreach ($glob as $file) {
         //$dirName = rtrim($parts[1], '/');
         $glob2 = glob("{$file}/*");
         foreach ($glob2 as $file2) {
-            $filesToUpload[] = $file2;
+            if (is_dir($file2)) {
+                $glob3 = glob("{$file2}/*");
+                foreach ($glob3 as $file3) {
+                    $filesToUpload[] = $file3;
+                }
+            } else {
+                $filesToUpload[] = $file2;
+            }
         }
     } else {
         $filesToUpload[] = $file;
     }
-    
+
     foreach ($filesToUpload as $value) {
-        echo "Upload $value ".PHP_EOL;
+        //$remote_file = 
+        echo "Upload $value to " . PHP_EOL;
     }
-    
+
     /*
-    // upload a file
-    if (ftp_mkdir($conn_id, $dir)) {
-        echo "successfully created $dir\n";
-        if (ftp_put($conn_id, $remote_file, $file, FTP_ASCII)) {
-            echo "successfully uploaded $file\n";
-        } else {
-            echo "There was a problem while uploading $file\n";
-        }
-    } else {
-        echo "There was a problem while creating $dir\n";
-    }
+      // upload a file
+      if (ftp_mkdir($conn_id, $dir)) {
+      echo "successfully created $dir\n";
+      if (ftp_put($conn_id, $remote_file, $file, FTP_ASCII)) {
+      echo "successfully uploaded $file\n";
+      } else {
+      echo "There was a problem while uploading $file\n";
+      }
+      } else {
+      echo "There was a problem while creating $dir\n";
+      }
      * 
      */
 }
