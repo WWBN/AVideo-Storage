@@ -79,19 +79,20 @@ foreach ($glob as $file) {
         if ($res > 0) {
             echo "File $remote_file already exists" . PHP_EOL;
         } else {
-            echo "Upload $value to $remote_file" . PHP_EOL;
+            echo "Uploading $value to $remote_file" . PHP_EOL;
             $filesize = filesize($value);
             $start = microtime(true);
             $filesizeMb = $filesize/(1024*1024);
             //ftp_mkdir_recusive($remote_file);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
                 echo "successfully uploaded $value\n";
+                $end = number_format(microtime(true)-$start);
+                if(!empty($end)){
+                    $ETA = secondsToVideoTime($end*($totalItems-$countItems));
+                    echo number_format($filesizeMb,2)."MB Uploaded in ".secondsToVideoTime($end).' '. number_format($filesizeMb/$end,1)."Mbps\n";
+                }
             } else {
                 echo "There was a problem while uploading $file\n";
-            }
-            $end = number_format(microtime(true)-$start);
-            if(!empty($end)){
-                echo number_format($filesizeMb,2)."MB Uploaded in $end seconds ". number_format($filesizeMb/$end,1)."Mbps\n";
             }
         }
     }
