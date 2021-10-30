@@ -47,7 +47,6 @@ ftp_pasv($conn_id, true);
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
-$dirname = $basename . DIRECTORY_SEPARATOR;
 $countItems = 0;
 foreach ($glob as $file) {
     $countItems++;
@@ -91,8 +90,9 @@ foreach ($glob as $file) {
                 echo "There was a problem while uploading $file\n";
             }
             $end = number_format(microtime(true)-$start);
-            
-            echo number_format($filesizeMb,2)."MB Uploaded in $end seconds ". number_format($filesizeMb/$end,1)."Mbps\n";
+            if(!empty($end)){
+                echo number_format($filesizeMb,2)."MB Uploaded in $end seconds ". number_format($filesizeMb/$end,1)."Mbps\n";
+            }
         }
     }
 }
