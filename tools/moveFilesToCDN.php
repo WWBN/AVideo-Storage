@@ -75,7 +75,7 @@ foreach ($glob as $file) {
 
     foreach ($filesToUpload as $value) {
         $parts = explode('/videos/', $value);
-        $remote_file = $parts[1];
+        $remote_file = "{$dirName}/{$parts[1]}";
         echo "Upload $value to $remote_file" . PHP_EOL;
 
         ftp_mkdir_recusive($remote_file);
