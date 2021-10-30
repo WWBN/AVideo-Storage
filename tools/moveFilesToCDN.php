@@ -34,9 +34,9 @@ if (!isCommandLineInterface()) {
     return die('Command Line only');
 }
 
-$storage_hostname = 'storage.ypt.me';
-$storage_username = '';
-$storage_password = '';
+//$storage_hostname = 'storage.ypt.me';
+//$storage_username = '';
+//$storage_password = '';
 
 // set up basic connection
 $conn_id = ftp_connect($storage_hostname);
