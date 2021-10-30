@@ -25,8 +25,10 @@ function ftp_mkdir_recusive($path) {
     return $return;
 }
 
+require_once '../configuration.php';
 //streamer config
 require_once '../functions.php';
+
 
 if (!isCommandLineInterface()) {
     return die('Command Line only');
