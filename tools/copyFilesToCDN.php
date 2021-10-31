@@ -89,10 +89,13 @@ foreach ($glob as $file) {
     foreach ($filesToUpload as $value) {
         $filesToUploadCount++;
         $path_parts = pathinfo($value);
+        /*
         if ($path_parts['extension'] == 'mp4') {
             echo "Skip MP4" . PHP_EOL;
             continue;
         }
+         * 
+         */
 
         $parts = explode('/videos/', $value);
         $remote_file = "{$dirName}/{$parts[1]}";
