@@ -81,20 +81,31 @@ foreach ($glob as $file) {
         } else {
             $filesize = filesize($value);
             $start = microtime(true);
-            $filesizeMb = $filesize/(1024*1024);
-            echo "Uploading $value to $remote_file ".number_format($filesizeMb,2)."MB" . PHP_EOL;
+            $filesizeMb = $filesize / (1024 * 1024);
+            echo "Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
             //ftp_mkdir_recusive($remote_file);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
                 echo "successfully uploaded $value\n";
-                $end = number_format(microtime(true)-$start);
-                if(!empty($end)){
-                    $ETA = secondsToVideoTime($end*($totalItems-$countItems));
-                    echo number_format($filesizeMb,2)."MB Uploaded in ".secondsToVideoTime($end).' '. number_format($filesizeMb/$end,1)."Mbps ETA:{$ETA}".PHP_EOL;
+                $end = number_format(microtime(true) - $start);
+                if (!empty($end)) {
+                    $ETA = secondsToVideoTime($end * ($totalItems - $countItems));
+                    echo number_format($filesizeMb, 2) . "MB Uploaded in " . secondsToVideoTime($end) . ' ' . number_format($filesizeMb / $end, 1) . "Mbps ETA:{$ETA}" . PHP_EOL;
                 }
             } else {
                 echo "There was a problem while uploading $file\n";
             }
         }
+        // move if there is a subdir wrong (hls files)
+        $remote_fileWrongDirname = "{$dirName}/{$dirName}";
+        $is_dir = @ftp_chdir($conn_id, $remote_fileWrongDirname); //produces warning if file...
+        if ($is_dir) {            
+            echo "Fixing Dir {$dirName}".PHP_EOL;
+            ftp_chdir($conn_id, '..');
+            ftp_rename($conn_id, $dirName, $dirName.'_old');
+            ftp_rename($conn_id, "{$dirName}_old/{$dirName}", $dirName);
+            ftp_rmdir($conn_id, "{$dirName}_old/{$dirName}");
+            exit;
+        } 
     }
 }
 
