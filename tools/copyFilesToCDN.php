@@ -52,6 +52,17 @@ foreach ($glob as $file) {
     $countItems++;
     echo "[$countItems/$totalItems] Process file {$file} " . PHP_EOL;
     $dirName = getCleanFilenameFromFile($file);
+    // move if there is a subdir wrong (hls files)
+    $WrongDirname = "{$dirName}/{$dirName}";
+    $is_dir = @ftp_chdir($conn_id, $WrongDirname); //produces warning if file...
+    if ($is_dir) {         
+        echo "Deleting wrong name {$WrongDirname} " . PHP_EOL;   
+        ftp_chdir($conn_id, '..');
+        ftp_chdir($conn_id, '..');
+        ftp_rmdir($conn_id, $dirName);
+        exit;
+    } 
+    
     $filesToUpload = array();
     if (is_dir($file)) {
         //$parts = explode('/videos/', $file);
@@ -81,6 +92,8 @@ foreach ($glob as $file) {
         
         $parts = explode('/videos/', $value);
         $remote_file = "{$dirName}/{$parts[1]}";
+        
+        $remote_file = str_replace("{$dirName}/{$dirName}", "$dirName", $remote_file);
 
         $res = ftp_size($conn_id, $remote_file);
         if ($res > 0) {
@@ -103,18 +116,6 @@ foreach ($glob as $file) {
             }
         }
     }
-    // move if there is a subdir wrong (hls files)
-    $remote_fileWrongDirname = "{$dirName}/{$dirName}";
-    $is_dir = @ftp_chdir($conn_id, $remote_fileWrongDirname); //produces warning if file...
-    if ($is_dir) {            
-        echo "Fixing Dir {$dirName}".PHP_EOL;
-        ftp_chdir($conn_id, '..');
-        ftp_chdir($conn_id, '..');
-        ftp_rename($conn_id, $dirName, $dirName.'_old');
-        ftp_rename($conn_id, "{$dirName}_old/{$dirName}", $dirName);
-        ftp_rmdir($conn_id, "{$dirName}_old/{$dirName}");
-        exit;
-    } 
 }
 
 // close the connection
