@@ -99,12 +99,12 @@ foreach ($glob as $file) {
         $remote_file = str_replace("{$dirName}/{$dirName}", "$dirName", $remote_file);
         $res = ftp_size($conn_id, $remote_file);
         if ($res > 0) {
-            echo "[{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
+            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
         } else {
             $filesize = filesize($value);
             $totalBytes += $filesize;
             $filesizeMb = $filesize / (1024 * 1024);
-            echo "[{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
             //ftp_mkdir_recusive($remote_file);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
                 echo "successfully uploaded $value\n";
