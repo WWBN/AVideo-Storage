@@ -106,10 +106,13 @@ foreach ($glob as $file) {
             $filesizeMb = $filesize / (1024 * 1024);
             echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
             //ftp_mkdir_recusive($remote_file);
+            
+            $start1 = microtime(true);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
-                echo "successfully uploaded $value\n";
+                $end1 = number_format(microtime(true) - $start);
+                echo "successfully uploaded in {$end1} seconds $value". PHP_EOL;
             } else {
-                echo "There was a problem while uploading $file\n";
+                echo "There was a problem while uploading $file". PHP_EOL;
             }
         }
     }
