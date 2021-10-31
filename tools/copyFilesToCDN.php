@@ -109,7 +109,7 @@ foreach ($glob as $file) {
             
             $start1 = microtime(true);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
-                $end1 = number_format(microtime(true) - $start1);
+                $end1 = number_format(microtime(true) - $start1,3);
                 echo "successfully uploaded in {$end1} seconds $value". PHP_EOL;
             } else {
                 echo "There was a problem while uploading $file". PHP_EOL;
