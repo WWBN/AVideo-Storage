@@ -102,19 +102,19 @@ foreach ($glob as $file) {
                 echo "There was a problem while uploading $file\n";
             }
         }
-        // move if there is a subdir wrong (hls files)
-        $remote_fileWrongDirname = "{$dirName}/{$dirName}";
-        $is_dir = @ftp_chdir($conn_id, $remote_fileWrongDirname); //produces warning if file...
-        if ($is_dir) {            
-            echo "Fixing Dir {$dirName}".PHP_EOL;
-            ftp_chdir($conn_id, '..');
-            ftp_chdir($conn_id, '..');
-            ftp_rename($conn_id, $dirName, $dirName.'_old');
-            ftp_rename($conn_id, "{$dirName}_old/{$dirName}", $dirName);
-            ftp_rmdir($conn_id, "{$dirName}_old/{$dirName}");
-            exit;
-        } 
     }
+    // move if there is a subdir wrong (hls files)
+    $remote_fileWrongDirname = "{$dirName}/{$dirName}";
+    $is_dir = @ftp_chdir($conn_id, $remote_fileWrongDirname); //produces warning if file...
+    if ($is_dir) {            
+        echo "Fixing Dir {$dirName}".PHP_EOL;
+        ftp_chdir($conn_id, '..');
+        ftp_chdir($conn_id, '..');
+        ftp_rename($conn_id, $dirName, $dirName.'_old');
+        ftp_rename($conn_id, "{$dirName}_old/{$dirName}", $dirName);
+        ftp_rmdir($conn_id, "{$dirName}_old/{$dirName}");
+        exit;
+    } 
 }
 
 // close the connection
