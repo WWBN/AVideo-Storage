@@ -72,6 +72,13 @@ foreach ($glob as $file) {
     }
 
     foreach ($filesToUpload as $value) {
+        
+        $path_parts = pathinfo($value);
+        if($path_parts['extension']=='mp4'){
+            echo "Skip MP4" . PHP_EOL;
+            continue;
+        }
+        
         $parts = explode('/videos/', $value);
         $remote_file = "{$dirName}/{$parts[1]}";
 
@@ -100,6 +107,7 @@ foreach ($glob as $file) {
         $is_dir = @ftp_chdir($conn_id, $remote_fileWrongDirname); //produces warning if file...
         if ($is_dir) {            
             echo "Fixing Dir {$dirName}".PHP_EOL;
+            ftp_chdir($conn_id, '..');
             ftp_chdir($conn_id, '..');
             ftp_rename($conn_id, $dirName, $dirName.'_old');
             ftp_rename($conn_id, "{$dirName}_old/{$dirName}", $dirName);
