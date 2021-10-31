@@ -55,14 +55,14 @@ foreach ($glob as $file) {
     // move if there is a subdir wrong (hls files)
     $WrongDirname = "{$dirName}/{$dirName}";
     $is_dir = @ftp_chdir($conn_id, $WrongDirname); //produces warning if file...
-    if ($is_dir) {         
-        echo "Deleting wrong name {$WrongDirname} " . PHP_EOL;   
+    if ($is_dir) {
+        echo "Deleting wrong name {$WrongDirname} " . PHP_EOL;
         ftp_chdir($conn_id, '..');
         ftp_chdir($conn_id, '..');
         ftp_rmdir($conn_id, $dirName);
         exit;
-    } 
-    
+    }
+
     $filesToUpload = array();
     if (is_dir($file)) {
         //$parts = explode('/videos/', $file);
@@ -82,39 +82,43 @@ foreach ($glob as $file) {
         $filesToUpload[] = $file;
     }
 
+    $start = microtime(true);
+    $totalBytes = 0;
+    $totalFilesToUpload = count($filesToUpload);
+    $filesToUploadCount = 0;
     foreach ($filesToUpload as $value) {
-        
+        $filesToUploadCount++;
         $path_parts = pathinfo($value);
-        if($path_parts['extension']=='mp4'){
+        if ($path_parts['extension'] == 'mp4') {
             echo "Skip MP4" . PHP_EOL;
             continue;
         }
-        
+
         $parts = explode('/videos/', $value);
         $remote_file = "{$dirName}/{$parts[1]}";
-        
         $remote_file = str_replace("{$dirName}/{$dirName}", "$dirName", $remote_file);
-
         $res = ftp_size($conn_id, $remote_file);
         if ($res > 0) {
             echo "File $remote_file already exists" . PHP_EOL;
         } else {
             $filesize = filesize($value);
-            $start = microtime(true);
+            $totalBytes += $filesize;
             $filesizeMb = $filesize / (1024 * 1024);
-            echo "Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+            echo "[{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
             //ftp_mkdir_recusive($remote_file);
             if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
                 echo "successfully uploaded $value\n";
-                $end = number_format(microtime(true) - $start);
-                if (!empty($end)) {
-                    $ETA = secondsToVideoTime($end * ($totalItems - $countItems));
-                    echo number_format($filesizeMb, 2) . "MB Uploaded in " . secondsToVideoTime($end) . ' ' . number_format($filesizeMb / $end, 1) . "Mbps ETA:{$ETA}" . PHP_EOL;
-                }
             } else {
                 echo "There was a problem while uploading $file\n";
             }
         }
+    }
+
+    $totalMb = $totalBytes / (1024 * 1024);
+    $end = number_format(microtime(true) - $start);
+    if (!empty($end)) {
+        $ETA = secondsToVideoTime($end * ($totalItems - $countItems));
+        echo number_format($totalMb, 2) . "MB Uploaded in " . secondsToVideoTime($end) . ' ' . number_format($totalMb / $end, 1) . "Mbps ETA:{$ETA}" . PHP_EOL;
     }
 }
 
