@@ -99,7 +99,7 @@ foreach ($glob as $file) {
 
         $parts = explode('/videos/', $value);
         $remote_file = "{$dirName}/{$parts[1]}";
-        $remote_file = str_replace("{$dirName}/{$dirName}", "$dirName", $remote_file);
+        $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
         $res = ftp_size($conn_id, $remote_file);
         if ($res > 0) {
             echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
