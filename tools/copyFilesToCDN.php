@@ -34,6 +34,8 @@ if (!isCommandLineInterface()) {
     return die('Command Line only');
 }
 
+$index = intval(@$argv[1]);
+
 //$storage_hostname = 'storage.ypt.me';
 //$storage_username = '';
 //$storage_password = '';
@@ -50,6 +52,9 @@ echo "Found total of {$totalItems} items " . PHP_EOL;
 $countItems = 0;
 foreach ($glob as $file) {
     $countItems++;
+    if($countItems<$index){
+        continue;
+    }
     echo "[$countItems/$totalItems] Process file {$file} " . PHP_EOL;
     $dirName = getCleanFilenameFromFile($file);
     // move if there is a subdir wrong (hls files)
