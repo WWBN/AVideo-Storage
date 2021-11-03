@@ -134,9 +134,6 @@ foreach ($glob as $file) {
             $filesizeMb = $filesize / (1024 * 1024);
             echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading {$value2['remote_file']} " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
             $value2['d'] = ftp_nb_put($conn_id, $value2['remote_file'], $value2['local_file'], FTP_BINARY);
-        }
-        
-        foreach ($uploadingNow as $value2) {
             while ($value2['d'] == FTP_MOREDATA) {
                 // do whatever you want
                 // continue uploading
@@ -151,6 +148,7 @@ foreach ($glob as $file) {
                 echo "successfully uploaded in {$end1} seconds {$value2['remote_file']}" . PHP_EOL;
             }
         }
+        
     }
 
     $totalMb = $totalBytes / (1024 * 1024);
