@@ -31,6 +31,7 @@ $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
 for ($countItems = 0; $countItems < count($glob);) {
+    $file = $glob[$countItems];
     $ret = array();
     for ($i = 0; $i < $totalSameTime; $i++) {
         $countItems++;
