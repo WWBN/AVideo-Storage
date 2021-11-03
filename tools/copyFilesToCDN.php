@@ -64,27 +64,28 @@ for ($countItems = 0; $countItems < count($glob);) {
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
+
     foreach ($filesToUpload as $value) {
         $filesToUploadCount++;
-        $path_parts = pathinfo($value);
-        if (empty($path_parts['extension'])) {
-            echo "Skip empty extension {$value}" . PHP_EOL;
-            continue;
-        }
-        if ($path_parts['extension'] == 'tgz') {
-            echo "Skip tgz {$value}" . PHP_EOL;
-            continue;
-        }
-
-        $parts = explode('/videos/', $value);
-        $filesize = filesize($value);
-        if (empty($filesize)) {
-            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
-        }
-        $remote_file = "{$dirName}/{$parts[1]}";
-        $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
-
         for ($i = 0; $i < $totalSameTime;) {
+            $path_parts = pathinfo($value);
+            if (empty($path_parts['extension'])) {
+                echo "Skip empty extension {$value}" . PHP_EOL;
+                continue;
+            }
+            if ($path_parts['extension'] == 'tgz') {
+                echo "Skip tgz {$value}" . PHP_EOL;
+                continue;
+            }
+
+            $parts = explode('/videos/', $value);
+            $filesize = filesize($value);
+            if (empty($filesize)) {
+                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
+            }
+            $remote_file = "{$dirName}/{$parts[1]}";
+            $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
+
             $res = ftp_size($conn_id[$i], $remote_file);
             if ($res > 0) {
                 echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
@@ -99,18 +100,18 @@ for ($countItems = 0; $countItems < count($glob);) {
                 $i++;
             }
         }
-    }
-    for ($i = 0; $i < $totalSameTime; $i++) {
-        if (empty($ret[$i])) {
-            continue;
-        }
-        while ($ret[$i] == FTP_MOREDATA) {
-            // Continue uploading...
-            $ret[$i] = ftp_nb_continue($conn_id[$i]);
-        }
-        if ($ret[$i] != FTP_FINISHED) {
-            echo "There was an error uploading the file... $i";
-            //exit(1);
+        for ($i = 0; $i < $totalSameTime; $i++) {
+            if (empty($ret[$i])) {
+                continue;
+            }
+            while ($ret[$i] == FTP_MOREDATA) {
+                // Continue uploading...
+                $ret[$i] = ftp_nb_continue($conn_id[$i]);
+            }
+            if ($ret[$i] != FTP_FINISHED) {
+                echo "There was an error uploading the file... $i";
+                //exit(1);
+            }
         }
     }
 }
