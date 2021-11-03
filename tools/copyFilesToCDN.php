@@ -105,13 +105,6 @@ foreach ($glob as $file) {
                 continue;
             }
             $path_parts = pathinfo($value);
-            /*
-              if ($path_parts['extension'] == 'mp4') {
-              echo "Skip MP4" . PHP_EOL;
-              continue;
-              }
-             * 
-             */
 
             $parts = explode('/videos/', $value);
             $remote_file = "{$dirName}/{$parts[1]}";
@@ -120,14 +113,8 @@ foreach ($glob as $file) {
             if ($res > 0) {
                 echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
             } else {
-                $filesize = filesize($value);
-                $totalBytes += $filesize;
-                $filesizeMb = $filesize / (1024 * 1024);
-                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
                 //ftp_mkdir_recusive($remote_file);
 
-                $start1 = microtime(true);
-                $d = ftp_nb_put($conn_id, $remote_file, $value, FTP_BINARY);
                 /*
                   if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
                   $end1 = number_format(microtime(true) - $start1, 3);
@@ -137,13 +124,23 @@ foreach ($glob as $file) {
                   }
                  * 
                  */
-                $uploadingNow[$i] = array('remote_file'=>$remote_file, 'start'=>$start1, 'd'=>$d);
+                $uploadingNow[$i] = array('remote_file'=>$remote_file, 'local_file'=>$local_file,'d'=>$d);
             }
         }
+        foreach ($uploadingNow as $value2) {
+            $start1 = microtime(true);
+            $filesize = filesize($value2['local_file']);
+            $totalBytes += $filesize;
+            $filesizeMb = $filesize / (1024 * 1024);
+            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading {$value2['remote_file']} " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+            $value2['d'] = ftp_nb_put($conn_id, $value2['remote_file'], $value2['local_file'], FTP_BINARY);
+        }
+        
         foreach ($uploadingNow as $value2) {
             while ($value2['d'] == FTP_MOREDATA) {
                 // do whatever you want
                 // continue uploading
+                echo "Still uploading {$value2['remote_file']}" . PHP_EOL;
                 $value2['d'] = ftp_nb_continue($conn_id);
             }
 
