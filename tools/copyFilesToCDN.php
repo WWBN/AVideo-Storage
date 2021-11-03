@@ -94,7 +94,7 @@ foreach ($glob as $file) {
     $totalFilesToUpload = count($filesToUpload);
     //$filesToUploadCount = 0;
     //foreach ($filesToUpload as $value) {
-    for ($filesToUploadCount = 0; $filesToUploadCount < count($filesToUpload);) {
+    for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
 
         $uploadingNow = array();
 
