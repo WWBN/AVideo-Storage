@@ -129,7 +129,8 @@ for ($countItems = 0; $countItems < count($glob);) {
         
         $totalUploadedSizeMb = $totalUploadedSize / (1024 * 1024);
         $end1 = microtime(true) - $start1;
-        echo "Finished ".number_format($totalUploadedSizeMb, 2)."MB in ".number_format($end1, 1)." seconds". PHP_EOL;
+        $mbps = number_format($totalUploadedSizeMb/$end1,1);
+        echo "Finished ".number_format($totalUploadedSizeMb, 2)."MB in ".number_format($end1, 1)." seconds {$mbps}/mbps". PHP_EOL;
     }
 }
 
