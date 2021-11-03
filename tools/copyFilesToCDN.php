@@ -1,6 +1,6 @@
 <?php
 
-$totalSameTime = 20;
+$totalSameTime = 10;
 
 require_once '../configuration.php';
 //streamer config
@@ -21,6 +21,7 @@ $index = intval(@$argv[1]);
 $conn_id = array();
 
 for ($i = 0; $i < $totalSameTime; $i++) {
+    echo "Connection {$i} ... " . PHP_EOL;
     $conn_id[$i] = ftp_connect($storage_hostname);
     // login with username and password
     $login_result = ftp_login($conn_id[$i], $storage_username, $storage_password);
