@@ -99,7 +99,7 @@ foreach ($glob as $file) {
         $uploadingNow = array();
 
         for ($i = 0; $i < $totalFilesAtTheSameTime; $i++) {
-            $value = $filesToUpload[$filesToUploadCount];
+            $value = @$filesToUpload[$filesToUploadCount];
             $filesToUploadCount++;
             if(empty($value)){
                 continue;
