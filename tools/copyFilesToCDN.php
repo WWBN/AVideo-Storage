@@ -107,12 +107,6 @@ for ($countItems = 0; $countItems < count($glob);) {
             }
         }
 
-        $totalMb = $totalBytes / (1024 * 1024);
-        $end = number_format(microtime(true) - $start);
-        if (!empty($end)) {
-            $ETA = secondsToVideoTime($end * ($totalItems - $countItems));
-            echo number_format($totalMb, 2) . "MB Uploaded in " . secondsToVideoTime($end) . ' ' . number_format($totalMb / $end, 1) . "Mbps ETA:{$ETA}" . PHP_EOL;
-        }
     }
     for ($i = 0; $i < $totalSameTime; $i++) {
         if (empty($ret[$i])) {
@@ -122,7 +116,7 @@ for ($countItems = 0; $countItems < count($glob);) {
             // Continue uploading...
             $ret[$i] = ftp_nb_continue($conn_id[$i]);
         }
-        if ($ret != FTP_FINISHED) {
+        if ($ret[$i] != FTP_FINISHED) {
             echo "There was an error uploading the file... $i";
             //exit(1);
         }
