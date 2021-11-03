@@ -86,13 +86,16 @@ for ($countItems = 0; $countItems < count($glob);) {
              */
 
             $parts = explode('/videos/', $value);
+            $filesize = filesize($value);
+            if (empty($filesize)) {
+                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
+            }
             $remote_file = "{$dirName}/{$parts[1]}";
             $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
             $res = ftp_size($conn_id[$i], $remote_file);
             if ($res > 0) {
                 echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
             } else {
-                $filesize = filesize($value);
                 $totalBytes += $filesize;
                 $filesizeMb = $filesize / (1024 * 1024);
                 echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
@@ -126,4 +129,4 @@ for ($countItems = 0; $countItems < count($glob);) {
 }
 
 // close the connection
-ftp_close($conn_id[$i]);
+//ftp_close($conn_id[$i]);
