@@ -1,6 +1,6 @@
 <?php
 
-$totalSameTime = 10;
+$totalSameTime = 50;
 
 require_once '../configuration.php';
 //streamer config
@@ -99,7 +99,7 @@ for ($countItems = 0; $countItems < count($glob);) {
             } else {
                 $totalBytes += $filesize;
                 $filesizeMb = $filesize / (1024 * 1024);
-                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$i]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
                 //ftp_mkdir_recusive($remote_file);
 
                 $start1 = microtime(true);
