@@ -77,6 +77,10 @@ for ($countItems = 0; $countItems < count($glob);) {
         foreach ($filesToUpload as $value) {
             $filesToUploadCount++;
             $path_parts = pathinfo($value);
+            if(empty($path_parts['extension'])){
+                echo "Skip empty extension" . PHP_EOL;
+                continue;
+            }
             if ($path_parts['extension'] == 'tgz') {
                 echo "Skip tgz" . PHP_EOL;
                 continue;
