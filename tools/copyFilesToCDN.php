@@ -65,6 +65,8 @@ for ($countItems = 0; $countItems < count($glob);) {
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
+        $start1 = microtime(true);
+        $totalUploadedSize=0;
         for ($i = 0; $i < $totalSameTime;) {
             if(empty($filesToUpload[$filesToUploadCount])){
                 $filesToUploadCount++;
@@ -95,11 +97,11 @@ for ($countItems = 0; $countItems < count($glob);) {
                 echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
             } else {
                 $totalBytes += $filesize;
+                $totalUploadedSize += $filesize;
                 $filesizeMb = $filesize / (1024 * 1024);
                 echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$i]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
                 //ftp_mkdir_recusive($remote_file);
 
-                $start1 = microtime(true);
                 $ret[$i] = ftp_nb_put($conn_id[$i], $remote_file, $value, FTP_BINARY);
                 $i++;
             }
@@ -119,6 +121,10 @@ for ($countItems = 0; $countItems < count($glob);) {
                 echo "File finished... $i" . PHP_EOL;
             }
         }
+        
+        $totalUploadedSizeMb = $totalUploadedSize / (1024 * 1024);
+        $end1 = microtime(true) - $start1;
+        echo "Finished ".number_format($totalUploadedSizeMb, 2)."MB in ".number_format($end1, 1)." seconds". PHP_EOL;
     }
 }
 
