@@ -139,4 +139,9 @@ for ($countItems = 0; $countItems < count($glob);) {
 }
 
 // close the connection
-//ftp_close($conn_id[$i]);
+
+foreach ($conn_id as $value) {
+    ftp_close($value);
+}
+
+
