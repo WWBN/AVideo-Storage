@@ -66,6 +66,10 @@ for ($countItems = 0; $countItems < count($glob);) {
     $filesToUploadCount = 0;
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         for ($i = 0; $i < $totalSameTime;) {
+            if(empty($filesToUpload[$filesToUploadCount])){
+                $filesToUploadCount++;
+                break;
+            }
             $value = $filesToUpload[$filesToUploadCount];
             $filesToUploadCount++;
             $path_parts = pathinfo($value);
