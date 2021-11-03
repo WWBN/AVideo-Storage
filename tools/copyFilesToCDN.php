@@ -122,7 +122,7 @@ for ($countItems = 0; $countItems < count($glob);) {
             }
             while ($ret[$key] == FTP_MOREDATA) {
                 // Continue uploading...
-                $ret[$key] = ftp_nb_continue($conn_id[$i]);
+                $ret[$key] = ftp_nb_continue($conn_id[$key]);
             }
             if ($ret[$key] != FTP_FINISHED) {
                 echo "There was an error uploading the file... $key" . PHP_EOL;
