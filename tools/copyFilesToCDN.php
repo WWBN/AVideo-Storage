@@ -24,7 +24,7 @@ for ($i = 0; $i < $totalSameTime; $i++) {
     $conn_id[$i] = ftp_connect($storage_hostname);
     if(empty($conn_id[$i])){
         unset($conn_id[$i]);
-        $totalSameTime = $i;
+        $totalSameTime = $i+1;
         break;
     }
     echo "Connection {$i} ... " . PHP_EOL;
