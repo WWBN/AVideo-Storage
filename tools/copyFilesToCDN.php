@@ -18,7 +18,7 @@ $index = intval(@$argv[1]);
 //$storage_password = '';
 // set up basic connection
 
-$conn_id[$i] = array();
+$conn_id = array();
 
 for ($i = 0; $i < $totalSameTime; $i++) {
     $conn_id[$i] = ftp_connect($storage_hostname);
@@ -110,6 +110,9 @@ for ($countItems = 0; $countItems < count($glob);) {
         }
     }
     for ($i = 0; $i < $totalSameTime; $i++) {
+        if(empty($ret[$i])){
+            continue;
+        }
         while ($ret[$i] == FTP_MOREDATA) {
             // Continue uploading...
             $ret[$i] = ftp_nb_continue($conn_id[$i]);
