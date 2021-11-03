@@ -105,6 +105,9 @@ for ($countItems = 0; $countItems < count($glob);) {
                 $start1 = microtime(true);
                 $ret[$i] = ftp_nb_put($conn_id[$i], $remote_file, $value, FTP_BINARY);
                 $i++;
+                if(empty($conn_id[$i])){
+                    break;
+                }
             }
         }
 
