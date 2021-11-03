@@ -101,6 +101,9 @@ foreach ($glob as $file) {
         for ($i = 0; $i < $totalFilesAtTheSameTime; $i++) {
             $value = $filesToUpload[$filesToUploadCount];
             $filesToUploadCount++;
+            if(empty($value)){
+                continue;
+            }
             $path_parts = pathinfo($value);
             /*
               if ($path_parts['extension'] == 'mp4') {
