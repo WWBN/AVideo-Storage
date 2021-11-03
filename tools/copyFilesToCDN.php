@@ -21,8 +21,13 @@ $index = intval(@$argv[1]);
 $conn_id = array();
 
 for ($i = 0; $i < $totalSameTime; $i++) {
-    echo "Connection {$i} ... " . PHP_EOL;
     $conn_id[$i] = ftp_connect($storage_hostname);
+    if(empty($conn_id[$i])){
+        unset($conn_id[$i]);
+        $totalSameTime = $i-1;
+        break;
+    }
+    echo "Connection {$i} ... " . PHP_EOL;
     // login with username and password
     $login_result = ftp_login($conn_id[$i], $storage_username, $storage_password);
     ftp_pasv($conn_id[$i], true);
