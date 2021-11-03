@@ -92,13 +92,15 @@ foreach ($glob as $file) {
     $start = microtime(true);
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
-    $filesToUploadCount = 0;
-    foreach ($filesToUpload as $value) {
+    //$filesToUploadCount = 0;
+    //foreach ($filesToUpload as $value) {
+    for ($filesToUploadCount = 0; $filesToUploadCount < count($filesToUpload);) {
 
         $uploadingNow = array();
 
         for ($i = 0; $i < $totalFilesAtTheSameTime; $i++) {
             $filesToUploadCount++;
+            $value = $filesToUpload[$filesToUploadCount];
             $path_parts = pathinfo($value);
             /*
               if ($path_parts['extension'] == 'mp4') {
