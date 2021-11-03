@@ -78,11 +78,11 @@ for ($countItems = 0; $countItems < count($glob);) {
             $filesToUploadCount++;
             $path_parts = pathinfo($value);
             if(empty($path_parts['extension'])){
-                echo "Skip empty extension" . PHP_EOL;
+                echo "Skip empty extension {$value}" . PHP_EOL;
                 continue;
             }
             if ($path_parts['extension'] == 'tgz') {
-                echo "Skip tgz" . PHP_EOL;
+                echo "Skip tgz {$value}" . PHP_EOL;
                 continue;
             }
 
@@ -104,6 +104,7 @@ for ($countItems = 0; $countItems < count($glob);) {
 
                 $start1 = microtime(true);
                 $ret[$i] = ftp_nb_put($conn_id[$i], $remote_file, $value, FTP_BINARY);
+                $i++;
             }
         }
 
