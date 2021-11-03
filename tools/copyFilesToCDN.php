@@ -1,7 +1,5 @@
 <?php
 
-$totalFilesAtTheSameTime = 10;
-
 function ftp_mkdir_recusive($path) {
     global $conn_id;
     $parts = explode("/", $path);
@@ -54,7 +52,7 @@ echo "Found total of {$totalItems} items " . PHP_EOL;
 $countItems = 0;
 foreach ($glob as $file) {
     $countItems++;
-    if ($countItems < $index) {
+    if($countItems<$index){
         continue;
     }
     echo "[$countItems/$totalItems] Process file {$file} " . PHP_EOL;
@@ -92,63 +90,39 @@ foreach ($glob as $file) {
     $start = microtime(true);
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
-    //$filesToUploadCount = 0;
-    //foreach ($filesToUpload as $value) {
-    for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
-
-        $uploadingNow = array();
-
-        for ($i = 0; $i < $totalFilesAtTheSameTime; $i++) {
-            $value = @$filesToUpload[$filesToUploadCount];
-            $filesToUploadCount++;
-            if(empty($value)){
-                continue;
-            }
-            $path_parts = pathinfo($value);
-
-            $parts = explode('/videos/', $value);
-            $remote_file = "{$dirName}/{$parts[1]}";
-            $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
-            $res = ftp_size($conn_id, $remote_file);
-            if ($res > 0) {
-                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
-            } else {
-                //ftp_mkdir_recusive($remote_file);
-
-                /*
-                  if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
-                  $end1 = number_format(microtime(true) - $start1, 3);
-                  echo "successfully uploaded in {$end1} seconds $value" . PHP_EOL;
-                  } else {
-                  echo "There was a problem while uploading $file" . PHP_EOL;
-                  }
-                 * 
-                 */
-                $uploadingNow[$i] = array('remote_file'=>$remote_file, 'local_file'=>$value);
-            }
+    $filesToUploadCount = 0;
+    foreach ($filesToUpload as $value) {
+        $filesToUploadCount++;
+        $path_parts = pathinfo($value);
+        /*
+        if ($path_parts['extension'] == 'mp4') {
+            echo "Skip MP4" . PHP_EOL;
+            continue;
         }
-        foreach ($uploadingNow as $value2) {
-            $start1 = microtime(true);
-            $filesize = filesize($value2['local_file']);
+         * 
+         */
+
+        $parts = explode('/videos/', $value);
+        $remote_file = "{$dirName}/{$parts[1]}";
+        $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
+        $res = ftp_size($conn_id, $remote_file);
+        if ($res > 0) {
+            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
+        } else {
+            $filesize = filesize($value);
             $totalBytes += $filesize;
             $filesizeMb = $filesize / (1024 * 1024);
-            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading {$value2['remote_file']} " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
-            $value2['d'] = ftp_nb_put($conn_id, $value2['remote_file'], $value2['local_file'], FTP_BINARY);
-            while ($value2['d'] == FTP_MOREDATA) {
-                // do whatever you want
-                // continue uploading
-                echo "Still uploading {$value2['remote_file']}" . PHP_EOL;
-                $value2['d'] = ftp_nb_continue($conn_id);
-            }
-
-            if ($value2['d'] != FTP_FINISHED) {
-                echo "There was a problem while uploading {$value2['remote_file']}" . PHP_EOL;
-            }else{
-                $end1 = number_format(microtime(true) - $value2['start'], 3);
-                echo "successfully uploaded in {$end1} seconds {$value2['remote_file']}" . PHP_EOL;
+            echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+            //ftp_mkdir_recusive($remote_file);
+            
+            $start1 = microtime(true);
+            if (ftp_put($conn_id, $remote_file, $value, FTP_ASCII)) {
+                $end1 = number_format(microtime(true) - $start1,3);
+                echo "successfully uploaded in {$end1} seconds $value". PHP_EOL;
+            } else {
+                echo "There was a problem while uploading $file". PHP_EOL;
             }
         }
-        
     }
 
     $totalMb = $totalBytes / (1024 * 1024);
