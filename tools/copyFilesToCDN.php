@@ -78,7 +78,7 @@ for ($countItems = 0; $countItems < count($glob);) {
         $start1 = microtime(true);
         $totalUploadedSize=0;
         for ($i = 0; $i < $totalSameTime;) {
-            if(empty($filesToUpload[$filesToUploadCount])){
+            if(empty($filesToUpload[$filesToUploadCount]) || empty($conn_id[$i])){
                 $filesToUploadCount++;
                 break;
             }
