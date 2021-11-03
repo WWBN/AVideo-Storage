@@ -38,7 +38,6 @@ $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
 for ($countItems = 0; $countItems < count($glob);) {
     $file = $glob[$countItems];
-    $ret = array();
     $countItems++;
     if ($countItems < $index) {
         continue;
@@ -69,6 +68,7 @@ for ($countItems = 0; $countItems < count($glob);) {
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
+    $ret = array();
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
         $totalUploadedSize=0;
