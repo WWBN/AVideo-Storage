@@ -111,6 +111,8 @@ for ($countItems = 0; $countItems < count($glob);) {
             if ($ret[$i] != FTP_FINISHED) {
                 echo "There was an error uploading the file... $i";
                 //exit(1);
+            }else{
+                echo "File finished... $i";
             }
         }
     }
