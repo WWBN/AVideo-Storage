@@ -24,7 +24,7 @@ for ($i = 0; $i < $totalSameTime; $i++) {
     $conn_id[$i] = ftp_connect($storage_hostname);
     if(empty($conn_id[$i])){
         unset($conn_id[$i]);
-        $totalSameTime = $i-1;
+        $totalSameTime = $i;
         break;
     }
     echo "Connection {$i} ... " . PHP_EOL;
@@ -111,22 +111,21 @@ for ($countItems = 0; $countItems < count($glob);) {
                 $i++;
             }
         }
-        for ($i = 0; $i < $totalSameTime; $i++) {
-            if (empty($ret[$i])) {
+        foreach ($ret as $key => $r) {
+            if (empty($ret[$key])) {
                 continue;
             }
-            while ($ret[$i] == FTP_MOREDATA) {
+            while ($ret[$key] == FTP_MOREDATA) {
                 // Continue uploading...
-                $ret[$i] = ftp_nb_continue($conn_id[$i]);
+                $ret[$key] = ftp_nb_continue($conn_id[$i]);
             }
-            if ($ret[$i] != FTP_FINISHED) {
-                echo "There was an error uploading the file... $i" . PHP_EOL;
+            if ($ret[$key] != FTP_FINISHED) {
+                echo "There was an error uploading the file... $key" . PHP_EOL;
                 //exit(1);
             }else{
-                echo "File finished... $i" . PHP_EOL;
+                echo "File finished... $key" . PHP_EOL;
             }
-        }
-        
+        }        
         $totalUploadedSizeMb = $totalUploadedSize / (1024 * 1024);
         $end1 = microtime(true) - $start1;
         $mbps = number_format($totalUploadedSizeMb/$end1,1);
