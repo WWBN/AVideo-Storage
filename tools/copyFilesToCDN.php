@@ -141,7 +141,7 @@ foreach ($glob as $file) {
             while ($value2['d'] == FTP_MOREDATA) {
                 // do whatever you want
                 // continue uploading
-                $value2['d'] = ftp_nb_continue($ftp_conn);
+                $value2['d'] = ftp_nb_continue($conn_id);
             }
 
             if ($value2['d'] != FTP_FINISHED) {
