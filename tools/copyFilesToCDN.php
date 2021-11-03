@@ -64,10 +64,10 @@ for ($countItems = 0; $countItems < count($glob);) {
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
-
-    foreach ($filesToUpload as $value) {
-        $filesToUploadCount++;
+    for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         for ($i = 0; $i < $totalSameTime;) {
+            $value = $filesToUpload[$filesToUploadCount];
+            $filesToUploadCount++;
             $path_parts = pathinfo($value);
             if (empty($path_parts['extension'])) {
                 echo "Skip empty extension {$value}" . PHP_EOL;
