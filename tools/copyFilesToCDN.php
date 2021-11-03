@@ -137,7 +137,7 @@ foreach ($glob as $file) {
                 $uploadingNow[$i] = array('remote_file'=>$remote_file, 'start'=>$start1, 'd'=>$d);
             }
         }
-        for ($i = 0; $i < $totalFilesAtTheSameTime; $i++) {
+        for ($i = 0; $i < count($uploadingNow); $i++) {
             while ($uploadingNow[$i]['d'] == FTP_MOREDATA) {
                 // do whatever you want
                 // continue uploading
