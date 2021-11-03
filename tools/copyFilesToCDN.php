@@ -124,7 +124,7 @@ foreach ($glob as $file) {
                   }
                  * 
                  */
-                $uploadingNow[$i] = array('remote_file'=>$remote_file, 'local_file'=>$local_file,'d'=>$d);
+                $uploadingNow[$i] = array('remote_file'=>$remote_file, 'local_file'=>$value);
             }
         }
         foreach ($uploadingNow as $value2) {
