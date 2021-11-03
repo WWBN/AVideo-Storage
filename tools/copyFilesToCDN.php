@@ -13,6 +13,11 @@ if (!isCommandLineInterface()) {
 
 $index = intval(@$argv[1]);
 
+$totalSameTimeArg = intval(@$argv[2]);
+if(!empty($totalSameTimeArg)){
+    $totalSameTime = $totalSameTimeArg;
+}
+
 //$storage_hostname = 'storage.ypt.me';
 //$storage_username = '';
 //$storage_password = '';
