@@ -77,13 +77,10 @@ for ($countItems = 0; $countItems < count($glob);) {
         foreach ($filesToUpload as $value) {
             $filesToUploadCount++;
             $path_parts = pathinfo($value);
-            /*
-              if ($path_parts['extension'] == 'mp4') {
-              echo "Skip MP4" . PHP_EOL;
-              continue;
-              }
-             * 
-             */
+            if ($path_parts['extension'] == 'tgz') {
+                echo "Skip tgz" . PHP_EOL;
+                continue;
+            }
 
             $parts = explode('/videos/', $value);
             $filesize = filesize($value);
@@ -114,7 +111,7 @@ for ($countItems = 0; $countItems < count($glob);) {
         }
     }
     for ($i = 0; $i < $totalSameTime; $i++) {
-        if(empty($ret[$i])){
+        if (empty($ret[$i])) {
             continue;
         }
         while ($ret[$i] == FTP_MOREDATA) {
