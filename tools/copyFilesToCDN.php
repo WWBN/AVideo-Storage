@@ -1,6 +1,6 @@
 <?php
 
-$totalSameTime = 10;
+$totalSameTime = 20;
 
 require_once '../configuration.php';
 //streamer config
