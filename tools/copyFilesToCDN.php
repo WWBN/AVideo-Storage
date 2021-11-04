@@ -3,6 +3,7 @@
 $totalSameTime = 15;
 
 function getRemoteFileName($value) {
+    global $dirName;
     $path_parts = pathinfo($value);
     if (empty($path_parts['extension'])) {
         echo "Skip empty extension {$value}" . PHP_EOL;
