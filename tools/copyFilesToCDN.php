@@ -131,6 +131,7 @@ for ($countItems = 0; $countItems < count($glob);) {
                     $continue = true;
                 }
                 if ($ret[$key] == FTP_FINISHED) {
+                    unset($ret[$key]);
                     echo "File finished... $key" . PHP_EOL;
                 }
             }
