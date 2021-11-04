@@ -87,7 +87,7 @@ for ($i = 0; $i < $totalSameTime; $i++) {
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
-for ($countItems = 0; $countItems < count($glob);) {
+for ($countItems = 0; $countItems < $totalItems;) {
     $file = $glob[$countItems];
     $countItems++;
     if ($countItems < $index) {
@@ -119,6 +119,7 @@ for ($countItems = 0; $countItems < count($glob);) {
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
+    //var_dump($filesToUpload);exit;
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
         $totalUploadedSize = 0;
