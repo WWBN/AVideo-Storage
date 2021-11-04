@@ -71,18 +71,25 @@ if (!empty($totalSameTimeArg)) {
 
 $conn_id = array();
 
-for ($i = 0; $i < $totalSameTime; $i++) {
-    echo "Connect to $storage_hostname " . PHP_EOL;
-    $conn_id[$i] = ftp_connect($storage_hostname);
-    if (empty($conn_id[$i])) {
-        unset($conn_id[$i]);
-        $totalSameTime = $i + 1;
-        break;
+echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
+while(empty($conn_id)){
+    for ($i = 0; $i < $totalSameTime; $i++) {
+        $conn_id[$i] = ftp_connect($storage_hostname);
+        if (empty($conn_id[$i])) {
+            unset($conn_id[$i]);
+            $totalSameTime = $i + 1;
+            break;
+        }
+        echo "Connection {$i} ... " . PHP_EOL;
+        // login with username and password
+        $login_result = ftp_login($conn_id[$i], $storage_username, $storage_password);
+        ftp_pasv($conn_id[$i], true);
     }
-    echo "Connection {$i} ... " . PHP_EOL;
-    // login with username and password
-    $login_result = ftp_login($conn_id[$i], $storage_username, $storage_password);
-    ftp_pasv($conn_id[$i], true);
+
+    if(empty($conn_id)){
+        echo "ERROR We could not open any connection" . PHP_EOL;
+        sleep(5);
+    }
 }
 
 $glob = glob("../videos/*");
