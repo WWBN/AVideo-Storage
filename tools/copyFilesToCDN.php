@@ -72,6 +72,7 @@ if (!empty($totalSameTimeArg)) {
 $conn_id = array();
 
 for ($i = 0; $i < $totalSameTime; $i++) {
+    echo "Connect to $storage_hostname " . PHP_EOL;
     $conn_id[$i] = ftp_connect($storage_hostname);
     if (empty($conn_id[$i])) {
         unset($conn_id[$i]);
