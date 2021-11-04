@@ -21,7 +21,7 @@ function getRemoteFileName($value) {
 }
 
 function upload($value, $index) {
-    global $conn_id, $totalBytes, $totalUploadedSize, $ret;
+    global $conn_id, $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload;
     $remote_file = getRemoteFileName($value);
     if (empty($remote_file)) {
         return false;
