@@ -14,7 +14,7 @@ if (!isCommandLineInterface()) {
 $index = intval(@$argv[1]);
 
 $totalSameTimeArg = intval(@$argv[2]);
-if(!empty($totalSameTimeArg)){
+if (!empty($totalSameTimeArg)) {
     $totalSameTime = $totalSameTimeArg;
 }
 
@@ -27,9 +27,9 @@ $conn_id = array();
 
 for ($i = 0; $i < $totalSameTime; $i++) {
     $conn_id[$i] = ftp_connect($storage_hostname);
-    if(empty($conn_id[$i])){
+    if (empty($conn_id[$i])) {
         unset($conn_id[$i]);
-        $totalSameTime = $i+1;
+        $totalSameTime = $i + 1;
         break;
     }
     echo "Connection {$i} ... " . PHP_EOL;
@@ -76,9 +76,9 @@ for ($countItems = 0; $countItems < count($glob);) {
     $ret = array();
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
-        $totalUploadedSize=0;
+        $totalUploadedSize = 0;
         for ($i = 0; $i < $totalSameTime;) {
-            if(empty($filesToUpload[$filesToUploadCount]) || empty($conn_id[$i])){
+            if (empty($filesToUpload[$filesToUploadCount]) || empty($conn_id[$i])) {
                 $filesToUploadCount++;
                 break;
             }
@@ -116,29 +116,43 @@ for ($countItems = 0; $countItems < count($glob);) {
                 $i++;
             }
         }
+
+        $continue = true;
+        while ($continue) {
+            $continue = false;
+            foreach ($ret as $key => $r) {
+                if (empty($ret[$key])) {
+                    continue;
+                }
+
+                if ($ret[$key] == FTP_MOREDATA) {
+                    // Continue uploading...
+                    $ret[$key] = ftp_nb_continue($conn_id[$key]);
+                    $continue = true;
+                }
+            }
+        }
+
         foreach ($ret as $key => $r) {
             if (empty($ret[$key])) {
                 continue;
             }
-            while ($ret[$key] == FTP_MOREDATA) {
-                // Continue uploading...
-                $ret[$key] = ftp_nb_continue($conn_id[$key]);
-            }
             if ($ret[$key] != FTP_FINISHED) {
                 echo "There was an error uploading the file... $key" . PHP_EOL;
                 //exit(1);
-            }else{
+            } else {
                 echo "File finished... $key" . PHP_EOL;
             }
-        }        
+        }
+        
         $totalUploadedSizeMb = $totalUploadedSize / (1024 * 1024);
         $end1 = microtime(true) - $start1;
-        if(!empty($end1)){
-            $mbps = number_format($totalUploadedSizeMb/$end1,1);
-        }else{
+        if (!empty($end1)) {
+            $mbps = number_format($totalUploadedSizeMb / $end1, 1);
+        } else {
             $mbps = 0;
         }
-        echo "Finished ".number_format($totalUploadedSizeMb, 2)."MB in ".number_format($end1, 1)." seconds {$mbps}/mbps". PHP_EOL;
+        echo "Finished " . number_format($totalUploadedSizeMb, 2) . "MB in " . number_format($end1, 1) . " seconds {$mbps}/mbps" . PHP_EOL;
     }
 }
 
