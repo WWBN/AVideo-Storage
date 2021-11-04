@@ -2,6 +2,51 @@
 
 $totalSameTime = 15;
 
+function getRemoteFileName($value) {
+    $path_parts = pathinfo($value);
+    if (empty($path_parts['extension'])) {
+        echo "Skip empty extension {$value}" . PHP_EOL;
+        return false;
+    }
+    if ($path_parts['extension'] == 'tgz') {
+        echo "Skip tgz {$value}" . PHP_EOL;
+        return false;
+    }
+
+    $parts = explode('/videos/', $value);
+    $remote_file = "{$dirName}/{$parts[1]}";
+    $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
+    return $remote_file;
+}
+
+function upload($value, $index) {
+    global $conn_id, $totalBytes, $totalUploadedSize, $ret;
+    $remote_file = getRemoteFileName($value);
+    if (empty($remote_file)) {
+        return false;
+    }
+    $filesize = filesize($value);
+    if (empty($filesize)) {
+        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
+        return false;
+    }
+
+    $res = ftp_size($conn_id[$index], $remote_file);
+    if ($res > 0) {
+        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
+        return false;
+    } else {
+        $totalBytes += $filesize;
+        $totalUploadedSize += $filesize;
+        $filesizeMb = $filesize / (1024 * 1024);
+        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+        //ftp_mkdir_recusive($remote_file);
+
+        $ret[$index] = ftp_nb_put($conn_id[$index], $remote_file, $value, FTP_BINARY);
+        return true;
+    }
+}
+
 require_once '../configuration.php';
 //streamer config
 require_once '../functions.php';
@@ -84,35 +129,8 @@ for ($countItems = 0; $countItems < count($glob);) {
             }
             $value = $filesToUpload[$filesToUploadCount];
             $filesToUploadCount++;
-            $path_parts = pathinfo($value);
-            if (empty($path_parts['extension'])) {
-                echo "Skip empty extension {$value}" . PHP_EOL;
-                continue;
-            }
-            if ($path_parts['extension'] == 'tgz') {
-                echo "Skip tgz {$value}" . PHP_EOL;
-                continue;
-            }
-
-            $parts = explode('/videos/', $value);
-            $filesize = filesize($value);
-            if (empty($filesize)) {
-                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
-            }
-            $remote_file = "{$dirName}/{$parts[1]}";
-            $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
-
-            $res = ftp_size($conn_id[$i], $remote_file);
-            if ($res > 0) {
-                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
-            } else {
-                $totalBytes += $filesize;
-                $totalUploadedSize += $filesize;
-                $filesizeMb = $filesize / (1024 * 1024);
-                echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$i]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
-                //ftp_mkdir_recusive($remote_file);
-
-                $ret[$i] = ftp_nb_put($conn_id[$i], $remote_file, $value, FTP_BINARY);
+            
+            if(upload($value, $i)){
                 $i++;
             }
         }
@@ -132,7 +150,12 @@ for ($countItems = 0; $countItems < count($glob);) {
                 }
                 if ($ret[$key] == FTP_FINISHED) {
                     unset($ret[$key]);
+
+                    $value = $filesToUpload[$filesToUploadCount];
+                    $filesToUploadCount++;
+                    
                     echo "File finished... $key" . PHP_EOL;
+                    upload($value, $key);
                 }
             }
         }
@@ -146,7 +169,7 @@ for ($countItems = 0; $countItems < count($glob);) {
                 //exit(1);
             }
         }
-        
+
         $totalUploadedSizeMb = $totalUploadedSize / (1024 * 1024);
         $end1 = microtime(true) - $start1;
         if (!empty($end1)) {
