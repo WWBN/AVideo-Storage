@@ -130,6 +130,9 @@ for ($countItems = 0; $countItems < count($glob);) {
                     $ret[$key] = ftp_nb_continue($conn_id[$key]);
                     $continue = true;
                 }
+                if ($ret[$key] == FTP_FINISHED) {
+                    echo "File finished... $key" . PHP_EOL;
+                }
             }
         }
 
@@ -140,8 +143,6 @@ for ($countItems = 0; $countItems < count($glob);) {
             if ($ret[$key] != FTP_FINISHED) {
                 echo "There was an error uploading the file... $key" . PHP_EOL;
                 //exit(1);
-            } else {
-                echo "File finished... $key" . PHP_EOL;
             }
         }
         
