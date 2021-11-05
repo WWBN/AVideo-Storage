@@ -188,7 +188,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
                     echo "1. Finished Go to the next video" . PHP_EOL;
                     continue 3;
                 } else {
-                    echo "1. Not Finished Go {$filesToUploadCount}" . PHP_EOL;
+                    echo "1. Not Finished Go {$indexFile}" . PHP_EOL;
                     $filesToUploadCount = $indexFile;
                 }
             }
