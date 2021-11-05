@@ -31,21 +31,14 @@ function upload($value, $index) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
         return false;
     }
+    $totalBytes += $filesize;
+    $totalUploadedSize += $filesize;
+    $filesizeMb = $filesize / (1024 * 1024);
+    echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+    //ftp_mkdir_recusive($remote_file);
 
-    $res = ftp_size($conn_id[$index], $remote_file);
-    if ($res > 0) {
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
-        return false;
-    } else {
-        $totalBytes += $filesize;
-        $totalUploadedSize += $filesize;
-        $filesizeMb = $filesize / (1024 * 1024);
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
-        //ftp_mkdir_recusive($remote_file);
-
-        $ret[$index] = ftp_nb_put($conn_id[$index], $remote_file, $value, FTP_BINARY);
-        return true;
-    }
+    $ret[$index] = ftp_nb_put($conn_id[$index], $remote_file, $value, FTP_BINARY);
+    return true;
 }
 
 require_once '../configuration.php';
@@ -57,7 +50,7 @@ if (!isCommandLineInterface()) {
     return die('Command Line only');
 }
 
-$index=0;
+$index = 0;
 $folder = trim(@$argv[1]);
 
 $totalSameTimeArg = intval(@$argv[2]);
@@ -73,7 +66,7 @@ if (!empty($totalSameTimeArg)) {
 $conn_id = array();
 
 echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
-while(empty($conn_id)){
+while (empty($conn_id)) {
     for ($i = 0; $i < $totalSameTime; $i++) {
         $conn_id[$i] = ftp_connect($storage_hostname);
         if (empty($conn_id[$i])) {
@@ -87,7 +80,7 @@ while(empty($conn_id)){
         ftp_pasv($conn_id[$i], true);
     }
 
-    if(empty($conn_id)){
+    if (empty($conn_id)) {
         echo "ERROR We could not open any connection" . PHP_EOL;
         sleep(5);
     }
@@ -140,8 +133,8 @@ for ($countItems = 0; $countItems < $totalItems;) {
             }
             $value = $filesToUpload[$filesToUploadCount];
             $filesToUploadCount++;
-            
-            if(upload($value, $i)){
+
+            if (upload($value, $i)) {
                 $i++;
             }
         }
@@ -164,7 +157,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
 
                     $value = $filesToUpload[$filesToUploadCount];
                     $filesToUploadCount++;
-                    
+
                     //echo "File finished... $key" . PHP_EOL;
                     upload($value, $key);
                 }
