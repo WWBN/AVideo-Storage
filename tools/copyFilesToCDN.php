@@ -16,18 +16,17 @@ function findWhereToSkip($filesToUpload, $index) {
         if ($i > $totalFiles) {
             $i = $totalFiles;
         }
-        $indexFile = $i - 1;
-        $lastFile = $filesToUpload[$indexFile];
+        $lastFile = $filesToUpload[$i];
         $remote_file = getRemoteFileName($lastFile);
         $res = ftp_size($conn_id[$index], $remote_file);
         if ($res > 0) {
-            $indexFile -= 100;
+            $i -= 100;
 
-            if ($indexFile < 0) {
-                $indexFile = 0;
+            if ($i < 0) {
+                $i = 0;
             }
 
-            return $indexFile;
+            return $i;
         }
     }
 }
@@ -68,7 +67,7 @@ function upload($value, $index) {
         $res = ftp_size($conn_id[$index], $remote_file);
     }
     if ($res > 0) {
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
+        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists [$index]" . PHP_EOL;
         return false;
     } else {
         $totalBytes += $filesize;
