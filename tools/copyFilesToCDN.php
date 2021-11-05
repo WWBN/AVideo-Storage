@@ -151,10 +151,16 @@ for ($countItems = 0; $countItems < $totalItems;) {
             
             if(upload($value, $i)){
                 $i++;
+            }else{            
+                $consecutiveFails++;
+                if($consecutiveFails>10){
+                    break 2;
+                }
             }
         }
 
         $continue = true;
+        $consecutiveFails = 0;
         while ($continue) {
             $continue = false;
             foreach ($ret as $key => $r) {
@@ -174,7 +180,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
                     $filesToUploadCount++;
                     
                     //echo "File finished... $key" . PHP_EOL;
-                    upload($value, $key);
+                    $upload = upload($value, $key);
                 }
             }
         }
