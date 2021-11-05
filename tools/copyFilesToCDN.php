@@ -64,7 +64,9 @@ if (!isCommandLineInterface()) {
 $index = intval(@$argv[1]);
 
 $ignoreRemoteCheck = $index == -1;
-
+if($ignoreRemoteCheck){
+    $index = 0;
+}
 
 $totalSameTimeArg = intval(@$argv[2]);
 if (!empty($totalSameTimeArg)) {
