@@ -58,7 +58,7 @@ if (!isCommandLineInterface()) {
 }
 
 $index=0;
-$folder = intval(@$argv[1]);
+$folder = trim(@$argv[1]);
 
 $totalSameTimeArg = intval(@$argv[2]);
 if (!empty($totalSameTimeArg)) {
