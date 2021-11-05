@@ -186,10 +186,10 @@ for ($countItems = 0; $countItems < $totalItems;) {
                 $skip = false;
                 $indexFile = findWhereToSkip($filesToUpload, $i);
                 if ($indexFile < 0) {
-                    echo "Finished Go to the next video" . PHP_EOL;
+                    echo "1. Finished Go to the next video" . PHP_EOL;
                     continue 3;
                 } else {
-                    echo "Not Finished Go {$filesToUploadCount}" . PHP_EOL;
+                    echo "1. Not Finished Go {$filesToUploadCount}" . PHP_EOL;
                     $filesToUploadCount = $indexFile;
                 }
             }
@@ -220,10 +220,10 @@ for ($countItems = 0; $countItems < $totalItems;) {
                         $skip = false;
                         $indexFile = findWhereToSkip($filesToUpload, $i);
                         if ($indexFile < 0) {
-                            echo "Finished Go to the next video" . PHP_EOL;
+                            echo "2. Finished Go to the next video" . PHP_EOL;
                             continue 3;
                         } else {
-                            echo "Not Finished Go {$filesToUploadCount}" . PHP_EOL;
+                            echo "2. Not Finished Go {$filesToUploadCount}" . PHP_EOL;
                             $filesToUploadCount = $indexFile;
                         }
                     }
