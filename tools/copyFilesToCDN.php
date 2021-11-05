@@ -164,7 +164,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
                     $value = $filesToUpload[$filesToUploadCount];
                     $filesToUploadCount++;
                     
-                    echo "File finished... $key" . PHP_EOL;
+                    //echo "File finished... $key" . PHP_EOL;
                     upload($value, $key);
                 }
             }
