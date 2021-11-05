@@ -136,6 +136,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
+    $consecutiveFails = 0;
     //var_dump($filesToUpload);exit;
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
@@ -160,7 +161,6 @@ for ($countItems = 0; $countItems < $totalItems;) {
         }
 
         $continue = true;
-        $consecutiveFails = 0;
         while ($continue) {
             $continue = false;
             foreach ($ret as $key => $r) {
