@@ -2,6 +2,36 @@
 
 $totalSameTime = 15;
 
+function findWhereToSkip($filesToUpload, $index) {
+    $totalFiles = count($filesToUpload);
+    $lastFile = $filesToUpload[$totalFiles-1];
+    $remote_file = getRemoteFileName($lastFile);
+    $res = ftp_size($conn_id[$i], $remote_file);
+    if ($res > 0) {
+        return -1;
+    }
+    
+    for($i=$index;$i<$totalFiles;$i+=100){
+        if($i>$totalFiles){
+            $i=$totalFiles;
+        }
+        $indexFile = $i-1;
+        $lastFile = $filesToUpload[$indexFile];
+        $remote_file = getRemoteFileName($lastFile);
+        $res = ftp_size($conn_id[$index], $remote_file);
+        if ($res > 0) {
+            $indexFile -= 100;
+            
+            if($indexFile<0){
+                $indexFile = 0;
+            }
+            
+            return $indexFile;
+        }
+    }
+    
+}
+
 function getRemoteFileName($value) {
     global $dirName;
     $path_parts = pathinfo($value);
@@ -105,6 +135,7 @@ $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
 for ($countItems = 0; $countItems < $totalItems;) {
+    $skip = true;
     $file = $glob[$countItems];
     $countItems++;
     if ($countItems < $index) {
@@ -151,13 +182,13 @@ for ($countItems = 0; $countItems < $totalItems;) {
             
             if(upload($value, $i)){
                 $i++;
-            }else if($filesToUploadCount<10){
-                $lastFile = $filesToUpload[count($filesToUpload)-1];
-                $remote_file = getRemoteFileName($lastFile);
-                $res = ftp_size($conn_id[$i], $remote_file);
-                echo "Checking last file {$lastFile} {$res}" . PHP_EOL;
-                if ($res > 0) {
+            }else if($skip){
+                $skip = false;
+                $indexFile = findWhereToSkip($filesToUpload, $i);
+                if ($indexFile < 0) {
                     continue 3;
+                }else{
+                    $filesToUploadCount = $indexFile;
                 }
             }
         }
