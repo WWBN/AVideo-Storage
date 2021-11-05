@@ -136,7 +136,6 @@ for ($countItems = 0; $countItems < $totalItems;) {
     $totalBytes = 0;
     $totalFilesToUpload = count($filesToUpload);
     $filesToUploadCount = 0;
-    $consecutiveFails = 0;
     //var_dump($filesToUpload);exit;
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
@@ -152,9 +151,11 @@ for ($countItems = 0; $countItems < $totalItems;) {
             
             if(upload($value, $i)){
                 $i++;
-            }else{            
-                $consecutiveFails++;
-                if($consecutiveFails>10){
+            }else if($filesToUploadCount<10){
+                $lastFile = $filesToUpload[count($filesToUpload)-1];
+                $remote_file = getRemoteFileName($lastFile);
+                $res = ftp_size($conn_id[$i], $remote_file);
+                if ($res > 0) {
                     break 2;
                 }
             }
