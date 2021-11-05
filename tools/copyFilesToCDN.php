@@ -7,7 +7,7 @@ function findWhereToSkip($filesToUpload, $index) {
     $totalFiles = count($filesToUpload);
     $lastFile = $filesToUpload[$totalFiles-1];
     $remote_file = getRemoteFileName($lastFile);
-    $res = ftp_size($conn_id[$i], $remote_file);
+    $res = ftp_size($conn_id[$index], $remote_file);
     if ($res > 0) {
         return -1;
     }
