@@ -5,32 +5,31 @@ $totalSameTime = 15;
 function findWhereToSkip($filesToUpload, $index) {
     global $conn_id;
     $totalFiles = count($filesToUpload);
-    $lastFile = $filesToUpload[$totalFiles-1];
+    $lastFile = $filesToUpload[$totalFiles - 1];
     $remote_file = getRemoteFileName($lastFile);
     $res = ftp_size($conn_id[$index], $remote_file);
     if ($res > 0) {
         return -1;
     }
-    
-    for($i=$index;$i<$totalFiles;$i+=100){
-        if($i>$totalFiles){
-            $i=$totalFiles;
+
+    for ($i = $index; $i < $totalFiles; $i += 100) {
+        if ($i > $totalFiles) {
+            $i = $totalFiles;
         }
-        $indexFile = $i-1;
+        $indexFile = $i - 1;
         $lastFile = $filesToUpload[$indexFile];
         $remote_file = getRemoteFileName($lastFile);
         $res = ftp_size($conn_id[$index], $remote_file);
         if ($res > 0) {
             $indexFile -= 100;
-            
-            if($indexFile<0){
+
+            if ($indexFile < 0) {
                 $indexFile = 0;
             }
-            
+
             return $indexFile;
         }
     }
-    
 }
 
 function getRemoteFileName($value) {
@@ -63,9 +62,9 @@ function upload($value, $index) {
         return false;
     }
 
-    if($ignoreRemoteCheck){
+    if ($ignoreRemoteCheck) {
         $res = -1;
-    }else{
+    } else {
         $res = ftp_size($conn_id[$index], $remote_file);
     }
     if ($res > 0) {
@@ -95,7 +94,7 @@ if (!isCommandLineInterface()) {
 $index = intval(@$argv[1]);
 
 $ignoreRemoteCheck = $index == -1;
-if($ignoreRemoteCheck){
+if ($ignoreRemoteCheck) {
     $index = 0;
 }
 
@@ -112,7 +111,7 @@ if (!empty($totalSameTimeArg)) {
 $conn_id = array();
 
 echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
-while(empty($conn_id)){
+while (empty($conn_id)) {
     for ($i = 0; $i < $totalSameTime; $i++) {
         $conn_id[$i] = ftp_connect($storage_hostname);
         if (empty($conn_id[$i])) {
@@ -126,7 +125,7 @@ while(empty($conn_id)){
         ftp_pasv($conn_id[$i], true);
     }
 
-    if(empty($conn_id)){
+    if (empty($conn_id)) {
         echo "ERROR We could not open any connection" . PHP_EOL;
         sleep(5);
     }
@@ -180,16 +179,16 @@ for ($countItems = 0; $countItems < $totalItems;) {
             }
             $value = $filesToUpload[$filesToUploadCount];
             $filesToUploadCount++;
-            
-            if(upload($value, $i)){
+
+            if (upload($value, $i)) {
                 $i++;
-            }else if($skip){
+            } else if ($skip) {
                 $skip = false;
                 $indexFile = findWhereToSkip($filesToUpload, $i);
                 if ($indexFile < 0) {
                     echo "Finished Go to the next video" . PHP_EOL;
                     continue 3;
-                }else{
+                } else {
                     echo "Not Finished Go {$filesToUploadCount}" . PHP_EOL;
                     $filesToUploadCount = $indexFile;
                 }
@@ -214,9 +213,20 @@ for ($countItems = 0; $countItems < $totalItems;) {
 
                     $value = $filesToUpload[$filesToUploadCount];
                     $filesToUploadCount++;
-                    
+
                     //echo "File finished... $key" . PHP_EOL;
                     $upload = upload($value, $key);
+                    if ($skip && !$upload) {
+                        $skip = false;
+                        $indexFile = findWhereToSkip($filesToUpload, $i);
+                        if ($indexFile < 0) {
+                            echo "Finished Go to the next video" . PHP_EOL;
+                            continue 3;
+                        } else {
+                            echo "Not Finished Go {$filesToUploadCount}" . PHP_EOL;
+                            $filesToUploadCount = $indexFile;
+                        }
+                    }
                 }
             }
         }
