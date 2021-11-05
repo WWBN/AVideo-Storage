@@ -21,7 +21,7 @@ function getRemoteFileName($value) {
 }
 
 function upload($value, $index) {
-    global $conn_id, $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload;
+    global $conn_id, $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload, $ignoreRemoteCheck;
     $remote_file = getRemoteFileName($value);
     if (empty($remote_file)) {
         return false;
@@ -32,7 +32,11 @@ function upload($value, $index) {
         return false;
     }
 
-    $res = ftp_size($conn_id[$index], $remote_file);
+    if($ignoreRemoteCheck){
+        $res = -1;
+    }else{
+        $res = ftp_size($conn_id[$index], $remote_file);
+    }
     if ($res > 0) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists" . PHP_EOL;
         return false;
@@ -58,6 +62,9 @@ if (!isCommandLineInterface()) {
 }
 
 $index = intval(@$argv[1]);
+
+$ignoreRemoteCheck = $index == -1;
+
 
 $totalSameTimeArg = intval(@$argv[2]);
 if (!empty($totalSameTimeArg)) {
