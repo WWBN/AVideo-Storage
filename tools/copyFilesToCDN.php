@@ -155,6 +155,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
                 $lastFile = $filesToUpload[count($filesToUpload)-1];
                 $remote_file = getRemoteFileName($lastFile);
                 $res = ftp_size($conn_id[$i], $remote_file);
+                echo "Checking last file {$lastFile} {$res}" . PHP_EOL;
                 if ($res > 0) {
                     continue 3;
                 }
