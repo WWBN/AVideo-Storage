@@ -3,6 +3,7 @@
 $totalSameTime = 15;
 
 function findWhereToSkip($filesToUpload, $index) {
+    global $conn_id;
     $totalFiles = count($filesToUpload);
     $lastFile = $filesToUpload[$totalFiles-1];
     $remote_file = getRemoteFileName($lastFile);
