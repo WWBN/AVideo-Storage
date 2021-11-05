@@ -156,7 +156,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
                 $remote_file = getRemoteFileName($lastFile);
                 $res = ftp_size($conn_id[$i], $remote_file);
                 if ($res > 0) {
-                    break 2;
+                    continue 3;
                 }
             }
         }
