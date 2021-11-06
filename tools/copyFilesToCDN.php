@@ -36,6 +36,7 @@ function getConnID($index){
     if(empty($conn_id[$index])){
         $conn_id[$index] = ftp_connect($storage_hostname);
         if (empty($conn_id[$index])) {
+            echo "getConnID trying again {$index}" . PHP_EOL;
             sleep(1);
             return getConnID($index);
         }
