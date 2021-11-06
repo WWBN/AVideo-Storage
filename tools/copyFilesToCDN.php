@@ -35,7 +35,6 @@ function getConnID($index){
     global $conn_id,$storage_hostname, $storage_username, $storage_password;
     if(empty($conn_id[$index])){
         sleep(1);
-        echo 'Creating conn '.$index.PHP_EOL;
         $conn_id[$index] = ftp_connect($storage_hostname);
         if (empty($conn_id[$index])) {
             return false;
