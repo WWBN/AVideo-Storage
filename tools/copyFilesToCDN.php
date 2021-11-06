@@ -34,15 +34,14 @@ function findWhereToSkip($filesToUpload, $index) {
 function getConnID($index){
     global $conn_id,$storage_hostname, $storage_username, $storage_password;
     if(empty($conn_id[$index])){
-        sleep(1);
         $conn_id[$index] = ftp_connect($storage_hostname);
         if (empty($conn_id[$index])) {
-            return false;
+            sleep(1);
+            return getConnID($index);
         }
         // login with username and password
         $login_result = ftp_login($conn_id[$index], $storage_username, $storage_password);
         ftp_pasv($conn_id[$index], true);
-        return getConnID($index);
     }
     return $conn_id[$index];
 }
