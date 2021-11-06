@@ -143,6 +143,10 @@ while (empty($conn_id)) {
     }
 }
 
+if(empty($conn_id)){
+    die('Could Not Connect');
+}
+
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
