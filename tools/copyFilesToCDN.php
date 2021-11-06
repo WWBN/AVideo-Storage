@@ -3,11 +3,11 @@
 $totalSameTime = 15;
 
 function findWhereToSkip($filesToUpload, $index) {
-    global $conn_id;
+    $connID = getConnID($index);
     $totalFiles = count($filesToUpload);
     $lastFile = $filesToUpload[$totalFiles - 1];
     $remote_file = getRemoteFileName($lastFile);
-    $res = ftp_size($conn_id[$index], $remote_file);
+    $res = ftp_size($connID, $remote_file);
     if ($res > 0) {
         return -1;
     }
@@ -18,7 +18,7 @@ function findWhereToSkip($filesToUpload, $index) {
         }
         $lastFile = $filesToUpload[$i];
         $remote_file = getRemoteFileName($lastFile);
-        $res = ftp_size($conn_id[$index], $remote_file);
+        $res = ftp_size($connID, $remote_file);
         if ($res <= 0) {
             $i -= 100;
 
@@ -30,6 +30,21 @@ function findWhereToSkip($filesToUpload, $index) {
         }
     }
 }
+
+function getConnID($index){
+    global $conn_id;
+    if(empty($conn_id[$index])){
+        $conn_id[$index] = ftp_connect($storage_hostname);
+        if (empty($conn_id[$index])) {
+            return false;
+        }
+        // login with username and password
+        $login_result = ftp_login($conn_id[$index], $storage_username, $storage_password);
+        ftp_pasv($conn_id[$index], true);
+    }
+    return $conn_id[$index];
+}
+
 
 function getRemoteFileName($value) {
     global $dirName;
@@ -50,7 +65,7 @@ function getRemoteFileName($value) {
 }
 
 function upload($value, $index) {
-    global $conn_id, $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload, $ignoreRemoteCheck;
+    global $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload, $ignoreRemoteCheck;
     $remote_file = getRemoteFileName($value);
     if (empty($remote_file)) {
         return false;
@@ -60,11 +75,11 @@ function upload($value, $index) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
         return false;
     }
-
+    $connID = getConnID($index);
     if ($ignoreRemoteCheck) {
         $res = -1;
     } else {
-        $res = ftp_size($conn_id[$index], $remote_file);
+        $res = ftp_size($connID, $remote_file);
     }
     if ($res > 0) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists [$index]" . PHP_EOL;
@@ -76,7 +91,7 @@ function upload($value, $index) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
         //ftp_mkdir_recusive($remote_file);
 
-        $ret[$index] = ftp_nb_put($conn_id[$index], $remote_file, $value, FTP_BINARY);
+        $ret[$index] = ftp_nb_put($connID, $remote_file, $value, FTP_BINARY);
         return true;
     }
 }
@@ -112,16 +127,13 @@ $conn_id = array();
 echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
 while (empty($conn_id)) {
     for ($i = 0; $i < $totalSameTime; $i++) {
-        $conn_id[$i] = ftp_connect($storage_hostname);
-        if (empty($conn_id[$i])) {
-            unset($conn_id[$i]);
-            $totalSameTime = $i + 1;
+        $conn = getConnID($i);
+        if(empty($conn)){
+            $totalSameTime = $i;
             break;
+        }else{
+            echo "Connection {$i} ... " . PHP_EOL;
         }
-        echo "Connection {$i} ... " . PHP_EOL;
-        // login with username and password
-        $login_result = ftp_login($conn_id[$i], $storage_username, $storage_password);
-        ftp_pasv($conn_id[$i], true);
     }
 
     if (empty($conn_id)) {
