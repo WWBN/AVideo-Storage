@@ -34,6 +34,7 @@ function findWhereToSkip($filesToUpload, $index) {
 function getConnID($index){
     global $conn_id;
     if(empty($conn_id[$index])){
+        echo 'Creating conn '.$index.PHP_EOL;
         $conn_id[$index] = ftp_connect($storage_hostname);
         if (empty($conn_id[$index])) {
             return false;
