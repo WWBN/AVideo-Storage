@@ -181,7 +181,9 @@ for ($countItems = 0; $countItems < $totalItems;) {
                 }
                 if ($ret[$key] == FTP_FINISHED) {
                     unset($ret[$key]);
-
+                    if(empty($filesToUpload[$filesToUploadCount])){
+                        break;
+                    }
                     $value = $filesToUpload[$filesToUploadCount];
                     $filesToUploadCount++;
 
