@@ -29,6 +29,7 @@ function findWhereToSkip($filesToUpload, $index) {
             return $i;
         }
     }
+    return $totalFiles;
 }
 
 function getConnID($index){
