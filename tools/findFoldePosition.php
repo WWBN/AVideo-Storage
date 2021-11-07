@@ -31,8 +31,8 @@ $folder = trim(@$argv[1]);
 $list = ftp_rawlist($conn_id[0], "/{$storage_username}/", true);
 for ($i=$index;$i<count($list);$i++){
     $value = $list[$i];
-    if(preg_match('/'.$folder.'/i', $file)){
-        echo $i.' found '.$file.PHP_EOL;
+    if(preg_match('/'.$folder.'/i', $value)){
+        echo $i.' found '.$value.PHP_EOL;
     }
 }
 
