@@ -29,7 +29,7 @@ getConnID(0);
 $folder = trim(@$argv[1]);
 
 $list = ftp_rawlist($conn_id[0], "/{$storage_username}/", true);
-for ($i=$index;$i<count($list);$i++){
+for ($i=0;$i<count($list);$i++){
     $value = $list[$i];
     if(preg_match('/'.$folder.'/i', $value)){
         echo $i.' found '.$value.PHP_EOL;
