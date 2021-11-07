@@ -1,6 +1,6 @@
 <?php
 
-$totalSameTime = 15;
+$totalSameTime = 5;
 
 function findWhereToSkip($filesToUpload, $index) {
     $connID = getConnID($index);
