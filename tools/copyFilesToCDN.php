@@ -213,6 +213,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
         }
 
         $continue = true;
+        $skip = true;
         while ($continue) {
             $continue = false;
             foreach ($ret as $key => $r) {
