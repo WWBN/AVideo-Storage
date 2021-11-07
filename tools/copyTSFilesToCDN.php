@@ -2,35 +2,6 @@
 
 $totalSameTime = 5;
 
-function findWhereToSkip($filesToUpload, $index) {
-    $connID = getConnID($index);
-    $totalFiles = count($filesToUpload);
-    $lastFile = $filesToUpload[$totalFiles - 1];
-    $remote_file = getRemoteFileName($lastFile);
-    $res = ftp_size($connID, $remote_file);
-    if ($res > 0) {
-        return -1;
-    }
-
-    for ($i = $index; $i < $totalFiles; $i += 100) {
-        if ($i > $totalFiles) {
-            $i = $totalFiles;
-        }
-        $lastFile = $filesToUpload[$i];
-        $remote_file = getRemoteFileName($lastFile);
-        $res = ftp_size($connID, $remote_file);
-        if ($res <= 0) {
-            $i -= 100;
-
-            if ($i < 0) {
-                $i = 0;
-            }
-
-            return $i;
-        }
-    }
-    return $totalFiles;
-}
 
 function getConnID($index){
     global $conn_id,$storage_hostname, $storage_username, $storage_password;
@@ -191,17 +162,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
 
             if (upload($value, $i)) {
                 $i++;
-            } else if ($skip) {
-                $skip = false;
-                $indexFile = findWhereToSkip($filesToUpload, $i);
-                if ($indexFile < 0) {
-                    echo "1. Finished Go to the next video" . PHP_EOL;
-                    continue 3;
-                } else {
-                    echo "1. Not Finished Go {$indexFile}" . PHP_EOL;
-                    $filesToUploadCount = $indexFile;
-                }
-            }
+            } 
         }
 
         $continue = true;
@@ -226,17 +187,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
 
                     //echo "File finished... $key" . PHP_EOL;
                     $upload = upload($value, $key);
-                    if ($skip && !$upload) {
-                        $skip = false;
-                        $indexFile = findWhereToSkip($filesToUpload, $i);
-                        if ($indexFile < 0) {
-                            echo "2. Finished Go to the next video" . PHP_EOL;
-                            continue 3;
-                        } else {
-                            echo "2. Not Finished Go {$filesToUploadCount}" . PHP_EOL;
-                            $filesToUploadCount = $indexFile;
-                        }
-                    }
+                    
                 }
             }
         }
