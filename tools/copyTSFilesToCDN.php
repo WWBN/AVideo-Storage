@@ -68,7 +68,7 @@ function getRemoteFileName($value) {
 }
 
 function upload($value, $index) {
-    global $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload, $ignoreRemoteCheck;
+    global $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload;
     
     if (!preg_match('/.ts$/', $value)) {
         return false;
@@ -84,24 +84,15 @@ function upload($value, $index) {
         return false;
     }
     $connID = getConnID($index);
-    if ($ignoreRemoteCheck) {
-        $res = -1;
-    } else {
-        $res = ftp_size($connID, $remote_file);
-    }
-    if ($res > 0) {
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists [$index]" . PHP_EOL;
-        return false;
-    } else {
-        $totalBytes += $filesize;
-        $totalUploadedSize += $filesize;
-        $filesizeMb = $filesize / (1024 * 1024);
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
-        //ftp_mkdir_recusive($remote_file);
+    
+    $totalBytes += $filesize;
+    $totalUploadedSize += $filesize;
+    $filesizeMb = $filesize / (1024 * 1024);
+    echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+    //ftp_mkdir_recusive($remote_file);
 
-        $ret[$index] = ftp_nb_put($connID, $remote_file, $value, FTP_BINARY);
-        return true;
-    }
+    $ret[$index] = ftp_nb_put($connID, $remote_file, $value, FTP_BINARY);
+    return true;
 }
 
 require_once '../configuration.php';
@@ -114,11 +105,6 @@ if (!isCommandLineInterface()) {
 }
 
 $index = intval(@$argv[1]);
-
-$ignoreRemoteCheck = $index == -1;
-if ($ignoreRemoteCheck) {
-    $index = 0;
-}
 
 $totalSameTimeArg = intval(@$argv[2]);
 if (!empty($totalSameTimeArg)) {
