@@ -25,7 +25,7 @@ function getConnID($index){
     }
     return $conn_id[$index];
 }
-
+getConnID(0);
 $folder = trim(@$argv[1]);
 
 $list = ftp_rawlist($conn_id[0], "/{$CDNObj->storage_username}/", true);
