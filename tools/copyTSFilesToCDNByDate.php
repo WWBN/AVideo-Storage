@@ -20,8 +20,10 @@ function put($folder, $totalSameTime) {
                     $fileTime = strtotime($matches[1]);
                     if($fileTime < $olderThan){
                         $f = "{$filename}/$matches[2]";
-                        $filesToUpload[] = $f;
-                        echo "Add ($file) $f ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
+                        if(preg_match('/.ts$/', $f)){
+                            $filesToUpload[] = $f;
+                            echo "Add ($file) $f ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
+                        }
                     }
                 }
             }
