@@ -84,6 +84,9 @@ function put($folder, $totalSameTime) {
                 echo ("put:uploadToCDNStorage [$key] [{$fileUploadCount}/{$totalFiles}] FTP_FINISHED in {$seconds} seconds {$humanFilesize} {$ps}ps ") . PHP_EOL;
 
                 $file = array_shift($filesToUpload);
+                if(empty($file)){
+                    continue;
+                }
 //echo "File finished... $key" . PHP_EOL;
                 $upload = uploadToCDNStorage($file, $key, $conn_id, $ret);
                 if ($upload) {
@@ -103,9 +106,6 @@ function put($folder, $totalSameTime) {
     }
 
     if ($fileUploadCount == $totalFiles) {
-        createDummyFiles($videos_id);
-        sendSocketNotification($videos_id, __('Video upload complete'));
-        setProgress($videos_id, true, true);
         echo ("put finished SUCCESS ") . PHP_EOL;
     } else {
         echo ("put finished ERROR ") . PHP_EOL;
@@ -174,8 +174,11 @@ $totalSameTime = 5;
 $conn_id = array();
 $glob = glob("../videos/*");
 $totalItems = count($glob);
+
+$index = intval(@$argv[1]);
+
 echo "Found total of {$totalItems} items " . PHP_EOL;
-for ($countItems = 0; $countItems < $totalItems; $countItems++) {
+for ($countItems = $index; $countItems < $totalItems; $countItems++) {
     $folder = $glob[$countItems];
     if (is_dir($folder)) {
         echo "[{$countItems}/{$totalItems}] Searching {$folder} " . PHP_EOL;
