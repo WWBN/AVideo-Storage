@@ -4,9 +4,18 @@ require_once '../configuration.php';
 //streamer config
 require_once '../functions.php';
 function put($folder, $totalSameTime) {
-    global $_uploadInfo;
-    $filename = str_replace('../videos/', '', $folder);
-    $list = glob("{$folder}*");
+    global $_uploadInfo, $conn_id;
+    $list = glob("{$folder}/*");
+    $connID = getConnID(0, $conn_id);
+    foreach ($list as $value) {
+        if(is_dir($value)){
+            $listTS = glob("{$value}/*");
+            $filename = str_replace('../videos/', '', $folder);
+            $rawlist = ftp_rawlist($connID, $filename);
+            var_dump($rawlist);exit;
+        }
+    }
+    
     $totalItems = count($list);
     var_dump($list);exit;
     $filesToUpload = array();
@@ -157,7 +166,7 @@ function uploadToCDNStorage($local_path, $index, &$conn_id, &$ret) {
 
 
 $totalSameTime = 5;
-
+$conn_id = array();
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
