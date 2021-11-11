@@ -20,15 +20,15 @@ function put($folder, $totalSameTime) {
                     $fileTime = strtotime($matches[1]);
                     if($fileTime < $olderThan){
                         $filesToUpload[] = $file;
+                        echo "Add ($file) ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
                     }
-                    echo "Add ($file) ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
                 }
             }
         }
     }
     
     $totalItems = count($filesToUpload);
-    var_dump($filesToUpload);exit;
+    var_dump($filesToUpload);return false;
     $totalFilesize = 0;
     $totalBytesTransferred = 0;
     foreach ($list as $value) {
