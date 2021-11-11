@@ -5,8 +5,8 @@ require_once '../configuration.php';
 require_once '../functions.php';
 function put($folder, $totalSameTime) {
     global $_uploadInfo;
-    
-    $list = glob("../videos/{$folder}*");
+    $filename = str_replace('../videos/', '', $folder);
+    $list = glob("{$folder}*");
     $totalItems = count($list);
     var_dump($list);exit;
     $filesToUpload = array();
