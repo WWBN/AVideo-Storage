@@ -15,12 +15,13 @@ function put($folder, $totalSameTime) {
             $filename = str_replace('../videos/', '', $value);
             $rawlist = ftp_rawlist($connID, $filename);
             foreach ($rawlist as $file) {
-                preg_match('/[-drwx]+ +[0-9] [0-9]+ +[0-9]+ +[0-9]+ +([a-z]{3} [0-9]+ [0-9]+:[0-9]+) .*/i', $file, $matches);
-                if(!empty($matches[1])){
+                preg_match('/[-drwx]+ +[0-9] [0-9]+ +[0-9]+ +[0-9]+ +([a-z]{3} [0-9]+ [0-9]+:[0-9]+) (.+)/i', $file, $matches);
+                if(!empty($matches[1]) && !empty($matches[2])){
                     $fileTime = strtotime($matches[1]);
                     if($fileTime < $olderThan){
-                        $filesToUpload[] = $file;
-                        echo "Add ($file) ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
+                        $f = "{$filename}/$matches[2]";
+                        $filesToUpload[] = $f;
+                        echo "Add ($file) $f ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
                     }
                 }
             }
