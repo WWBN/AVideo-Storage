@@ -77,12 +77,11 @@ function put($folder, $totalSameTime) {
                 $humanFilesize = humanFileSize($filesize);
                 $ps = humanFileSize($filesize / $end);
                 $seconds = number_format($end);
-                $ETA = secondsToDuration($end * (($totalFiles - $fileUploadCount) / $totalSameTime));
                 $totalBytesTransferred += $filesize;
                 unset($ret[$key]);
                 unset($_uploadInfo[$key]);
 
-                echo ("put:uploadToCDNStorage [$key] [{$fileUploadCount}/{$totalFiles}] FTP_FINISHED in {$seconds} seconds {$humanFilesize} {$ps}ps ETA: {$ETA}") . PHP_EOL;
+                echo ("put:uploadToCDNStorage [$key] [{$fileUploadCount}/{$totalFiles}] FTP_FINISHED in {$seconds} seconds {$humanFilesize} {$ps}ps ") . PHP_EOL;
 
                 $file = array_shift($filesToUpload);
 //echo "File finished... $key" . PHP_EOL;
@@ -166,7 +165,7 @@ function filenameToRemotePath($filename) {
     global $storage_username;
     $filename = str_replace('../videos/', '', $filename);
     if (!preg_match('/^\/' . $storage_username . '\//', $filename)) {
-        return "/{$obj->storage_username}/$filename";
+        return "/{$storage_username}/$filename";
     }
     return $filename;
 }
