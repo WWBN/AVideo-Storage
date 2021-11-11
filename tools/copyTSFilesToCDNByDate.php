@@ -162,5 +162,9 @@ $glob = glob("../videos/*");
 $totalItems = count($glob);
 echo "Found total of {$totalItems} items " . PHP_EOL;
 for ($countItems = 0; $countItems < $totalItems;$countItems++) {
-    echo "[{$countItems}/{$totalItems}] Searching {$glob[$countItems]} " . PHP_EOL;
+    $folder = $glob[$countItems];
+    if(is_dir($folder)){
+        echo "[{$countItems}/{$totalItems}] Searching {$folder} " . PHP_EOL;
+        put($folder, $totalSameTime);
+    }
 }
