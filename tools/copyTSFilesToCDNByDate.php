@@ -134,28 +134,28 @@ function uploadToCDNStorage($local_path, $index, &$conn_id, &$ret) {
         $_uploadInfo = array();
     }
     if (empty($local_path)) {
-        echo ("put:uploadToCDNStorage error empty local file name {$local_path}");
+        echo ("put:uploadToCDNStorage error empty local file name {$local_path}").PHP_EOL;
         return false;
     }
     if (!file_exists($local_path)) {
-        echo ("put:uploadToCDNStorage error file does not exists {$local_path}");
+        echo ("put:uploadToCDNStorage error file does not exists {$local_path}").PHP_EOL;
         return false;
     }
-    //echo ("put:uploadToCDNStorage " . __LINE__);
+    //echo ("put:uploadToCDNStorage " . __LINE__).PHP_EOL;
     $remote_file = filenameToRemotePath($local_path);
-    //echo ("put:uploadToCDNStorage " . __LINE__);
+    //echo ("put:uploadToCDNStorage " . __LINE__).PHP_EOL;
     if (empty($remote_file)) {
-        echo ("put:uploadToCDNStorage error empty remote file name {$local_path}");
+        echo ("put:uploadToCDNStorage error empty remote file name {$local_path}").PHP_EOL;
         return false;
     }
     $filesize = filesize($local_path);
-    //echo ("put:uploadToCDNStorage [$index] START " . humanFileSize($filesize) . " {$remote_file} ");
+    //echo ("put:uploadToCDNStorage [$index] START " . humanFileSize($filesize) . " {$remote_file} ").PHP_EOL;
     $connID = getConnID($index, $conn_id);
-    //echo ("put:uploadToCDNStorage " . __LINE__);
+    //echo ("put:uploadToCDNStorage " . __LINE__).PHP_EOL;
     $_uploadInfo[$index] = array('microtime' => microtime(true), 'filesize' => $filesize, 'local_path' => $local_path, 'remote_file' => $remote_file);
-    //echo ("put:uploadToCDNStorage " . __LINE__);
+    //echo ("put:uploadToCDNStorage " . __LINE__).PHP_EOL;
     $ret[$index] = ftp_nb_put($connID, $remote_file, $local_path, FTP_BINARY);
-    //echo ("put:uploadToCDNStorage SUCCESS [$index] {$remote_file} " . json_encode($_uploadInfo[$index]));
+    //echo ("put:uploadToCDNStorage SUCCESS [$index] {$remote_file} " . json_encode($_uploadInfo[$index])).PHP_EOL;
     return true;
 }
 
