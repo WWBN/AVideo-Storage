@@ -33,26 +33,26 @@ function put($folder, $totalSameTime) {
     $totalItems = count($filesToUpload);    
     
     if (empty($filesToUpload)) {
-        echo ("put $folder There is no file to upload ");
+        echo ("put $folder There is no file to upload ").PHP_EOL;
         return false;
     }
 
     $totalFiles = count($filesToUpload);
 
-    echo ("put $folder totalSameTime=$totalSameTime totalFiles={$totalFiles} ");
+    echo ("put $folder totalSameTime=$totalSameTime totalFiles={$totalFiles} ").PHP_EOL;
 
     $conn_id = array();
     $ret = array();
     $fileUploadCount = 0;
     for ($i = 0; $i < $totalSameTime; $i++) {
         $file = array_shift($filesToUpload);
-        //echo ("put:upload 1 {$i} Start {$file}");
+        //echo ("put:upload 1 {$i} Start {$file}").PHP_EOL;
         $upload = uploadToCDNStorage($file, $i, $conn_id, $ret);
-        //echo ("put:upload 1 {$i} done {$file}");
+        //echo ("put:upload 1 {$i} done {$file}").PHP_EOL;
         if ($upload) {
             $fileUploadCount++;
         } else {
-            echo ("put:upload 1 {$i} error {$file}");
+            echo ("put:upload 1 {$i} error {$file}").PHP_EOL;
         }
     }
     //echo ("put confirmed " . count($ret));
@@ -80,7 +80,7 @@ function put($folder, $totalSameTime) {
                 unset($ret[$key]);
                 unset($_uploadInfo[$key]);
 
-                echo ("put:uploadToCDNStorage [$key] [{$fileUploadCount}/{$totalFiles}] FTP_FINISHED in {$seconds} seconds {$humanFilesize} {$ps}ps ETA: {$ETA}");
+                echo ("put:uploadToCDNStorage [$key] [{$fileUploadCount}/{$totalFiles}] FTP_FINISHED in {$seconds} seconds {$humanFilesize} {$ps}ps ETA: {$ETA}").PHP_EOL;
 
                 $file = array_shift($filesToUpload);
                 //echo "File finished... $key" . PHP_EOL;
@@ -89,13 +89,13 @@ function put($folder, $totalSameTime) {
                     $fileUploadCount++;
                     $totalBytesTransferred += $filesize;
                 } else {
-                    echo ("put:upload 2 {$i} error {$file}");
+                    echo ("put:upload 2 {$i} error {$file}").PHP_EOL;
                 }
             }
         }
     }
 
-    echo ("put videos_id={$videos_id} End totalFiles => $totalFiles, filesCopied => $fileUploadCount, totalBytesTransferred => $totalBytesTransferred");
+    echo ("put videos_id={$videos_id} End totalFiles => $totalFiles, filesCopied => $fileUploadCount, totalBytesTransferred => $totalBytesTransferred").PHP_EOL;
     // close the connection
     foreach ($conn_id as $value) {
         ftp_close($value);
@@ -105,9 +105,9 @@ function put($folder, $totalSameTime) {
         createDummyFiles($videos_id);
         sendSocketNotification($videos_id, __('Video upload complete'));
         setProgress($videos_id, true, true);
-        echo ("put finished SUCCESS ");
+        echo ("put finished SUCCESS ").PHP_EOL;
     } else {
-        echo ("put finished ERROR ");
+        echo ("put finished ERROR ").PHP_EOL;
     }
     return array('filesCopied' => $fileUploadCount, 'totalBytesTransferred' => $totalBytesTransferred);
 }
