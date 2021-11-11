@@ -9,6 +9,7 @@ function put($folder, $totalSameTime) {
     $list = glob("{$folder}/*");
     $connID = getConnID(0, $conn_id);
     $filesToUpload = array();
+    $totalBytesTransferred = 0;
     foreach ($list as $value) {
         if(is_dir($value)){
             $listTS = glob("{$value}/*");
@@ -95,7 +96,7 @@ function put($folder, $totalSameTime) {
         }
     }
 
-    echo ("put videos_id={$videos_id} End totalFiles => $totalFiles, filesCopied => $fileUploadCount, totalBytesTransferred => $totalBytesTransferred").PHP_EOL;
+    echo ("put End totalFiles => $totalFiles, filesCopied => $fileUploadCount, totalBytesTransferred => $totalBytesTransferred").PHP_EOL;
     // close the connection
     foreach ($conn_id as $value) {
         ftp_close($value);
@@ -137,6 +138,7 @@ function uploadToCDNStorage($local_path, $index, &$conn_id, &$ret) {
         echo ("put:uploadToCDNStorage error empty local file name {$local_path}").PHP_EOL;
         return false;
     }
+    $local_path = "../videos/{$local_path}";
     if (!file_exists($local_path)) {
         echo ("put:uploadToCDNStorage error file does not exists {$local_path}").PHP_EOL;
         return false;
