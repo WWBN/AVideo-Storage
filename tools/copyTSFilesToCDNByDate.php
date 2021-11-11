@@ -100,10 +100,6 @@ function put($folder, $totalSameTime) {
     }
 
     echo ("put End totalFiles => $totalFiles, filesCopied => $fileUploadCount, totalBytesTransferred => $totalBytesTransferred") . PHP_EOL;
-// close the connection
-    foreach ($conn_id as $value) {
-        ftp_close($value);
-    }
 
     if ($fileUploadCount == $totalFiles) {
         echo ("put finished SUCCESS ") . PHP_EOL;
@@ -184,4 +180,9 @@ for ($countItems = $index; $countItems < $totalItems; $countItems++) {
         echo "[{$countItems}/{$totalItems}] Searching {$folder} " . PHP_EOL;
         put($folder, $totalSameTime);
     }
+}
+
+// close the connection
+foreach ($conn_id as $value) {
+    ftp_close($value);
 }
