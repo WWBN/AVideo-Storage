@@ -5,8 +5,10 @@ require_once '../configuration.php';
 require_once '../functions.php';
 function put($folder, $totalSameTime) {
     global $_uploadInfo, $conn_id;
+    $olderThan = strtotime('2021-11-04');
     $list = glob("{$folder}/*");
     $connID = getConnID(0, $conn_id);
+    $filesToUpload = array();
     foreach ($list as $value) {
         if(is_dir($value)){
             $listTS = glob("{$value}/*");
@@ -16,16 +18,17 @@ function put($folder, $totalSameTime) {
                 preg_match('/[-drwx]+ +[0-9] [0-9]+ +[0-9]+ +[0-9]+ +([a-z]{3} [0-9]+ [0-9]+:[0-9]+) .*/i', $file, $matches);
                 if(!empty($matches[1])){
                     $fileTime = strtotime($matches[1]);
-                    var_dump(date('Y-m-d H:i:s', $fileTime), $matches);exit;
+                    if($fileTime < $olderThan){
+                        $filesToUpload[] = $file;
+                    }
+                    echo "Add ($file) ".date('Y-m-d H:i:s', $fileTime).PHP_EOL;
                 }
             }
-            var_dump($rawlist);exit;
         }
     }
     
-    $totalItems = count($list);
-    var_dump($list);exit;
-    $filesToUpload = array();
+    $totalItems = count($filesToUpload);
+    var_dump($filesToUpload);exit;
     $totalFilesize = 0;
     $totalBytesTransferred = 0;
     foreach ($list as $value) {
