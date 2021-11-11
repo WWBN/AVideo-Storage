@@ -10,8 +10,15 @@ function put($folder, $totalSameTime) {
     foreach ($list as $value) {
         if(is_dir($value)){
             $listTS = glob("{$value}/*");
-            $filename = str_replace('../videos/', '', $folder);
+            $filename = str_replace('../videos/', '', $value);
             $rawlist = ftp_rawlist($connID, $filename);
+            foreach ($rawlist as $file) {
+                preg_match('/[-drwx]+ +[0-9] [0-9]+ +[0-9]+ +[0-9]+ +([a-z]{3} [0-9]+ [0-9]+:[0-9]+) .*/i', $file, $matches);
+                if(!empty($matches[1])){
+                    $fileTime = strtotime($matches[1]);
+                    var_dump(date('Y-m-d H:i:s', $fileTime), $matches);exit;
+                }
+            }
             var_dump($rawlist);exit;
         }
     }
