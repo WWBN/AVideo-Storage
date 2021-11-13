@@ -13,7 +13,7 @@ foreach ($glob as $file) {
     if (preg_match('/enc.*.key$/', $file)) {
         
         $obj->file = $file;
-        $obj->content = file_get_contents($file);;
+        $obj->content = base64_encode(file_get_contents($file));
         $obj->pathinfo = pathinfo($file);
         break;
     }
