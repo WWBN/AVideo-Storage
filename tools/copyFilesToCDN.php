@@ -87,7 +87,7 @@ function upload($value, $index) {
     if ($res > 0) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists [$index]" . PHP_EOL;
         return false;
-    } else {
+    } else if(file_exists($remote_file)) {
         $totalBytes += $filesize;
         $totalUploadedSize += $filesize;
         $filesizeMb = $filesize / (1024 * 1024);
