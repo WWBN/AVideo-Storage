@@ -1,6 +1,6 @@
 <?php
 
-$totalSameTime = 5;
+$totalSameTime = 3;
 
 function findWhereToSkip($filesToUpload, $index) {
     $connID = getConnID($index);
@@ -32,14 +32,14 @@ function findWhereToSkip($filesToUpload, $index) {
     return $totalFiles;
 }
 
-function getConnID($index){
+function getConnID($index, $retry=true){
     global $conn_id,$storage_hostname, $storage_username, $storage_password;
     if(empty($conn_id[$index])){
         $conn_id[$index] = ftp_connect($storage_hostname);
-        if (empty($conn_id[$index])) {
+        if ($retry && empty($conn_id[$index])) {
             echo "getConnID trying again {$index}" . PHP_EOL;
             sleep(1);
-            return getConnID($index);
+            return getConnID($index, $retry);
         }
         // login with username and password
         $login_result = ftp_login($conn_id[$index], $storage_username, $storage_password);
@@ -130,7 +130,7 @@ $conn_id = array();
 echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
 while (empty($conn_id)) {
     for ($i = 0; $i < $totalSameTime; $i++) {
-        $conn = getConnID($i);
+        $conn = getConnID($i, empty($conn_id));
         if(empty($conn)){
             $totalSameTime = $i;
             break;
