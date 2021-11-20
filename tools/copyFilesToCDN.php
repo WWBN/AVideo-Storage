@@ -32,9 +32,9 @@ function findWhereToSkip($filesToUpload, $index) {
     return $totalFiles;
 }
 
-function getConnID($index, $retry=true){
-    global $conn_id,$storage_hostname, $storage_username, $storage_password;
-    if(empty($conn_id[$index])){
+function getConnID($index, $retry = true) {
+    global $conn_id, $storage_hostname, $storage_username, $storage_password;
+    if (empty($conn_id[$index])) {
         $conn_id[$index] = ftp_connect($storage_hostname);
         if ($retry && empty($conn_id[$index])) {
             echo "getConnID trying again {$index}" . PHP_EOL;
@@ -47,7 +47,6 @@ function getConnID($index, $retry=true){
     }
     return $conn_id[$index];
 }
-
 
 function getRemoteFileName($value) {
     global $dirName;
@@ -87,7 +86,7 @@ function upload($value, $index) {
     if ($res > 0) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists [$index]" . PHP_EOL;
         return false;
-    } else if(file_exists($value)) {
+    } else if (file_exists($value)) {
         $totalBytes += $filesize;
         $totalUploadedSize += $filesize;
         $filesizeMb = $filesize / (1024 * 1024);
@@ -131,10 +130,10 @@ echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
 while (empty($conn_id)) {
     for ($i = 0; $i < $totalSameTime; $i++) {
         $conn = getConnID($i, empty($conn_id));
-        if(empty($conn)){
+        if (empty($conn)) {
             $totalSameTime = $i;
             break;
-        }else{
+        } else {
             echo "Connection {$i} ... " . PHP_EOL;
         }
     }
@@ -145,7 +144,7 @@ while (empty($conn_id)) {
     }
 }
 
-if(empty($conn_id)){
+if (empty($conn_id)) {
     die('Could Not Connect');
 }
 
@@ -229,21 +228,22 @@ for ($countItems = 0; $countItems < $totalItems;) {
                 }
                 if ($ret[$key] == FTP_FINISHED) {
                     unset($ret[$key]);
+                    if (!empty($filesToUpload[$filesToUploadCount])) {
+                        $value = $filesToUpload[$filesToUploadCount];
+                        $filesToUploadCount++;
 
-                    $value = $filesToUpload[$filesToUploadCount];
-                    $filesToUploadCount++;
-
-                    //echo "File finished... $key" . PHP_EOL;
-                    $upload = upload($value, $key);
-                    if ($skip && !$upload) {
-                        $skip = false;
-                        $indexFile = findWhereToSkip($filesToUpload, $i);
-                        if ($indexFile < 0) {
-                            echo "2. Finished Go to the next video" . PHP_EOL;
-                            continue 3;
-                        } else {
-                            echo "2. Not Finished Go {$filesToUploadCount}" . PHP_EOL;
-                            $filesToUploadCount = $indexFile;
+                        //echo "File finished... $key" . PHP_EOL;
+                        $upload = upload($value, $key);
+                        if ($skip && !$upload) {
+                            $skip = false;
+                            $indexFile = findWhereToSkip($filesToUpload, $i);
+                            if ($indexFile < 0) {
+                                echo "2. Finished Go to the next video" . PHP_EOL;
+                                continue 3;
+                            } else {
+                                echo "2. Not Finished Go {$filesToUploadCount}" . PHP_EOL;
+                                $filesToUploadCount = $indexFile;
+                            }
                         }
                     }
                 }
