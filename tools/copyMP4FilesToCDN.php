@@ -130,8 +130,8 @@ for ($countItems = 0; $countItems < $totalItems;) {
 
     $filesToUpload = array();
     if (!is_dir($file)) {
-        $path_parts = pathinfo($value);
-        if ($path_parts['extension'] = 'mp4') {
+        $path_parts = pathinfo($file);
+        if ($path_parts['extension'] == 'mp4') {
             $filesToUpload[] = $file;
         }
     }
