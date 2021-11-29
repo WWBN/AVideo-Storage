@@ -47,7 +47,7 @@ function upload($value) {
         $totalBytes += $filesize;
         $totalUploadedSize += $filesize;
         $filesizeMb = $filesize / (1024 * 1024);
-        echo "Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+        echo "Uploading $value to $remote_file " . PHP_EOL;
         //ftp_mkdir_recusive($remote_file);
 
         return ftp_put($connID, $remote_file, $value, FTP_BINARY);
