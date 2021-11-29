@@ -2,20 +2,15 @@
 
 $totalSameTime = 3;
 
-function getConnID($index, $retry = true) {
+function getConnID() {
     global $conn_id, $storage_hostname, $storage_username, $storage_password;
-    if (empty($conn_id[$index])) {
-        $conn_id[$index] = ftp_connect($storage_hostname);
-        if ($retry && empty($conn_id[$index])) {
-            echo "getConnID trying again {$index}" . PHP_EOL;
-            sleep(1);
-            return getConnID($index, $retry);
-        }
+    if (empty($conn_id)) {
+        $conn_id = ftp_connect($storage_hostname);
         // login with username and password
-        $login_result = ftp_login($conn_id[$index], $storage_username, $storage_password);
-        ftp_pasv($conn_id[$index], true);
+        $login_result = ftp_login($conn_id, $storage_username, $storage_password);
+        ftp_pasv($conn_id, true);
     }
-    return $conn_id[$index];
+    return $conn_id;
 }
 
 function getRemoteFileName($value) {
@@ -36,35 +31,26 @@ function getRemoteFileName($value) {
     return $remote_file;
 }
 
-function upload($value, $index) {
+function upload($value) {
     global $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload, $ignoreRemoteCheck;
     $remote_file = getRemoteFileName($value);
     if (empty($remote_file)) {
         return false;
     }
     $filesize = filesize($value);
-    if (empty($filesize)) {
+    if (empty($filesize) || $filesize < 20) {
         echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
         return false;
     }
-    $connID = getConnID($index);
-    if ($ignoreRemoteCheck) {
-        $res = -1;
-    } else {
-        $res = ftp_size($connID, $remote_file);
-    }
-    if ($res > 0) {
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] File $remote_file already exists [$index]" . PHP_EOL;
-        return false;
-    } else if (file_exists($value)) {
+    $connID = getConnID();
+    if (file_exists($value)) {
         $totalBytes += $filesize;
         $totalUploadedSize += $filesize;
         $filesizeMb = $filesize / (1024 * 1024);
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] [$index]Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
         //ftp_mkdir_recusive($remote_file);
 
-        $ret[$index] = ftp_nb_put($connID, $remote_file, $value, FTP_BINARY);
-        return true;
+        return ftp_put($connID, $remote_file, $value, FTP_BINARY);
     }
 }
 
@@ -91,32 +77,11 @@ if (!empty($totalSameTimeArg)) {
 //$storage_password = '';
 // set up basic connection
 
-$conn_id = array();
-
 echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
-while (empty($conn_id)) {
-    for ($i = 0; $i < $totalSameTime; $i++) {
-        $conn = getConnID($i, empty($conn_id));
-        if (empty($conn)) {
-            $totalSameTime = $i;
-            break;
-        } else {
-            echo "Connection {$i} ... " . PHP_EOL;
-        }
-    }
-
-    if (empty($conn_id)) {
-        echo "ERROR We could not open any connection" . PHP_EOL;
-        sleep(5);
-    }
-}
-
-if (empty($conn_id)) {
-    die('Could Not Connect');
-}
 
 $glob = glob("../videos/*");
 $totalItems = count($glob);
+
 echo "Found total of {$totalItems} items " . PHP_EOL;
 for ($countItems = 0; $countItems < $totalItems;) {
     $skip = true;
@@ -136,76 +101,10 @@ for ($countItems = 0; $countItems < $totalItems;) {
         }
     }
 
-    $start = microtime(true);
-    $totalBytes = 0;
-    $totalFilesToUpload = count($filesToUpload);
-    $filesToUploadCount = 0;
-    //var_dump($filesToUpload);exit;
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
-        $totalUploadedSize = 0;
-        $ret = array();
-        for ($i = 0; $i < $totalSameTime;) {
-            if (empty($filesToUpload[$filesToUploadCount]) || empty($conn_id[$i])) {
-                $filesToUploadCount++;
-                break;
-            }
-            $value = $filesToUpload[$filesToUploadCount];
-            $filesToUploadCount++;
-
-            if (upload($value, $i)) {
-                $i++;
-            } else if ($skip) {
-                $skip = false;
-                $indexFile = findWhereToSkip($filesToUpload, $i);
-                if ($indexFile < 0) {
-                    echo "1. Finished Go to the next video" . PHP_EOL;
-                    continue 3;
-                } else {
-                    echo "1. Not Finished Go {$indexFile}" . PHP_EOL;
-                    $filesToUploadCount = $indexFile;
-                }
-            }
-        }
-
-        $continue = true;
-        $skip = true;
-        while ($continue) {
-            $continue = false;
-            foreach ($ret as $key => $r) {
-                if (empty($ret[$key])) {
-                    continue;
-                }
-
-                if ($ret[$key] == FTP_MOREDATA) {
-                    // Continue uploading...
-                    $ret[$key] = ftp_nb_continue($conn_id[$key]);
-                    $continue = true;
-                }
-                if ($ret[$key] == FTP_FINISHED) {
-                    unset($ret[$key]);
-                    if (!empty($filesToUpload[$filesToUploadCount])) {
-                        $value = $filesToUpload[$filesToUploadCount];
-                        $filesToUploadCount++;
-
-                        //echo "File finished... $key" . PHP_EOL;
-                        $upload = upload($value, $key);
-                    }
-                }
-            }
-        }
-
-        foreach ($ret as $key => $r) {
-            if (empty($ret[$key])) {
-                continue;
-            }
-            if ($ret[$key] != FTP_FINISHED) {
-                echo "There was an error uploading the file... $key" . PHP_EOL;
-                //exit(1);
-            }
-        }
-
-        $totalUploadedSizeMb = $totalUploadedSize / (1024 * 1024);
+        upload($filesToUpload[$filesToUploadCount]);
+        $totalUploadedSizeMb = filesize($filesToUpload[$filesToUploadCount]) / (1024 * 1024);
         $end1 = microtime(true) - $start1;
         if (!empty($end1)) {
             $mbps = number_format($totalUploadedSizeMb / $end1, 1);
@@ -218,8 +117,6 @@ for ($countItems = 0; $countItems < $totalItems;) {
 
 // close the connection
 
-foreach ($conn_id as $value) {
-    ftp_close($value);
-}
+ftp_close($conn_id);
 
 
