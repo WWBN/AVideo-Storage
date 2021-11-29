@@ -32,14 +32,14 @@ function getRemoteFileName($value) {
 }
 
 function upload($value) {
-    global $totalBytes, $totalUploadedSize, $ret, $countItems, $totalItems, $filesToUploadCount, $totalFilesToUpload, $ignoreRemoteCheck;
+    global $totalBytes, $totalUploadedSize;
     $remote_file = getRemoteFileName($value);
     if (empty($remote_file)) {
         return false;
     }
     $filesize = filesize($value);
     if (empty($filesize) || $filesize < 20) {
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] $value empty filesize" . PHP_EOL;
+        echo "$value empty filesize" . PHP_EOL;
         return false;
     }
     $connID = getConnID();
@@ -47,7 +47,7 @@ function upload($value) {
         $totalBytes += $filesize;
         $totalUploadedSize += $filesize;
         $filesizeMb = $filesize / (1024 * 1024);
-        echo "[$countItems/$totalItems][{$filesToUploadCount}/{$totalFilesToUpload}] Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
+        echo "Uploading $value to $remote_file " . number_format($filesizeMb, 2) . "MB" . PHP_EOL;
         //ftp_mkdir_recusive($remote_file);
 
         return ftp_put($connID, $remote_file, $value, FTP_BINARY);
