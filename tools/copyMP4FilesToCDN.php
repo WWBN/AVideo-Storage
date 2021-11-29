@@ -82,6 +82,7 @@ echo "Connect to $storage_hostname MAX {$totalSameTime}" . PHP_EOL;
 $glob = glob("../videos/*");
 $totalItems = count($glob);
 
+$filesToUpload = array();
 echo "Found total of {$totalItems} items " . PHP_EOL;
 for ($countItems = 0; $countItems < $totalItems;) {
     $skip = true;
@@ -93,28 +94,29 @@ for ($countItems = 0; $countItems < $totalItems;) {
     echo "[$countItems/$totalItems] Process file {$file} " . PHP_EOL;
     $dirName = getCleanFilenameFromFile($file);
 
-    $filesToUpload = array();
     if (!is_dir($file)) {
         $path_parts = pathinfo($file);
         if ($path_parts['extension'] == 'mp4') {
             $filesToUpload[] = $file;
         }
     }
-    $totalFilesToUpload = count($filesToUpload);
-    for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
-        $start1 = microtime(true);
-        upload($filesToUpload[$filesToUploadCount]);
-        $totalUploadedSizeMb = filesize($filesToUpload[$filesToUploadCount]) / (1024 * 1024);
-        $end1 = microtime(true) - $start1;
-        if (!empty($end1)) {
-            $mbps = number_format($totalUploadedSizeMb / $end1, 1);
-        } else {
-            $mbps = 0;
-        }
-        echo "Finished " . number_format($totalUploadedSizeMb, 2) . "MB in " . number_format($end1, 1) . " seconds {$mbps}/mbps" . PHP_EOL;
-    }
 }
-
+$totalFilesToUpload = count($filesToUpload);
+for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;$filesToUploadCount++) {
+    $file = $filesToUpload[$filesToUploadCount];
+    $filesize = filesize($file);
+    echo "[{$filesToUploadCount}/{$totalFilesToUpload}/$totalItems] $file ". humanFileSize($filesize) . PHP_EOL;
+    $start1 = microtime(true);
+    upload($file);
+    $totalUploadedSizeMb = $filesize / (1024 * 1024);
+    $end1 = microtime(true) - $start1;
+    if (!empty($end1)) {
+        $mbps = number_format($totalUploadedSizeMb / $end1, 1);
+    } else {
+        $mbps = 0;
+    }
+    echo "Finished " . number_format($totalUploadedSizeMb, 2) . "MB in " . number_format($end1, 1) . " seconds {$mbps}/mbps" . PHP_EOL;
+}
 // close the connection
 
 
