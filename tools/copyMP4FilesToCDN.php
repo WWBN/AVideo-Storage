@@ -100,7 +100,7 @@ for ($countItems = 0; $countItems < $totalItems;) {
             $filesToUpload[] = $file;
         }
     }
-
+    $totalFilesToUpload = count($filesToUpload);
     for ($filesToUploadCount = 0; $filesToUploadCount < $totalFilesToUpload;) {
         $start1 = microtime(true);
         upload($filesToUpload[$filesToUploadCount]);
@@ -116,7 +116,5 @@ for ($countItems = 0; $countItems < $totalItems;) {
 }
 
 // close the connection
-
-ftp_close($conn_id);
 
 
