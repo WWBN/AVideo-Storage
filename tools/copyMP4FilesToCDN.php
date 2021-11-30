@@ -3,13 +3,11 @@
 $totalSameTime = 3;
 
 function getConnID() {
-    global $conn_id, $storage_hostname, $storage_username, $storage_password;
-    if (empty($conn_id)) {
-        $conn_id = ftp_connect($storage_hostname);
-        // login with username and password
-        $login_result = ftp_login($conn_id, $storage_username, $storage_password);
-        ftp_pasv($conn_id, true);
-    }
+    global $storage_hostname, $storage_username, $storage_password;
+    $conn_id = ftp_connect($storage_hostname);
+    // login with username and password
+    $login_result = ftp_login($conn_id, $storage_username, $storage_password);
+    ftp_pasv($conn_id, true);
     return $conn_id;
 }
 
@@ -50,7 +48,8 @@ function upload($value) {
         echo "Uploading $value to $remote_file " . PHP_EOL;
         //ftp_mkdir_recusive($remote_file);
 
-        return ftp_put($connID, $remote_file, $value, FTP_BINARY);
+        $put = ftp_put($connID, $remote_file, $value, FTP_BINARY);
+        return $put;
     }
 }
 
