@@ -12,7 +12,7 @@ function getConnID() {
 }
 
 function getRemoteFileName($value) {
-    global $dirName;
+    $dirName = getCleanFilenameFromFile($value);
     $path_parts = pathinfo($value);
     if (empty($path_parts['extension'])) {
         echo "Skip empty extension {$value}" . PHP_EOL;
@@ -91,7 +91,6 @@ for ($countItems = 0; $countItems < $totalItems;) {
         continue;
     }
     echo "[$countItems/$totalItems] Process file {$file} " . PHP_EOL;
-    $dirName = getCleanFilenameFromFile($file);
 
     if (!is_dir($file)) {
         $path_parts = pathinfo($file);
