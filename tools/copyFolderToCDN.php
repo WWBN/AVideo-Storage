@@ -16,6 +16,7 @@ function getRemoteFileName($value) {
 
     $parts = explode('/videos/', $value);
     $remote_file = "{$dirName}/{$parts[1]}";
+    $remote_file = str_replace("//", "/", $remote_file);
     $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
     return $remote_file;
 }
