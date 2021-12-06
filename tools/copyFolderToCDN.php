@@ -1,6 +1,6 @@
 <?php
 
-$totalSameTime = 15;
+$totalSameTime = 5;
 
 function getRemoteFileName($value) {
     global $dirName;
@@ -18,7 +18,9 @@ function getRemoteFileName($value) {
     echo "dirName {$dirName}" . PHP_EOL;
     $remote_file = "{$dirName}/{$parts[1]}";
     $remote_file = str_replace("//", "/", $remote_file);
-    $remote_file = str_replace("{$dirName}/{$dirName}/", "$dirName/", $remote_file);
+    $errorDir = "{$dirName}/{$dirName}/";
+    $errorDir = str_replace("//", "/", $errorDir);
+    $remote_file = str_replace($errorDir, "$dirName/", $remote_file);
     return $remote_file;
 }
 
