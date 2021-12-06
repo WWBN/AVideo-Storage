@@ -21,6 +21,7 @@ function getRemoteFileName($value) {
     $errorDir = "{$dirName}/{$dirName}/";
     $errorDir = str_replace("//", "/", $errorDir);
     $remote_file = str_replace($errorDir, "$dirName/", $remote_file);
+    $remote_file = str_replace("//", "/", $remote_file);
     return $remote_file;
 }
 
