@@ -7,10 +7,10 @@ if(file_exists($configFile)){
     require_once './objects/Login.php';
     
     $exists = true;
-    
     $url = $global['aVideoURL'] . 'plugin/YPTStorage/status.php?url='.urlencode($global['aVideoStorageURL']);
-    
     $status = url_get_contents($url);
+    error_log($url);
+    error_log($status);
     $status = json_decode($status);
 
     if (!empty($_REQUEST['inputUser']) && !empty($_REQUEST['inputPassword'])) {
