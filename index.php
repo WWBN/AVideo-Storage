@@ -7,8 +7,10 @@ if(file_exists($configFile)){
     require_once './objects/Login.php';
     
     $exists = true;
-
-    $status = url_get_contents($global['aVideoURL'] . 'plugin/YPTStorage/status.php?url='.urlencode($global['aVideoStorageURL']));
+    
+    $url = $global['aVideoURL'] . 'plugin/YPTStorage/status.php?url='.urlencode($global['aVideoStorageURL']);
+    
+    $status = url_get_contents($url);
     $status = json_decode($status);
 
     if (!empty($_REQUEST['inputUser']) && !empty($_REQUEST['inputPassword'])) {
@@ -51,6 +53,7 @@ if(!empty($_POST['inputURL'])){
             }else{
                 var_dump($status);
             }
+            var_dump($url);
         } else if (!Login::isAdmin()) {
             Login::logoff();
             include './login.php';
