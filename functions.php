@@ -23,6 +23,11 @@ function getSelfUserAgent() {
     global $global;
     $agent = 'AVideoStorage ';
     $agent .= parse_url($global['aVideoStorageURL'], PHP_URL_HOST);
+    
+    if(!empty($_SERVER['HTTP_USER_AGENT'])){
+        $agent .= " {$_SERVER['HTTP_USER_AGENT']}";
+    }
+    
     return $agent;
 }
 
