@@ -52,7 +52,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
                 if($filesize >= filesize($obj->filename)){
                     copy($tmpFile, $obj->filename);
                 }else{
-                    error_log("post.json.php: filesize is smalle=r then local file $tmpFile");
+                    error_log("post.json.php: ERROR filesize is smalle=r then local file $tmpFile");
                 }
                 unlink($tmpFile);
                 $obj->error = false;
