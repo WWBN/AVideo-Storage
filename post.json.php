@@ -44,9 +44,17 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
         if (strtolower($ext) === 'mp4' || strtolower($ext) === 'webm') {
             $obj->filename = "{$global['videos_directory']}{$name2}.{$ext}";
             error_log("post.json.php: requesting wget $url, $obj->filename");
-            $wgetResp = wget($url, $obj->filename);
+            $tmpFile = $obj->filename.'.tmp';
+            $wgetResp = wget($url, $tmpFile);
             if ($wgetResp) {
-                error_log("post.json.php: wget respond fine $url, $obj->filename");
+                $filesize = filesize($tmpFile);
+                error_log("post.json.php: wget respond fine $url, $tmpFile filesize=". humanFileSize($filesize));
+                if($filesize >= filesize($obj->filename)){
+                    copy($tmpFile, $obj->filename);
+                }else{
+                    error_log("post.json.php: filesize is smalle=r then local file $tmpFile");
+                }
+                unlink($tmpFile);
                 $obj->error = false;
                 $obj->msg = "";
             } else {
