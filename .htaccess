@@ -15,7 +15,6 @@ Options All -Indexes
 # END Expires
 # BEGIN Caching
 <ifModule mod_headers.c>
-    # Header set Access-Control-Allow-Origin: *
     <filesMatch "\.(ico|pdf|flv|jpg|jpeg|png|gif|swf)$">
         Header set Cache-Control "max-age=2592000, public"
     </filesMatch>
@@ -30,6 +29,9 @@ Options All -Indexes
     </filesMatch>
     <filesMatch "\.(html|htm|php)$">
         Header set Cache-Control "max-age=1, private, must-revalidate"
+    </filesMatch>
+    <filesMatch "\.(key|ts)$">
+        Header set Access-Control-Allow-Origin: *
     </filesMatch>
 </ifModule>
 # END Caching
