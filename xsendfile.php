@@ -70,7 +70,7 @@ if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {
 
     $jsonObject = json_decode($json);
     if (empty($jsonObject->authorization)) {
-        die("Not authorized: " . $json);
+        die("Not authorized ({$sfilename}): " . $json);
     }
 }
 
