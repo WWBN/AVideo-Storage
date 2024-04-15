@@ -30,7 +30,7 @@ if (empty($_GET['token'])) {
 $_GET['file'] = str_replace(".m3u8.mp4", '.m3u8', $_GET['file']);
 
 if (preg_match("/([^\/]+\.mp4)$/", $_GET['file'], $matches)) {
-    var_dump($_GET['file'], $matches);exit;
+    //var_dump($_GET['file'], $matches);exit;
     //amke video_240415010244_v960f/video_240415010244_v960f_SD.mp4 into videos/video_240415010244_v960f_SD.mp4
     $_GET['file'] = $matches[1];
 }
@@ -55,6 +55,7 @@ if ($path_parts["extension"] == 'ts') {
     $skipAuthorization = 1;
 }
 
+var_dump($path);exit;
 if (!empty($skipAuthorization)) {
 } else
 if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {
