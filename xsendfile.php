@@ -4,8 +4,8 @@ require_once './configuration.php';
 require_once './functions.php';
 session_write_close();
 
-if (!empty($_GET['test'])) {    
-    $path = getcwd().'/xtest.txt';    
+if (!empty($_GET['test'])) {
+    $path = getcwd() . '/xtest.txt';
     header('Content-Description: File Transfer');
     header('Content-Disposition: attachment; filename=successtest.txt');
     header('Content-Transfer-Encoding: binary');
@@ -29,6 +29,11 @@ if (empty($_GET['token'])) {
 
 $_GET['file'] = str_replace(".m3u8.mp4", '.m3u8', $_GET['file']);
 
+if (preg_match("/([^\/]+\.mp4)$/", $_GET['file'], $matches)) {
+    //amke video_240415010244_v960f/video_240415010244_v960f_SD.mp4 into videos/video_240415010244_v960f_SD.mp4
+    $_GET['file'] = $matches[1];
+}
+
 $path_parts = pathinfo($_GET['file']);
 $file = $path_parts['basename'];
 $path = "{$global['videos_directory']}{$file}";
@@ -50,7 +55,6 @@ if ($path_parts["extension"] == 'ts') {
 }
 
 if (!empty($skipAuthorization)) {
-    
 } else
 if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {
     error_log("Storage xsendfile with secret");

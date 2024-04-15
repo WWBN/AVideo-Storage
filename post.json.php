@@ -49,7 +49,7 @@ if (empty($_REQUEST['secret']) || $_REQUEST['secret'] !== $global['secret']) {
             if ($wgetResp) {
                 $filesize = filesize($tmpFile);
                 error_log("post.json.php: wget respond fine $url, $tmpFile filesize=". humanFileSize($filesize));
-                if($filesize >= filesize($obj->filename)){
+                if(!file_exists($obj->filename) || $filesize >= filesize($obj->filename)){
                     copy($tmpFile, $obj->filename);
                 }else{
                     error_log("post.json.php: ERROR filesize is smalle=r then local file $tmpFile");
