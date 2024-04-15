@@ -55,7 +55,7 @@ if ($path_parts["extension"] == 'ts') {
     $skipAuthorization = 1;
 }
 
-var_dump($path);exit;
+//var_dump($path);exit;
 if (!empty($skipAuthorization)) {
 } else
 if (!empty($_REQUEST['secret']) && $_REQUEST['secret'] === $global['secret']) {
