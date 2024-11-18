@@ -107,4 +107,10 @@ if (file_exists($path)) {
     die();
 } else {
     error_log("XSENDFILE ERROR: Not exists {$path} = " . json_encode($path_parts));
+    $avideoURLRelative = str_replace($global['videos_directory'], '', $path);
+    $avideoURL = "{$global['aVideoURL']}videos/{$avideoURLRelative}?token={$_GET['token']}";
+
+    header("Location: $avideoURL");
+    //var_dump($path, $global['aVideoURL'], $global['videos_directory'], $avideoURLRelative, $avideoURL, $_GET);
+    exit;
 }
