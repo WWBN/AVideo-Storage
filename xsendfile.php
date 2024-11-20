@@ -99,11 +99,22 @@ if (file_exists($path)) {
     } else if (!empty($_GET['playHLSasMP4'])) {
         playHLSasMP4($path);
     }
+    $fsize = filesize($path);
+    if($fsize < 20){
+        if($path_parts["extension"] === 'm3u8'){
+            require_once __DIR__.'/objects/ManifestGenerator.php';
+            $baseFolder = dirname($path);
+            $manifest = ManifestGenerator::generateManifest($baseFolder);
+            file_put_contents($baseFolder.'/index.m3u8', $manifest);
+            $fsize = strlen($fsize);
+        }
+    }
+    
     header("X-Sendfile: {$path}");
     if (empty($_GET['download'])) {
         header("Content-type: " . mime_content_type($path));
     }
-    header('Content-Length: ' . filesize($path));
+    header('Content-Length: ' . $fsize);
     die();
 } else {
     error_log("XSENDFILE ERROR: Not exists {$path} = " . json_encode($path_parts));
